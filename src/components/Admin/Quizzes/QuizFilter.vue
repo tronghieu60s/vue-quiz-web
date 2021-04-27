@@ -1,7 +1,10 @@
 <template>
   <div class="d-flex justify-content-between align-items-center">
     <div>
-      <button type="button" class="btn btn-danger btn-sm">Thùng rác</button>
+      <button type="button" class="btn btn-primary btn-sm">Tất Cả Quiz</button>
+      <button type="button" class="btn btn-outline-danger btn-sm">
+        Thùng Rác
+      </button>
       <button type="button" class="btn btn-secondary btn-sm" title="Yêu thích">
         <i class="fa fa-star" aria-hidden="true"></i>
       </button>

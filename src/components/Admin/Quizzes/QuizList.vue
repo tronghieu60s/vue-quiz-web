@@ -12,7 +12,11 @@
       </tr>
     </thead>
     <tbody>
-      <quiz-item />
+      <quiz-item
+        v-for="quiz in this.$store.state.quizzes"
+        :key="quiz._id"
+        :quiz="quiz"
+      />
     </tbody>
   </table>
   <pagination />
