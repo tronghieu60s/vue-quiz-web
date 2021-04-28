@@ -21,16 +21,17 @@ export default createStore({
   actions: {
     async actLoadFirst(context) {
       context.commit("setIsLoadingPage", true);
-
-      const quizzes = await getQuizzes();
-      context.commit("setQuizzes", quizzes);
-
+      await context.dispatch("actLoadQuizzes");
       context.commit("setIsLoadingPage", false);
     },
     async actAsyncLoading(context, callback) {
       context.commit("setIsLoadingAction", true);
       await callback();
       context.commit("setIsLoadingAction", false);
+    },
+    async actLoadQuizzes(context) {
+      const quizzes = await getQuizzes();
+      context.commit("setQuizzes", quizzes);
     },
   },
   modules: {},

@@ -60,9 +60,8 @@ export default {
       const quiz = await createQuiz({ quiz_title, quiz_desc });
       if (!quiz) return;
 
-      const { quizzes } = this.$store.state;
-      this.$store.commit("setQuizzes", [...quizzes, quiz]);
-      this.onReset();
+      await this.$store.dispatch("actLoadQuizzes");
+      this.$router.push({ name: "Questions", params: { quiz_id: quiz._id } });
     },
   },
 };

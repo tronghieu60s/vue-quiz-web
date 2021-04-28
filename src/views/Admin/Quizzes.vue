@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <header-custom />
+    <header-custom title="Trang Chủ" />
     <div class="row px-3 px-md-0">
       <div class="col-md-4">
         <quiz-create />

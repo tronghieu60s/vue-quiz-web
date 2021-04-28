@@ -14,19 +14,28 @@ export function getQuizById(_id) {
   return quizzesModel
     .child(_id)
     .once("value")
-    .then((snapshot) => ({ ...snapshot.val(), _id }))
+    .then((snapshot) => (snapshot.val() ? { ...snapshot.val(), _id } : null))
     .catch((err) => console.log(err));
 }
 
 export function createQuiz(quiz) {
   return quizzesModel
     .push({ ...quiz })
-    .then((response) => getQuizById(response.key))
+    .then((snapshot) => getQuizById(snapshot.key))
     .catch((err) => console.log(err));
 }
 
-export function updateQuiz(_id, update) {
+export function deleteQuiz(_id) {
   return getQuizById(_id)
-    .then((quiz) => quizzesModel.child(_id).set({ ...quiz, ...update }))
-    .then((err) => console.log(err));
+    .then(async (snapshot) => {
+      await quizzesModel.child(_id).remove();
+      return snapshot;
+    })
+    .catch((err) => console.log(err));
+}
+
+export function updateQuiz(_id, quiz) {
+  return getQuizById(_id)
+    .then((snapshot) => quizzesModel.child(_id).set({ ...snapshot, ...quiz }))
+    .catch((err) => console.log(err));
 }
