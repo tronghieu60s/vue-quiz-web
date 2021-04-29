@@ -1,13 +1,13 @@
 <template>
   <div class="container">
     <header-custom :title="`[${quiz._id}] ${quiz.quiz_title}`">
-      <questions-edit-quiz :quiz="quiz" @onLoadQuiz="onLoadQuiz" />
+      <questions-edit-quiz :quiz="quiz" @onUpdateQuizzes="onUpdateQuizzes" />
     </header-custom>
     <div class="row px-3 px-md-0">
-      <div class="col-md-4">
+      <div class="col-lg-4 col-md-5">
         <questions-create />
       </div>
-      <div class="col-md-8 mt-5 mt-md-0">
+      <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
         <questions-list />
       </div>
     </div>
@@ -21,7 +21,6 @@ import FooterCustom from "@components/Footer.vue";
 import QuestionsCreate from "@components/Admin/Questions/QuestionsCreate.vue";
 import QuestionsList from "@components/Admin/Questions/QuestionsList.vue";
 import QuestionsEditQuiz from "@components/Admin/Questions/QuestionsEditQuiz.vue";
-import { getQuizById } from "@models/quizzes.firebase";
 export default {
   components: {
     HeaderCustom,
@@ -41,13 +40,17 @@ export default {
     };
   },
   beforeMount() {
-    this.$store.dispatch("actAsyncLoading", this.onLoadQuiz);
+    this.onLoadQuiz(this.$store.state.quizzes);
   },
   methods: {
-    async onLoadQuiz() {
-      const getQuiz = await getQuizById(this.quiz_id);
-      if (getQuiz) return (this.quiz = getQuiz);
+    onLoadQuiz(quizzes) {
+      const findQuiz = quizzes.find((o) => o._id === this.quiz_id);
+      if (findQuiz) return (this.quiz = findQuiz);
       this.$router.push({ name: "Admin" });
+    },
+    onUpdateQuizzes(quizzes) {
+      this.onLoadQuiz(quizzes);
+      this.$store.commit("setQuizzes", quizzes);
     },
   },
 };

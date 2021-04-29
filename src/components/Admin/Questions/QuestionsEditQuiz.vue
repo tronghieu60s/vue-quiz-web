@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { updateQuiz } from "@models/quizzes.firebase";
+import { getQuizzes, updateQuiz } from "@models/quizzes.firebase";
 export default {
   props: {
     quiz: {
@@ -86,7 +86,7 @@ export default {
       inputDesc: "",
     };
   },
-  emits: ["onLoadQuiz"],
+  emits: ["onUpdateQuizzes"],
   beforeMount() {
     this.inputTitle = this.quiz.quiz_title;
     this.inputDesc = this.quiz.quiz_desc;
@@ -100,7 +100,10 @@ export default {
       const { inputTitle: quiz_title, inputDesc: quiz_desc } = this;
       const quiz = await updateQuiz(this.quiz._id, { quiz_title, quiz_desc });
       if (!quiz) return;
-      this.$emit("onLoadQuiz");
+
+      const quizzes = await getQuizzes();
+      this.$emit("onUpdateQuizzes", quizzes);
+      this.$toast.success(`Sửa các giá trị thành công.`);
     },
   },
 };
