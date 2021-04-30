@@ -1,19 +1,17 @@
 <template>
   <tr>
     <td>
-      <button
-        type="button"
-        class="btn btn-primary btn-sm mb-2"
-        title="Bắt đầu ngay"
-      >
+      <button type="button" class="btn btn-primary btn-sm" title="Bắt đầu ngay">
         <i class="fa fa-play" aria-hidden="true"></i>
       </button>
     </td>
     <td>
-      <a href="">
+      <router-link
+        :to="{ name: 'Questions', params: { quiz_id: this.quiz._id } }"
+      >
         <h6 v-if="quiz.quiz_trash" class="mb-0 text-uppercase">[Deleted]</h6>
         {{ quiz.quiz_title }}
-      </a>
+      </router-link>
     </td>
     <td>
       {{ quiz.quiz_desc }}
@@ -56,14 +54,16 @@ export default {
       });
     },
     onClickDelete() {
-      const textConfirm =
-        "Bạn có chắc chắn muốn xóa. Hành động này không thể hoàn tác.";
+      const textConfirm = this.$store.state.string.CONFIG_DELETE_VALUES;
       if (confirm(textConfirm))
         this.$store.dispatch("actAsyncLoading", this.onDeleteQuiz);
     },
     async onDeleteQuiz() {
       const item = await deleteQuiz(this.quiz._id);
-      if (item) await this.$store.dispatch("actLoadQuizzes");
+      if (item) {
+        await this.$store.dispatch("actLoadQuizzes");
+        this.$toast.success(this.$store.state.string.DELETE_VALUES_SUCCESS);
+      }
     },
   },
 };

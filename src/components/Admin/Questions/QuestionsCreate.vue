@@ -6,8 +6,6 @@
     </div>
     <textarea
       class="form-control"
-      name=""
-      id=""
       rows="3"
       placeholder="Nhập câu hỏi vào đây..."
     ></textarea>
@@ -15,7 +13,10 @@
   <div class="form-group">
     <h4 class="text-capitalize">Câu Trả Lời</h4>
     <div class="d-flex align-items-center mb-2">
-      <div class="bg-primary rounded py-1 px-2 mr-2">
+      <div
+        class="d-flex bg-primary rounded py-1 px-2 mr-2"
+        style="height: 30px"
+      >
         <img width="15px" src="/assets/images/circle.svg" alt="" />
       </div>
       <input
@@ -30,7 +31,10 @@
       </button>
     </div>
     <div class="d-flex align-items-center mb-2">
-      <div class="bg-primary rounded py-1 px-2 mr-2">
+      <div
+        class="d-flex bg-success rounded py-1 px-2 mr-2"
+        style="height: 30px"
+      >
         <img width="15px" src="/assets/images/rectangle.svg" alt="" />
       </div>
       <input
@@ -40,12 +44,12 @@
         aria-describedby="helpId"
         placeholder="Nhập câu trả lời sai..."
       />
-      <button type="button" class="btn btn-danger btn-sm mx-2">
-        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      <button type="button" class="btn btn-secondary btn-sm mx-2">
+        <i class="fa fa-check-square" aria-hidden="true"></i>
       </button>
     </div>
     <div class="d-flex align-items-center mb-2">
-      <div class="bg-primary rounded py-1 px-2 mr-2">
+      <div class="d-flex bg-danger rounded py-1 px-2 mr-2" style="height: 30px">
         <img width="15px" src="/assets/images/hexagon.svg" alt="" />
       </div>
       <input
@@ -55,12 +59,15 @@
         aria-describedby="helpId"
         placeholder="Nhập câu trả lời sai..."
       />
-      <button type="button" class="btn btn-danger btn-sm mx-2">
-        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      <button type="button" class="btn btn-secondary btn-sm mx-2">
+        <i class="fa fa-check-square" aria-hidden="true"></i>
       </button>
     </div>
     <div class="d-flex align-items-center mb-2">
-      <div class="bg-primary rounded py-1 px-2 mr-2">
+      <div
+        class="d-flex bg-warning rounded py-1 px-2 mr-2"
+        style="height: 30px"
+      >
         <img width="15px" src="/assets/images/triangle.svg" alt="" />
       </div>
       <input
@@ -70,8 +77,8 @@
         aria-describedby="helpId"
         placeholder="Nhập câu trả lời sai..."
       />
-      <button type="button" class="btn btn-danger btn-sm mx-2">
-        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      <button type="button" class="btn btn-secondary btn-sm mx-2">
+        <i class="fa fa-check-square" aria-hidden="true"></i>
       </button>
     </div>
   </div>
@@ -83,5 +90,15 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      inputQuestion: "",
+      inputAnswer1: "",
+      inputAnswer2: "",
+      inputAnswer3: "",
+      inputAnswer4: "",
+    };
+  },
+};
 </script>

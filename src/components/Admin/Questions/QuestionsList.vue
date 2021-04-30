@@ -33,13 +33,11 @@
       </tr>
     </tbody>
   </table>
-  <pagination />
 </template>
 
 <script>
-import Pagination from "@components/UI/Pagination.vue";
 import QuestionsFilter from "./QuestionsFilter.vue";
 export default {
-  components: { QuestionsFilter, Pagination },
+  components: { QuestionsFilter },
 };
 </script>

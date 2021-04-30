@@ -103,7 +103,7 @@ export default {
 
       const quizzes = await getQuizzes();
       this.$emit("onUpdateQuizzes", quizzes);
-      this.$toast.success(`Sửa các giá trị thành công.`);
+      this.$toast.success(this.$store.state.string.EDIT_VALUES_SUCCESS);
     },
   },
 };

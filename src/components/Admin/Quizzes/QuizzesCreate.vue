@@ -51,7 +51,7 @@ export default {
       this.inputDesc = "";
     },
     onSubmit() {
-      if (this.inputTitle === "") return;
+      if (this.inputTitle.length === 0) return;
       this.$store.dispatch("actAsyncLoading", this.onCreateQuiz);
     },
     async onCreateQuiz() {
@@ -61,7 +61,9 @@ export default {
       if (!quiz) return;
 
       await this.$store.dispatch("actLoadQuizzes");
-      this.$router.push({ name: "Questions", params: { quiz_id: quiz._id } });
+
+      if (confirm(this.$store.state.string.Q_ADD_MORE_QUESTIONS))
+        this.$router.push({ name: "Questions", params: { quiz_id: quiz._id } });
     },
   },
 };
