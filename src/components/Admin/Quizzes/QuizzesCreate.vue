@@ -61,6 +61,7 @@ export default {
       if (!quiz) return;
 
       await this.$store.dispatch("actLoadQuizzes");
+      this.$toast.success(this.$store.state.string.ADD_VALUES_SUCCESS);
 
       if (confirm(this.$store.state.string.Q_ADD_MORE_QUESTIONS))
         this.$router.push({ name: "Questions", params: { quiz_id: quiz._id } });
