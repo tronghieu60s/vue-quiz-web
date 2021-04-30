@@ -113,11 +113,11 @@ export default {
     },
     onSubmit() {
       if (this.inputQuestion.length === 0) return;
-      const hasAnswer = this.inputAnswer.find((o) => o.value.length > 0);
-      if (!hasAnswer) {
-        this.$toast.error(this.$store.state.string.D_AT_LEAST_ONE_ANSWER);
-        return;
-      }
+      const correctAnswer = this.inputAnswer.find((o) => o.isCorrect);
+      if (correctAnswer.value.length === 0)
+        return this.$toast.error(
+          this.$store.state.string.E_REQUIRED_ANSWER_CORRECT
+        );
 
       this.$store.dispatch("actAsyncLoading", this.onCreateQuestion);
     },
@@ -130,6 +130,7 @@ export default {
       const question = await createQuestion(newQuestion);
       if (question) {
         this.$toast.success(this.$store.state.string.ADD_VALUES_SUCCESS);
+        this.onReset();
       }
     },
   },

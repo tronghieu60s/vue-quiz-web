@@ -15,6 +15,7 @@
       placeholder="Nhập câu trả lời..."
     />
     <button
+      type="button"
       @click="this.$emit('toggleIsCorrect')"
       :class="stylesButtonIsCorrect"
     >
