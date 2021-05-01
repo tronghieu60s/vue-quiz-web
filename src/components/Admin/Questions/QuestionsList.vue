@@ -11,26 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>
-          <a href="">
-            <h6 class="mb-0">-MHy7D3tBEwpbOAKAIMU</h6>
-            Điểm khác biệt giữa Google One và Google Drive là gì? Điểm khác biệt
-            giữa Google One và Google Drive là gì?Điểm khác biệt giữa Google One
-            và Google Drive là gì?Điểm khác biệt giữa Google One và Google Drive
-            là gì?
-          </a>
-        </td>
-        <td>
-          <button type="button" class="btn btn-primary btn-sm mb-2" title="Sửa">
-            <i class="fa fa-pencil-square" aria-hidden="true"></i>
-          </button>
-          <button type="button" class="btn btn-danger btn-sm mb-2" title="Xóa">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
-        </td>
-      </tr>
+      <slot></slot>
     </tbody>
   </table>
 </template>

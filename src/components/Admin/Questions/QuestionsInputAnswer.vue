@@ -1,10 +1,10 @@
 <template>
   <div class="d-flex align-items-center mb-2">
     <div
-      :class="{ 'd-flex rounded py-1 px-2 mr-2': true, [input.color]: true }"
+      :class="{ 'd-flex rounded py-1 px-2 mr-2': true, [color]: true }"
       style="height: 30px"
     >
-      <img style="width: 13px" :src="input.icon" />
+      <img style="width: 13px" :src="icon" />
     </div>
     <input
       @input="onInputAnswer"
@@ -27,18 +27,47 @@
 <script>
 export default {
   props: {
+    index: {
+      type: Number,
+      default: 0,
+    },
     input: {
       type: Object,
       default: () => ({
-        index: -1,
         value: "",
         isCorrect: false,
-        icon: "",
-        color: "",
       }),
     },
   },
   emits: ["onInputAnswer", "toggleIsCorrect"],
+  data() {
+    return {
+      icon: "",
+      color: "",
+    };
+  },
+  beforeMount() {
+    switch (this.index) {
+      case 0:
+        this.icon = "/assets/images/circle.svg";
+        this.color = "bg-primary";
+        break;
+      case 1:
+        this.icon = "/assets/images/rectangle.svg";
+        this.color = "bg-success";
+        break;
+      case 2:
+        this.icon = "/assets/images/hexagon.svg";
+        this.color = "bg-danger";
+        break;
+      case 3:
+        this.icon = "/assets/images/triangle.svg";
+        this.color = "bg-warning";
+        break;
+      default:
+        break;
+    }
+  },
   computed: {
     stylesIconIsCorrect() {
       return {
@@ -57,7 +86,7 @@ export default {
   methods: {
     onInputAnswer(event) {
       const value = event.target.value;
-      this.$emit("onInputAnswer", { index: this.input.index, value });
+      this.$emit("onInputAnswer", { index: this.index, value });
     },
   },
 };
