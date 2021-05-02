@@ -10,6 +10,16 @@ export function getQuestions() {
     .catch((err) => console.log(err));
 }
 
+export function getQuestionsByQuizId(quiz_id) {
+  return questionsModel
+    .once("value")
+    .then((snapshot) => {
+      const questions = objectToArray(snapshot.val());
+      return questions.filter((o) => o.quiz_id === quiz_id);
+    })
+    .catch((err) => console.log(err));
+}
+
 export function getQuestionById(_id) {
   return questionsModel
     .child(_id)

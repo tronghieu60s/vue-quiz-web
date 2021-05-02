@@ -33,7 +33,7 @@ import QuestionsList from "@components/Questions/QuestionsList.vue";
 import QuestionsEditQuiz from "@components/Questions/QuestionsEditQuiz.vue";
 import { searchString } from "@helpers/string";
 import {
-  getQuestions,
+  getQuestionsByQuizId,
   createQuestion,
   deleteQuestionById,
   updateQuestionById,
@@ -67,11 +67,11 @@ export default {
   },
   watch: {
     inputSearch() {
-      // check input empty get quizzesbase to quizzes
+      // check input empty get questionsbase to questions
       if (this.inputSearch.length === 0)
         return (this.questions = this.questionsbase);
 
-      // filter quizzesbase to quizzes by search funtion
+      // filter questionsbase to questions by search funtion
       this.questions = this.questionsbase.filter((o) =>
         searchString(o.question, this.inputSearch)
       );
@@ -80,11 +80,15 @@ export default {
   methods: {
     async onLoadQuiz() {
       const quizItem = await getQuizById(this.quiz_id);
-      if (quizItem) return (this.quiz = quizItem);
+      if (quizItem) {
+        if (quizItem.quiz_code) this.$router.push({ name: "Admin" });
+        return (this.quiz = quizItem);
+      }
       this.$router.push({ name: "Admin" });
     },
     async onLoadQuestions() {
-      const questions = await getQuestions();
+      const questions = await getQuestionsByQuizId(this.quiz_id);
+      questions.reverse();
       this.questions = questions;
       this.questionsbase = questions;
     },
@@ -111,7 +115,8 @@ export default {
     async onCreateQuestion(props) {
       const { question, answers } = props;
       // create question, if not exists return fail
-      const createItem = await createQuestion({ question, answers });
+      const quiz_id = this.quiz._id;
+      const createItem = await createQuestion({ question, answers, quiz_id });
       if (!createItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT

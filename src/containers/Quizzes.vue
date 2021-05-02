@@ -10,7 +10,12 @@
           @onToggleCreate="isCreate = !isCreate"
           @onInputSearch="(s) => (inputSearch = s)"
         />
-        <quizzes-list :quizzes="quizzes" @onDeleteQuiz="onDeleteQuiz" />
+        <quizzes-list
+          :quizzes="quizzes"
+          @onStartQuiz="onStartQuiz"
+          @onStopQuiz="onStopQuiz"
+          @onDeleteQuiz="onDeleteQuiz"
+        />
       </div>
     </div>
     <footer-custom />
@@ -28,6 +33,7 @@ import {
   createQuiz,
   getQuizzes,
   deleteQuizById,
+  updateQuizById,
 } from "@models/quizzes.firebase";
 export default {
   components: {
@@ -73,6 +79,7 @@ export default {
     async onLoadQuizzes() {
       // get quizzes by database and set to quizzes and quizzesbase
       const quizzes = await getQuizzes();
+      quizzes.reverse();
       this.quizzes = quizzes;
       this.quizzesbase = quizzes;
     },
@@ -92,10 +99,10 @@ export default {
         this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
       });
     },
-    onDeleteQuiz(_id) {
+    onDeleteQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete quizzes by id
-        const deleteItem = await deleteQuizById(_id);
+        const deleteItem = await deleteQuizById(quiz._id);
         if (!deleteItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -105,6 +112,50 @@ export default {
         await this.onLoadQuizzes();
         this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
       });
+    },
+    onStartQuiz(quiz) {
+      if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
+
+      this.$store.dispatch("actLoadingAction", async () => {
+        const quiz_code = await this.generateCodeQuiz();
+        const updateItem = await updateQuizById(quiz._id, { quiz_code });
+        if (!updateItem)
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+
+        this.routerQuizStart(quiz._id);
+      });
+    },
+    async onStopQuiz(quiz) {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const quiz_code = null;
+        const updateItem = await updateQuizById(quiz._id, { quiz_code });
+        if (!updateItem)
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+
+        await this.onLoadQuizzes();
+      });
+    },
+    routerQuizStart(quiz_id) {
+      this.$router.push({
+        name: "Quizzes-Start",
+        params: { quiz_id: quiz_id },
+      });
+    },
+    async generateCodeQuiz(quizzes = null) {
+      // random and check if quizzes exists
+      const random = Math.random().toString(36).substring(7);
+      if (!quizzes) quizzes = await getQuizzes();
+
+      // find code exists on quizzes
+      const findCode = quizzes.find((o) => o.quiz_code === random);
+      if (findCode) return this.generateCodeQuiz(quizzes);
+
+      // return code
+      return random;
     },
   },
 };

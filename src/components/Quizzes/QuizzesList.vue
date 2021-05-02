@@ -15,10 +15,12 @@
         <td class="text-center" colspan="4">Không có bộ câu hỏi nào.</td>
       </tr>
       <quizzes-item
-        v-for="quiz in quizzes"
-        :key="quiz._id"
+        v-for="(quiz, index) in quizzes"
+        :key="index"
         :quiz="quiz"
-        @onDeleteQuiz="$emit('onDeleteQuiz', quiz._id)"
+        @onStartQuiz="$emit('onStartQuiz', quiz)"
+        @onStopQuiz="$emit('onStopQuiz', quiz)"
+        @onDeleteQuiz="$emit('onDeleteQuiz', quiz)"
       />
     </tbody>
   </table>
@@ -28,7 +30,7 @@
 import QuizzesItem from "./QuizzesItem.vue";
 export default {
   components: { QuizzesItem },
-  emits: ["onDeleteQuiz"],
+  emits: ["onStartQuiz", "onStopQuiz", "onDeleteQuiz"],
   props: { quizzes: { type: Array } },
 };
 </script>
