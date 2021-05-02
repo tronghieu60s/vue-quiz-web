@@ -12,7 +12,7 @@
         />
       </div>
       <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
-        <questions-filter />
+        <questions-filter @onInputSearch="(s) => (inputSearch = s)" />
         <questions-list
           :questions="questions"
           @onDeleteQuestion="onDeleteQuestion"
@@ -31,6 +31,7 @@ import QuestionsCreate from "@components/Questions/QuestionsCreate.vue";
 import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
 import QuestionsList from "@components/Questions/QuestionsList.vue";
 import QuestionsEditQuiz from "@components/Questions/QuestionsEditQuiz.vue";
+import { searchString } from "@helpers/string";
 import {
   getQuestions,
   createQuestion,
@@ -53,6 +54,8 @@ export default {
       quiz: { _id: "", quiz_title: "", quiz_desc: "" },
       question: null,
       questions: [],
+      questionsbase: [],
+      inputSearch: "",
     };
   },
   created() {
@@ -61,6 +64,18 @@ export default {
       await this.onLoadQuiz();
       await this.onLoadQuestions();
     });
+  },
+  watch: {
+    inputSearch() {
+      // check input empty get quizzesbase to quizzes
+      if (this.inputSearch.length === 0)
+        return (this.questions = this.questionsbase);
+
+      // filter quizzesbase to quizzes by search funtion
+      this.questions = this.questionsbase.filter((o) =>
+        searchString(o.question, this.inputSearch)
+      );
+    },
   },
   methods: {
     async onLoadQuiz() {
@@ -71,6 +86,7 @@ export default {
     async onLoadQuestions() {
       const questions = await getQuestions();
       this.questions = questions;
+      this.questionsbase = questions;
     },
     async onUpdateQuizzes(props) {
       this.$store.dispatch("actLoadingAction", async () => {

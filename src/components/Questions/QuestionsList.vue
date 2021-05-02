@@ -10,6 +10,9 @@
       </tr>
     </thead>
     <tbody>
+      <tr v-show="questions.length === 0">
+        <td class="text-center" colspan="4">Không có câu hỏi nào.</td>
+      </tr>
       <questions-item
         v-for="(question, index) in questions"
         :key="index"
