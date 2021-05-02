@@ -6,10 +6,7 @@
       </button>
     </td>
     <td>
-      <router-link
-        :to="{ name: 'Questions', params: { quiz_id: this.quiz._id } }"
-      >
-        <h6 v-if="quiz.quiz_trash" class="mb-0 text-uppercase">[Deleted]</h6>
+      <router-link :to="routerItem">
         {{ quiz.quiz_title }}
       </router-link>
     </td>
@@ -18,7 +15,7 @@
     </td>
     <td>
       <button
-        @click="onClickEdit"
+        @click="$router.push(routerItem)"
         type="button"
         class="btn btn-primary btn-sm mb-2"
         title="Sửa"
@@ -26,7 +23,7 @@
         <i class="fa fa-pencil-square" aria-hidden="true"></i>
       </button>
       <button
-        @click="onClickDelete"
+        @click="onDeleteQuiz"
         type="button"
         class="btn btn-danger btn-sm mb-2"
         title="Xóa"
@@ -38,7 +35,6 @@
 </template>
 
 <script>
-import { deleteQuiz } from "@models/quizzes.firebase";
 export default {
   props: {
     quiz: {
@@ -46,24 +42,15 @@ export default {
       default: () => ({ _id: "", quiz_title: "", quiz_desc: "" }),
     },
   },
+  computed: {
+    routerItem() {
+      return { name: "Questions", params: { quiz_id: this.quiz._id } };
+    },
+  },
   methods: {
-    onClickEdit() {
-      this.$router.push({
-        name: "Questions",
-        params: { quiz_id: this.quiz._id },
-      });
-    },
-    onClickDelete() {
-      const textConfirm = this.$store.state.string.CONFIG_DELETE_VALUES;
-      if (confirm(textConfirm))
-        this.$store.dispatch("actAsyncLoading", this.onDeleteQuiz);
-    },
-    async onDeleteQuiz() {
-      const item = await deleteQuiz(this.quiz._id);
-      if (item) {
-        await this.$store.dispatch("actLoadQuizzes");
-        this.$toast.success(this.$store.state.string.DELETE_VALUES_SUCCESS);
-      }
+    onDeleteQuiz() {
+      const textConfirm = this.$store.state.string.Q_CONFIRM_DELETE_VALUES;
+      if (confirm(textConfirm)) this.$emit("onDeleteQuiz");
     },
   },
 };

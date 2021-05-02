@@ -1,0 +1,109 @@
+<template>
+  <div class="container">
+    <header-custom title="Trang Chủ" />
+    <div class="row px-3 px-md-0">
+      <div :class="classLeftCol">
+        <quizzes-create @onCreateQuiz="onCreateQuiz" />
+      </div>
+      <div :class="[classRightCol, 'mt-5 mt-md-0']">
+        <quizzes-filter
+          @onToggleCreate="isCreate = !isCreate"
+          @onInputSearch="(s) => (inputSearch = s)"
+        />
+        <quizzes-list :quizzes="quizzes" @onDeleteQuiz="onDeleteQuiz" />
+      </div>
+    </div>
+    <footer-custom />
+  </div>
+</template>
+
+<script>
+import HeaderCustom from "@components/Header.vue";
+import FooterCustom from "@components/Footer.vue";
+import QuizzesCreate from "@components/Quizzes/QuizzesCreate.vue";
+import QuizzesList from "@components/Quizzes/QuizzesList.vue";
+import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
+import { searchString } from "@helpers/string";
+import {
+  createQuiz,
+  getQuizzes,
+  deleteQuizById,
+} from "@models/quizzes.firebase";
+export default {
+  components: {
+    HeaderCustom,
+    FooterCustom,
+    QuizzesCreate,
+    QuizzesList,
+    QuizzesFilter,
+  },
+  data() {
+    return {
+      quizzes: [],
+      quizzesbase: [],
+      inputSearch: "",
+      isCreate: false,
+    };
+  },
+  created() {
+    // load quizzes first
+    this.$store.dispatch("actLoadingAction", this.onLoadQuizzes);
+  },
+  computed: {
+    classLeftCol() {
+      return this.isCreate ? "col-lg-4 col-md-5" : "d-none";
+    },
+    classRightCol() {
+      return this.isCreate ? "col-lg-8 col-md-7" : "col-12 col-lg-10 mx-auto";
+    },
+  },
+  watch: {
+    inputSearch() {
+      // check input empty get quizzesbase to quizzes
+      if (this.inputSearch.length === 0)
+        return (this.quizzes = this.quizzesbase);
+
+      // filter quizzesbase to quizzes by search funtion
+      this.quizzes = this.quizzesbase.filter((o) =>
+        searchString(o.quiz_title, this.inputSearch)
+      );
+    },
+  },
+  methods: {
+    async onLoadQuizzes() {
+      // get quizzes by database and set to quizzes and quizzesbase
+      const quizzes = await getQuizzes();
+      this.quizzes = quizzes;
+      this.quizzesbase = quizzes;
+    },
+    onCreateQuiz(props) {
+      const { quiz_title, quiz_desc } = props;
+
+      this.$store.dispatch("actLoadingAction", async () => {
+        // create quiz and check exists (if not exists alert error)
+        const quiz = await createQuiz({ quiz_title, quiz_desc });
+        if (!quiz)
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+
+        // reload quizzes on table and alert success
+        await this.onLoadQuizzes();
+        this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
+      });
+    },
+    onDeleteQuiz(_id) {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const deleteItem = await deleteQuizById(_id);
+        if (!deleteItem)
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+
+        await this.onLoadQuizzes();
+        this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
+      });
+    },
+  },
+};
+</script>

@@ -1,18 +1,13 @@
 import { createStore } from "vuex";
-import { getQuizzes } from "@models/quizzes.firebase";
 import * as string from "../common/string";
 
 export default createStore({
   state: {
     string,
-    quizzes: [],
     isLoadingPage: false,
     isLoadingAction: false,
   },
   mutations: {
-    setQuizzes(state, payload) {
-      state.quizzes = payload;
-    },
     setIsLoadingPage(state, payload) {
       state.isLoadingPage = payload;
     },
@@ -21,19 +16,14 @@ export default createStore({
     },
   },
   actions: {
-    async actLoadFirst(context) {
+    async actLoadingPage(context) {
       context.commit("setIsLoadingPage", true);
-      await context.dispatch("actLoadQuizzes");
       context.commit("setIsLoadingPage", false);
     },
-    async actAsyncLoading(context, callback) {
+    async actLoadingAction(context, callback) {
       context.commit("setIsLoadingAction", true);
       await callback();
       context.commit("setIsLoadingAction", false);
-    },
-    async actLoadQuizzes(context) {
-      const quizzes = await getQuizzes();
-      context.commit("setQuizzes", quizzes);
     },
   },
   modules: {},

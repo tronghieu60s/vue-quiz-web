@@ -1,7 +1,7 @@
-import Questions from "@views/Admin/Questions.vue";
-import Quizzes from "@views/Admin/Quizzes.vue";
 import Home from "@views/Home.vue";
 import NotFound from "@views/NotFound.vue";
+import Questions from "@views/Questions.vue";
+import Quizzes from "@views/Quizzes.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -12,11 +12,15 @@ const routes = [
   },
   {
     path: "/admin",
-    name: "Admin",
+    redirect: { name: "Quizzes" },
+  },
+  {
+    path: "/admin/quizzes",
+    name: "Quizzes",
     component: Quizzes,
   },
   {
-    path: "/admin/quiz/:quiz_id",
+    path: "/admin/quizzes/:quiz_id",
     name: "Questions",
     component: Questions,
     props: true,

@@ -10,7 +10,7 @@ import LoadingAction from "./components/UI/LoadingAction.vue";
 export default {
   components: { LoadingPage, LoadingAction },
   beforeMount() {
-    this.$store.dispatch("actLoadFirst");
+    this.$store.dispatch("actLoadingPage");
   },
 };
 </script>
