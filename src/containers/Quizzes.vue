@@ -87,19 +87,21 @@ export default {
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
 
-        // reload quizzes on table and alert success
+        // reload quizzes on table and toast success
         await this.onLoadQuizzes();
         this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
       });
     },
     onDeleteQuiz(_id) {
       this.$store.dispatch("actLoadingAction", async () => {
+        // delete quizzes by id
         const deleteItem = await deleteQuizById(_id);
         if (!deleteItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
 
+        // reload quizzes and toast success
         await this.onLoadQuizzes();
         this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
       });

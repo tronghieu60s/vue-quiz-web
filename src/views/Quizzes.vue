@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Quizzes from "../containers/Quizzes.vue";
+import Quizzes from "@containers/Quizzes.vue";
 export default {
   components: { Quizzes },
 };

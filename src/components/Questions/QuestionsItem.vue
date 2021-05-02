@@ -2,14 +2,12 @@
   <tr>
     <td>{{ index }}</td>
     <td>
-      <a href="">
-        <h6 class="mb-0">{{ question._id }}</h6>
-        {{ question.content }}
-      </a>
+      <h6 class="mb-0">{{ question._id }}</h6>
+      {{ question.question }}
     </td>
     <td>
       <button
-        @click="onEditQuestion"
+        @click="$emit('onSelectEditQuestion')"
         type="button"
         class="btn btn-primary btn-sm mb-2"
         title="Sửa"
@@ -30,23 +28,18 @@
 
 <script>
 export default {
-  emits: ["onEditQuestion", "onDeleteQuestion"],
+  emits: ["onSelectEditQuestion", "onDeleteQuestion"],
   props: {
-    index: {
-      type: Number,
-      default: 0,
-    },
+    index: { type: Number },
     question: {
       type: Object,
-      default: () => ({ _id: "", content: "", answers: [] }),
+      default: () => ({ _id: "", question: "", answers: [] }),
     },
   },
   methods: {
-    onEditQuestion() {
-      this.$emit("onEditQuestion", this.question);
-    },
     onDeleteQuestion() {
-      this.$emit("onDeleteQuestion", this.question);
+      const textConfirm = this.$store.state.string.Q_CONFIRM_DELETE_VALUES;
+      if (confirm(textConfirm)) this.$emit("onDeleteQuestion");
     },
   },
 };

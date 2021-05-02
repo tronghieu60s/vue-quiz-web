@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import { getQuizzes, updateQuiz } from "@models/quizzes.firebase";
 export default {
   props: {
     quiz: {
@@ -87,23 +86,18 @@ export default {
     };
   },
   emits: ["onUpdateQuizzes"],
-  beforeMount() {
-    this.inputTitle = this.quiz.quiz_title;
-    this.inputDesc = this.quiz.quiz_desc;
+  watch: {
+    quiz() {
+      this.inputTitle = this.quiz.quiz_title;
+      this.inputDesc = this.quiz.quiz_desc;
+    },
   },
   methods: {
     onSubmit() {
       if (this.inputTitle === "") return;
-      this.$store.dispatch("actAsyncLoading", this.onUpdateQuiz);
-    },
-    async onUpdateQuiz() {
-      const { inputTitle: quiz_title, inputDesc: quiz_desc } = this;
-      const quiz = await updateQuiz(this.quiz._id, { quiz_title, quiz_desc });
-      if (!quiz) return;
-
-      const quizzes = await getQuizzes();
-      this.$emit("onUpdateQuizzes", quizzes);
-      this.$toast.success(this.$store.state.string.EDIT_VALUES_SUCCESS);
+      const quiz_title = this.inputTitle;
+      const quiz_desc = this.inputDesc;
+      this.$emit("onUpdateQuizzes", { quiz_title, quiz_desc });
     },
   },
 };

@@ -1,22 +1,19 @@
 <template>
   <div class="d-flex align-items-center mb-2">
-    <div
-      :class="{ 'd-flex rounded py-1 px-2 mr-2': true, [color]: true }"
-      style="height: 30px"
-    >
+    <div :class="stylesButtonIcon" style="height: 30px">
       <img style="width: 13px" :src="icon" />
     </div>
     <input
+      :value="input.answer"
       @input="onInputAnswer"
-      :value="input.value"
       type="text"
       class="form-control"
       aria-describedby="helpId"
       placeholder="Nhập câu trả lời..."
     />
     <button
+      @click="$emit('onToggleIsCorrect')"
       type="button"
-      @click="this.$emit('toggleIsCorrect')"
       :class="stylesButtonIsCorrect"
     >
       <i :class="stylesIconIsCorrect" aria-hidden="true"></i>
@@ -27,26 +24,20 @@
 <script>
 export default {
   props: {
-    index: {
-      type: Number,
-      default: 0,
-    },
+    index: { type: Number },
     input: {
       type: Object,
-      default: () => ({
-        value: "",
-        isCorrect: false,
-      }),
+      default: () => ({ answer: "", isCorrect: false }),
     },
   },
-  emits: ["onInputAnswer", "toggleIsCorrect"],
+  emits: ["onInputAnswer", "onToggleIsCorrect"],
   data() {
     return {
       icon: "",
       color: "",
     };
   },
-  beforeMount() {
+  created() {
     switch (this.index) {
       case 0:
         this.icon = "/assets/images/circle.svg";
@@ -69,6 +60,12 @@ export default {
     }
   },
   computed: {
+    stylesButtonIcon() {
+      return {
+        "d-flex rounded py-1 px-2 mr-2": true,
+        [this.color]: true,
+      };
+    },
     stylesIconIsCorrect() {
       return {
         "fa fa-check-square": true,

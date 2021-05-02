@@ -12,6 +12,7 @@ const routes = [
   },
   {
     path: "/admin",
+    name: "Admin",
     redirect: { name: "Quizzes" },
   },
   {
