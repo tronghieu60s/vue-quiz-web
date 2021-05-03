@@ -36,15 +36,7 @@ const socketConfig = {
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, socketConfig);
 
-io.on("connection", (socket) => {
-  console.log("a user connected: " + socket.id);
-  // console.log(socket.adapter.rooms);
-
-  socket.on("disconnect", () => {
-    console.log("a user disconnected: " + socket.id);
-    console.log(socket.adapter.rooms);
-  });
-});
+require("./socket")(io);
 
 server.listen(PORT, () =>
   console.log(`Server is running at http://localhost:${PORT}/`)
