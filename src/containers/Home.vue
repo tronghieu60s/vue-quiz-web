@@ -52,6 +52,11 @@ export default {
     );
 
     // listener user kick
+    this.$store.state.socket.on("server-username-exists", () => {
+      this.$toast.error(this.$store.state.string.S_ALERT_USERNAME_EXISTS);
+    });
+
+    // listener user kick
     this.$store.state.socket.on("server-user-kick", (username) => {
       if (this.username === username) {
         this.username = null;
@@ -76,8 +81,8 @@ export default {
 
         // input user name and send to user
         const username = prompt("Nhập tên của bạn để tiếp tục.");
-        const emit = { username, quiz_code: quizItem.quiz_code };
-        this.$store.state.socket.emit("client-join-user", emit);
+        const payload = { username, quiz_code: quizItem.quiz_code };
+        this.$store.state.socket.emit("client-join-user", payload);
       });
     },
     onOutRoom() {
