@@ -1,10 +1,17 @@
 <template>
-  <button type="button" class="btn btn-primary mb-2">
-    <span>Ahihi</span>
+  <button
+    @click="$emit('onKickUser')"
+    type="button"
+    class="btn btn-primary mb-2"
+  >
+    <span>{{ user }}</span>
     <i class="fa fa-times-circle" aria-hidden="true"></i>
   </button>
 </template>
 
 <script>
-export default {};
+export default {
+  emits: ["onKickUser"],
+  props: { user: { type: String } },
+};
 </script>

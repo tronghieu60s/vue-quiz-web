@@ -3,11 +3,19 @@
     class="d-flex justify-content-center align-items-center"
     style="height: 100vh"
   >
-    <form @submit.prevent="onSubmit">
-      <div
-        class="form-group border border-primary rounded px-3 py-4"
-        style="width: 350px"
+    <div v-if="username">
+      <div>Vui lòng chờ người khác vào...</div>
+      <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
+      <button
+        @click="onOutRoom"
+        type="button"
+        class="btn btn-default btn-sm mt-3"
       >
+        Rời khỏi phòng <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
+    <form v-else @submit.prevent="onSubmit">
+      <div class="form-group" style="width: 350px">
         <input
           v-model.trim="inputCode"
           type="text"
@@ -34,8 +42,30 @@ export default {
   data() {
     return {
       inputCode: "",
-      userName: "",
+      username: "",
     };
+  },
+  created() {
+    this.$store.state.socket.on(
+      "server-user-connected",
+      (username) => (this.username = username)
+    );
+
+    // listener user kick
+    this.$store.state.socket.on("server-user-kick", (username) => {
+      if (this.username === username) {
+        this.username = null;
+        this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
+      }
+    });
+
+    // listener user disconnect
+    this.$store.state.socket.on("server-user-disconnect", (username) => {
+      if (this.username === username) {
+        this.username = null;
+        this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
+      }
+    });
   },
   methods: {
     onSubmit() {
@@ -44,9 +74,16 @@ export default {
         if (!quizItem)
           return this.$toast.error(this.$store.state.string.E_NOT_FOUND_QUIZ);
 
-        const userName = prompt("Nhập tên của bạn để tiếp tục.");
-        this.userName = userName;
-        console.log(userName);
+        // input user name and send to user
+        const username = prompt("Nhập tên của bạn để tiếp tục.");
+        const emit = { username, quiz_code: quizItem.quiz_code };
+        this.$store.state.socket.emit("client-join-user", emit);
+      });
+    },
+    onOutRoom() {
+      this.$store.state.socket.emit("client-out-user", {
+        username: this.username,
+        quiz_code: this.inputCode,
       });
     },
   },
