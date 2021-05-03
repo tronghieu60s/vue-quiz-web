@@ -80,11 +80,9 @@ export default {
   methods: {
     async onLoadQuiz() {
       const quizItem = await getQuizById(this.quiz_id);
-      if (quizItem) {
-        if (quizItem.quiz_code) this.$router.push({ name: "Admin" });
-        return (this.quiz = quizItem);
-      }
-      this.$router.push({ name: "Admin" });
+      if (!quizItem) return this.$router.back();
+      if (quizItem.quiz_code) return this.$router.back();
+      return (this.quiz = quizItem);
     },
     async onLoadQuestions() {
       const questions = await getQuestionsByQuizId(this.quiz_id);

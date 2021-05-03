@@ -9,3 +9,4 @@ export const E_UNKNOWN_ERROR_DETECT =
   "Lỗi không xác định, vui lòng thử lại sau.";
 export const E_REQUIRED_ANSWER_CORRECT =
   "Câu trả lời chính xác không được để trống.";
+export const E_NOT_FOUND_QUIZ = "Không tìm thấy cuộc thi nào.";

@@ -18,6 +18,12 @@ export function getQuizById(_id) {
     .catch((err) => console.log(err));
 }
 
+export async function getQuizByQuizCode(quiz_code) {
+  const quizzes = await getQuizzes();
+  const findQuiz = quizzes.find((o) => o.quiz_code === quiz_code);
+  return findQuiz;
+}
+
 export function createQuiz(quiz) {
   return quizzesModel
     .push({ ...quiz })

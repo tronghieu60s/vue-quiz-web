@@ -1,5 +1,10 @@
 <template>
-  <div class="home">
-    <p>Home Page</p>
-  </div>
+  <home />
 </template>
+
+<script>
+import Home from "@containers/Home.vue";
+export default {
+  components: { Home },
+};
+</script>
