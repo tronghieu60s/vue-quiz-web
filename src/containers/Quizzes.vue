@@ -114,7 +114,7 @@ export default {
       });
     },
     onStartQuiz(quiz) {
-      if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
+      if (quiz) if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
 
       this.$store.dispatch("actLoadingAction", async () => {
         const quiz_code = await this.generateCodeQuiz();

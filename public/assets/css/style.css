@@ -9,12 +9,6 @@ td {
   word-wrap: break-word;
 }
 
-.btn-dash:hover {
-  color: #fff;
-  background-color: #f5365c;
-  border-color: #f5365c;
-}
-
 /* ScrollBar */
 
 ::-webkit-scrollbar {

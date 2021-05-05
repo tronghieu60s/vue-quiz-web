@@ -79,6 +79,9 @@ export default {
         if (!quizItem)
           return this.$toast.error(this.$store.state.string.E_NOT_FOUND_QUIZ);
 
+        if (quizItem.quiz_current > 0)
+          return this.$toast.error(this.$store.state.string.E_QUIZ_IS_RUNNING);
+
         // input user name and send to user
         const username = prompt("Nhập tên của bạn để tiếp tục.");
         const payload = { username, quiz_code: quizItem.quiz_code };
