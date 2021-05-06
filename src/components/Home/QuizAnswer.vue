@@ -1,45 +1,26 @@
 <template>
-  <div v-if="question" class="mt-4">
+  <div v-if="question">
     <div class="bg-dark rounded-lg w-75 mx-auto">
-      <h1 class="text-center py-3 mb-0" style="color: white; font-size: 1.7em">
+      <h1 class="text-center p-4 mb-0" style="color: white; font-size: 1.7em">
         {{ question.question }}
       </h1>
     </div>
-    <div class="w-100 mt-4">
-      <div class="d-flex">
-        <button type="button" class="btn btn-primary btn-block py-5 mt-3">
-          <div class="w-75 mx-auto">
-            <img src="/assets/images/circle.svg" style="width: 20px" />
-            {{ question.answers[0].answer }}
-          </div>
-        </button>
-        <button type="button" class="btn btn-success btn-block py-5 mt-3">
-          <div class="w-75 mx-auto">
-            <img src="/assets/images/rectangle.svg" style="width: 20px" />
-            {{ question.answers[1].answer }}
-          </div>
-        </button>
-      </div>
-      <div class="d-flex">
-        <button type="button" class="btn btn-danger btn-block py-5 mt-3">
-          <div class="w-75 mx-auto">
-            <img src="/assets/images/hexagon.svg" style="width: 20px" />
-            {{ question.answers[2].answer }}
-          </div>
-        </button>
-        <button type="button" class="btn btn-warning btn-block py-5 mt-3">
-          <div class="w-75 mx-auto">
-            <img src="/assets/images/triangle.svg" style="width: 20px" />
-            {{ question.answers[3].answer }}
-          </div>
-        </button>
-      </div>
+    <div class="w-100 d-flex justify-content-around flex-wrap mt-4">
+      <quiz-answer-item
+        v-for="(answer, index) in question.answers"
+        :key="index"
+        :index="index"
+        :answer="answer"
+        :showAnswer="showAnswer"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import QuizAnswerItem from "./QuizAnswerItem.vue";
 export default {
-  props: { question: { type: Object } },
+  components: { QuizAnswerItem },
+  props: { question: { type: Object }, showAnswer: { type: Boolean } },
 };
 </script>

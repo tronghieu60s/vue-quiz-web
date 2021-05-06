@@ -1,48 +1,57 @@
 <template>
-  <div
-    class="d-flex justify-content-center align-items-center"
-    style="height: 100vh"
-  >
-    <div v-if="username">
-      <div>Vui lòng chờ người khác vào...</div>
-      <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
-      <button
-        @click="onOutRoom"
-        type="button"
-        class="btn btn-default btn-sm mt-3"
-      >
-        Rời khỏi phòng <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      </button>
-    </div>
-    <form v-else @submit.prevent="onSubmit">
-      <div class="form-group" style="width: 350px">
-        <input
-          v-model.trim="inputCode"
-          type="text"
-          class="form-control"
-          aria-describedby="helpId"
-          placeholder="Nhập mã cuộc thi..."
-          required
-        />
-        <small id="helpId" class="form-text text-muted mt-2"
-          >Nhập mã cuộc thi để tham gia các câu hỏi trực tuyến cùng chúng
-          tôi.</small
-        >
-        <button type="submit" class="btn btn-primary btn-block mt-2">
-          Tham Gia
-        </button>
+  <div class="container">
+    <div
+      class="w-100 d-flex justify-content-center align-items-center"
+      style="height: 100vh"
+    >
+      <quiz-answer v-if="question" :question="question" />
+      <div v-else>
+        <div v-if="username">
+          <div>Vui lòng chờ người khác vào...</div>
+          <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
+          <button
+            @click="onOutRoom"
+            type="button"
+            class="btn btn-default btn-sm mt-3"
+          >
+            Rời khỏi phòng
+            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+          </button>
+        </div>
+        <form v-else @submit.prevent="onSubmit">
+          <div class="form-group" style="width: 350px">
+            <input
+              v-model.trim="inputCode"
+              type="text"
+              class="form-control"
+              aria-describedby="helpId"
+              placeholder="Nhập mã cuộc thi..."
+              required
+            />
+            <small id="helpId" class="form-text text-muted mt-2"
+              >Nhập mã cuộc thi để tham gia các câu hỏi trực tuyến cùng chúng
+              tôi.</small
+            >
+            <button type="submit" class="btn btn-primary btn-block mt-2">
+              Tham Gia
+            </button>
+          </div>
+        </form>
       </div>
-    </form>
+    </div>
   </div>
 </template>
 
 <script>
+import QuizAnswer from "../components/Home/QuizAnswer.vue";
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
 export default {
+  components: { QuizAnswer },
   data() {
     return {
       inputCode: "",
       username: "",
+      question: null,
     };
   },
   created() {
@@ -51,10 +60,16 @@ export default {
       (username) => (this.username = username)
     );
 
+    // listener quizzes
+    this.$store.state.socket.on(
+      "server-send-quiz",
+      (question) => (this.question = question)
+    );
+
     // listener user kick
-    this.$store.state.socket.on("server-username-exists", () => {
-      this.$toast.error(this.$store.state.string.S_ALERT_USERNAME_EXISTS);
-    });
+    this.$store.state.socket.on("server-username-exists", () =>
+      this.$toast.error(this.$store.state.string.S_ALERT_USERNAME_EXISTS)
+    );
 
     // listener user kick
     this.$store.state.socket.on("server-user-kick", (username) => {

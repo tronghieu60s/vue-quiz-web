@@ -9,6 +9,10 @@ td {
   word-wrap: break-word;
 }
 
+.del {
+  text-decoration: line-through;
+}
+
 /* ScrollBar */
 
 ::-webkit-scrollbar {

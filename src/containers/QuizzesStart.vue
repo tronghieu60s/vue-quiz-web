@@ -1,26 +1,24 @@
 <template>
   <div class="container" v-if="quiz">
-    <div class="row">
-      <div class="col">
-        <quizzes-start-control
-          :quiz="quiz"
-          :users="users"
-          @onQuizStart="onQuizStart"
-          @onQuizStop="onQuizStop"
-        />
-        <quiz-answer
-          v-if="quiz.quiz_current"
-          :question="questions[quiz.quiz_current - 1]"
-        />
-        <quizzes-start-users
-          v-if="!quiz.quiz_current"
-          :users="users"
-          @onKickUser="onKickUser"
-        />
-      </div>
-    </div>
-    <footer-custom />
+    <quizzes-start-control
+      :quiz="quiz"
+      :users="users"
+      @onQuizStart="onQuizStart"
+      @onQuizStop="onSetQuizCurrent(0)"
+      @onQuizNext="onQuizNext"
+    />
+    <quiz-answer
+      v-if="quiz.quiz_current"
+      :question="questions[quiz.quiz_current - 1]"
+      :showAnswer="showAnswer"
+    />
+    <quizzes-start-users
+      v-if="!quiz.quiz_current"
+      :users="users"
+      @onKickUser="onKickUser"
+    />
   </div>
+  <footer-custom />
 </template>
 
 <script>
@@ -43,6 +41,7 @@ export default {
       quiz: null,
       users: [],
       questions: [],
+      showAnswer: false,
     };
   },
   created() {
@@ -103,25 +102,27 @@ export default {
     },
     onQuizStart() {
       if (this.users.length === 0) return;
-      this.$store.dispatch("actLoadingAction", async () => {
-        const update = { quiz_current: 1 };
-        const updateItem = await updateQuizById(this.quiz._id, update);
-        if (!updateItem)
-          return this.$toast.error(
-            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-          );
-        this.quiz = updateItem;
-      });
+      this.onSetQuizCurrent(1);
     },
-    onQuizStop() {
+    onQuizNext() {
+      if (!this.showAnswer) return (this.showAnswer = true);
+      this.showAnswer = false;
+      this.onSetQuizCurrent(this.quiz.quiz_current + 1);
+    },
+    onSetQuizCurrent(quiz_current) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const update = { quiz_current: 0 };
+        const update = { quiz_current };
         const updateItem = await updateQuizById(this.quiz._id, update);
         if (!updateItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
+
         this.quiz = updateItem;
+        this.$store.state.socket.emit("client-send-quiz", {
+          quiz_code: this.quiz.quiz_code,
+          question: this.questions[this.quiz.quiz_current - 1],
+        });
       });
     },
   },
