@@ -1,12 +1,30 @@
 const socketConnect = (io) => {
   const users = {};
   io.on("connection", (socket) => {
+    // socket admin user
     socket.on("client-join-control", (quiz_code) => {
       if (!users[quiz_code]) users[quiz_code] = [];
       socket.join(quiz_code + "-control");
       socket.emit("server-send-users", users[quiz_code]);
     });
 
+    socket.on("client-kick-user", (props) => {
+      const { username, quiz_code } = props;
+      const findUser = users[quiz_code].findIndex((o) => o === username);
+      if (findUser === -1) return;
+      users[quiz_code].splice(findUser, 1);
+
+      socket.emit("server-user-kick", username);
+      socket.emit("server-send-users", users[quiz_code]);
+      io.to(quiz_code).emit("server-user-kick", username);
+    });
+
+    socket.on("client-send-quiz", (props) => {
+      const { quiz_code, question } = props;
+      io.to(quiz_code).emit("server-send-quiz", question);
+    });
+
+    // socket normal user
     socket.on("client-join-user", (props) => {
       const { username, quiz_code } = props;
 
@@ -26,48 +44,26 @@ const socketConnect = (io) => {
       // listener user disconnect
       socket.on("disconnect", () => {
         const findUser = users[quiz_code].findIndex((o) => o === username);
-        if (findUser !== -1) {
-          users[quiz_code].splice(findUser, 1);
-          io.to(quiz_code + "-control").emit(
-            "server-user-disconnect",
-            username
-          );
-          io.to(quiz_code + "-control").emit(
-            "server-send-users",
-            users[quiz_code]
-          );
-        }
-      });
-    });
-
-    socket.on("client-kick-user", (props) => {
-      const { username, quiz_code } = props;
-      const findUser = users[quiz_code].findIndex((o) => o === username);
-      if (findUser !== -1) {
+        if (findUser === -1) return;
         users[quiz_code].splice(findUser, 1);
 
-        io.to(quiz_code).emit("server-user-kick", username);
-        io.to(quiz_code + "-control").emit("server-user-kick", username);
-        io.to(quiz_code + "-control").emit(
-          "server-send-users",
-          users[quiz_code]
-        );
-      }
-    });
-
-    socket.on("client-out-user", (props) => {
-      const { username, quiz_code } = props;
-      const findUser = users[quiz_code].findIndex((o) => o === username);
-      if (findUser !== -1) {
-        users[quiz_code].splice(findUser, 1);
-
-        io.to(quiz_code).emit("server-user-disconnect", username);
         io.to(quiz_code + "-control").emit("server-user-disconnect", username);
         io.to(quiz_code + "-control").emit(
           "server-send-users",
           users[quiz_code]
         );
-      }
+      });
+    });
+
+    socket.on("client-out-user", (props) => {
+      const { username, quiz_code } = props;
+      const findUser = users[quiz_code].findIndex((o) => o === username);
+      if (findUser === -1) return;
+      users[quiz_code].splice(findUser, 1);
+
+      socket.emit("server-user-disconnect", username);
+      io.to(quiz_code + "-control").emit("server-user-disconnect", username);
+      io.to(quiz_code + "-control").emit("server-send-users", users[quiz_code]);
     });
   });
 };
