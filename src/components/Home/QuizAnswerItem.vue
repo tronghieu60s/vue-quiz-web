@@ -2,10 +2,10 @@
   <button
     type="button"
     :class="[
-      `btn ${color} btn-block m-0 py-5 mb-3 mx-1`,
+      `btn ${color} btn-block m-0 py-5 mb-3 mx-2`,
       [isDisable && 'btn-dark'],
     ]"
-    style="width: 48%"
+    style="width: 44%"
   >
     <div :class="['w-75 mx-auto', [isDisable && 'del']]">
       <img :src="icon" style="width: 20px" />

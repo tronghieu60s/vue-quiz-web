@@ -65,7 +65,9 @@ export default {
     },
     onLoadSocket() {
       // join room with quiz_code (action admin)
-      this.$store.state.socket.emit("client-join-control", this.quiz.quiz_code);
+      this.$store.state.socket.emit("client-join-control", {
+        quiz_code: this.quiz.quiz_code,
+      });
 
       // listener user connected
       this.$store.state.socket.on("server-user-connected", (username) =>
@@ -88,6 +90,12 @@ export default {
         )
       );
 
+      // listener show answer
+      this.$store.state.socket.on(
+        "server-show-answer",
+        (show) => (this.showAnswer = show)
+      );
+
       // listener server send user
       this.$store.state.socket.on(
         "server-send-users",
@@ -105,7 +113,11 @@ export default {
       this.onSetQuizCurrent(1);
     },
     onQuizNext() {
-      if (!this.showAnswer) return (this.showAnswer = true);
+      if (!this.showAnswer)
+        return this.$store.state.socket.emit("client-show-answer", {
+          quiz_code: this.quiz.quiz_code,
+        });
+
       this.showAnswer = false;
       this.onSetQuizCurrent(this.quiz.quiz_current + 1);
     },

@@ -5,7 +5,7 @@
         {{ question.question }}
       </h1>
     </div>
-    <div class="w-100 d-flex justify-content-around flex-wrap mt-4">
+    <div class="w-100 d-flex justify-content-center flex-wrap mt-4">
       <quiz-answer-item
         v-for="(answer, index) in question.answers"
         :key="index"

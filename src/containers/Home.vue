@@ -1,11 +1,17 @@
 <template>
   <div class="container">
     <div
+      v-if="question"
+      class="w-100 d-flex justify-content-center align-items-center mt-5"
+    >
+      <quiz-answer :question="question" :showAnswer="showAnswer" />
+    </div>
+    <div
+      v-else
       class="w-100 d-flex justify-content-center align-items-center"
       style="height: 100vh"
     >
-      <quiz-answer v-if="question" :question="question" />
-      <div v-else>
+      <div>
         <div v-if="username">
           <div>Vui lòng chờ người khác vào...</div>
           <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
@@ -52,12 +58,18 @@ export default {
       inputCode: "",
       username: "",
       question: null,
+      showAnswer: false,
     };
   },
   created() {
     this.$store.state.socket.on(
       "server-user-connected",
       (username) => (this.username = username)
+    );
+
+    this.$store.state.socket.on(
+      "server-show-answer",
+      (show) => (this.showAnswer = show)
     );
 
     // listener quizzes
