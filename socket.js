@@ -3,18 +3,16 @@ const socketConnect = (io) => {
   const quiz = {};
   io.on("connection", (socket) => {
     // socket admin user
-    socket.on("client-join-control", (props) => {
-      const { quiz_code } = props;
+    socket.on("admin-join-control", (quiz_code) => {
       // setup quiz
-      if (!users[quiz_code]) users[quiz_code] = [];
       if (!quiz[quiz_code]) quiz[quiz_code] = {};
+      if (!users[quiz_code]) users[quiz_code] = [];
 
       socket.join(quiz_code + "-control");
       socket.emit("server-send-users", users[quiz_code]);
     });
 
-    socket.on("client-kick-user", (props) => {
-      const { username, quiz_code } = props;
+    socket.on("admin-kick-user", ({ username, quiz_code }) => {
       const findUser = users[quiz_code].findIndex((o) => o === username);
       if (findUser === -1) return;
       users[quiz_code].splice(findUser, 1);
@@ -24,25 +22,23 @@ const socketConnect = (io) => {
       io.to(quiz_code).emit("server-user-kick", username);
     });
 
-    socket.on("client-send-quiz", (props) => {
-      const { quiz_code, question } = props;
-      io.to(quiz_code).emit("server-send-quiz", question);
+    socket.on("admin-send-question", ({ quiz_code, question }) => {
+      const showAnswer = (quiz[quiz_code]["show-answer"] = false);
+      socket.emit("server-show-answer", showAnswer);
+      io.to(quiz_code).emit("server-show-answer", showAnswer);
+
+      socket.emit("server-send-question", question);
+      io.to(quiz_code).emit("server-send-question", question);
     });
 
-    socket.on("client-show-answer", (props) => {
-      const { quiz_code } = props;
-      quiz[quiz_code]["show-answer"] = true;
-      socket.emit("server-show-answer", quiz[quiz_code]["show-answer"]);
-      io.to(quiz_code).emit(
-        "server-show-answer",
-        quiz[quiz_code]["show-answer"]
-      );
+    socket.on("admin-show-answer", (quiz_code) => {
+      const showAnswer = (quiz[quiz_code]["show-answer"] = true);
+      socket.emit("server-show-answer", showAnswer);
+      io.to(quiz_code).emit("server-show-answer", showAnswer);
     });
 
     // socket normal user
-    socket.on("client-join-user", (props) => {
-      const { username, quiz_code } = props;
-
+    socket.on("client-join-user", ({ username, quiz_code }) => {
       if (!users[quiz_code]) users[quiz_code] = [];
       const findUser = users[quiz_code].findIndex((o) => o === username);
       if (findUser !== -1) return socket.emit("server-username-exists");
