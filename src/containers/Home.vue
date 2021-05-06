@@ -63,39 +63,39 @@ export default {
   },
   created() {
     this.$store.state.socket.on(
-      "server-user-connected",
-      (username) => (this.username = username)
-    );
-
-    this.$store.state.socket.on(
       "server-show-answer",
       (show) => (this.showAnswer = show)
     );
 
     // listener quizzes
     this.$store.state.socket.on(
-      "server-send-quiz",
+      "server-send-question",
       (question) => (this.question = question)
     );
 
-    // listener user kick
     this.$store.state.socket.on("server-username-exists", () =>
       this.$toast.error(this.$store.state.string.S_ALERT_USERNAME_EXISTS)
     );
 
-    // listener user kick
-    this.$store.state.socket.on("server-user-kick", (username) => {
-      if (this.username === username) {
-        this.username = null;
-        this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
-      }
-    });
+    // CONNECT
+    this.$store.state.socket.on(
+      "server-user-connected",
+      (username) => (this.username = username)
+    );
 
-    // listener user disconnect
+    // DISCONNECT
     this.$store.state.socket.on("server-user-disconnect", (username) => {
       if (this.username === username) {
         this.username = null;
         this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
+      }
+    });
+
+    // KICK
+    this.$store.state.socket.on("server-user-kick", (username) => {
+      if (this.username === username) {
+        this.username = null;
+        this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
       }
     });
   },

@@ -9,7 +9,7 @@
           <i class="fa fa-user" aria-hidden="true"></i> {{ users.length }}
         </button>
         <button
-          v-if="quiz.quiz_current === 0"
+          v-if="!question"
           @click="$emit('onQuizStart')"
           type="button"
           class="btn btn-default btn-sm mb-2"
@@ -19,7 +19,7 @@
           <i class="fa fa-arrow-right" aria-hidden="true"></i>
         </button>
         <button
-          v-if="quiz.quiz_current > 0"
+          v-if="question"
           @click="onQuizStop"
           type="button"
           class="btn btn-danger btn-sm mb-2"
@@ -28,7 +28,7 @@
           <i class="fa fa-times" aria-hidden="true"></i>
         </button>
         <button
-          v-if="quiz.quiz_current > 0"
+          v-if="question"
           @click="$emit('onQuizNext')"
           type="button"
           class="btn btn-default btn-sm mb-2"
@@ -47,6 +47,7 @@ export default {
   props: {
     quiz: { type: Object },
     users: { type: Object },
+    question: { type: Object },
   },
   methods: {
     onQuizStop() {
