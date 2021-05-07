@@ -1,5 +1,7 @@
 import Home from "@containers/Home.vue";
 import JoinRoom from "@containers/JoinRoom.vue";
+import Login from "@containers/Login.vue";
+import Register from "@containers/Register.vue";
 import Questions from "@containers/Questions.vue";
 import Quizzes from "@containers/Quizzes.vue";
 import QuizzesStart from "@containers/QuizzesStart.vue";
@@ -22,6 +24,16 @@ const routes = [
     path: "/admin",
     name: "Admin",
     redirect: { name: "Quizzes" },
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: Login,
+  },
+  {
+    path: "/register",
+    name: "Register",
+    component: Register,
   },
   {
     path: "/admin/quizzes",

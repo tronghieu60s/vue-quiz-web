@@ -1,7 +1,7 @@
 <template>
-  <div class="w-100 mt-3" v-if="question">
-    <div class="bg-dark rounded-lg w-75 mx-auto">
-      <h1 class="text-center p-4 mb-0" style="color: white; font-size: 1.7em">
+  <div class="w-100" v-if="question">
+    <div class="w-75 rounded-lg mx-auto">
+      <h1 class="text-dark text-center p-4 mb-0" style="font-size: 1.7em">
         {{ question.question }}
       </h1>
     </div>
@@ -23,6 +23,9 @@ import QuizAnswerItem from "./QuizAnswerItem.vue";
 export default {
   components: { QuizAnswerItem },
   emits: ["onSelectAnswer"],
-  props: { question: { type: Object }, showResult: { type: Boolean } },
+  props: {
+    question: { type: Object },
+    showResult: { type: Boolean },
+  },
 };
 </script>

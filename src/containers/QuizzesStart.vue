@@ -1,5 +1,5 @@
 <template>
-  <div class="container" v-if="quiz">
+  <layout-top v-if="quiz">
     <quizzes-start-control
       :quiz="quiz"
       :users="users"
@@ -9,6 +9,13 @@
       @onQuizStop="onSetQuizCurrent(0)"
       @onQuizNext="onQuizNext"
     />
+  </layout-top>
+  <layout-center v-if="quiz">
+    <div v-if="question" class="d-flex justify-content-end align-items-center">
+      <button @click="onQuizNext" type="button" class="btn btn-default btn-sm">
+        Tiếp theo <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
     <quiz-answer
       v-if="question"
       :question="question"
@@ -19,23 +26,24 @@
       :users="users"
       @onKickUser="onKickUser"
     />
-    <footer-custom />
-  </div>
+  </layout-center>
 </template>
 
 <script>
-import FooterCustom from "@components/Footer.vue";
 import QuizzesStartControl from "@components/QuizzesStart/QuizzesStartControl.vue";
 import QuizzesStartUsers from "@components/QuizzesStart/QuizzesStartUsers.vue";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
+import LayoutTop from "@components/Layout/LayoutTop.vue";
+import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import { getQuizById, updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
 export default {
   components: {
-    FooterCustom,
     QuizzesStartControl,
     QuizzesStartUsers,
     QuizAnswer,
+    LayoutTop,
+    LayoutCenter,
   },
   props: ["quiz_id"],
   data() {

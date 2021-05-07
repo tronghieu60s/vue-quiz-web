@@ -13,6 +13,17 @@ td {
   text-decoration: line-through;
 }
 
+.form-responsive {
+  max-width: 350px;
+  margin: auto;
+}
+
+@media (max-width: 768px) {
+  .form-responsive {
+    max-width: 80%;
+  }
+}
+
 /* ScrollBar */
 
 ::-webkit-scrollbar {

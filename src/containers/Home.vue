@@ -1,35 +1,31 @@
 <template>
-  <div class="container">
-    <div
-      class="d-flex justify-content-center align-items-center"
-      style="height: 100vh"
-    >
-      <form @submit.prevent="onSubmit">
-        <div class="form-group" style="width: 350px">
-          <input
-            v-model.trim="inputCode"
-            type="text"
-            class="form-control"
-            aria-describedby="helpId"
-            placeholder="Nhập mã cuộc thi..."
-            required
-          />
-          <small id="helpId" class="form-text text-muted mt-2"
-            >Nhập mã cuộc thi để tham gia các câu hỏi trực tuyến cùng chúng
-            tôi.</small
-          >
-          <button type="submit" class="btn btn-primary btn-block mt-2">
-            Tham Gia
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
+  <layout-center>
+    <form @submit.prevent="onSubmit" class="form-responsive">
+      <div class="form-group mb-1">
+        <input
+          v-model.trim="inputCode"
+          type="text"
+          class="form-control"
+          aria-describedby="helpId"
+          placeholder="Nhập mã cuộc thi..."
+          required
+        />
+      </div>
+      <small class="form-text text-muted">
+        Nhập mã cuộc thi để tham gia các câu hỏi trực tuyến cùng chúng tôi.
+      </small>
+      <button type="submit" class="btn btn-primary btn-block mt-3">
+        Tham Gia
+      </button>
+    </form>
+  </layout-center>
 </template>
 
 <script>
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
+import LayoutCenter from "../components/Layout/LayoutCenter.vue";
 export default {
+  components: { LayoutCenter },
   data() {
     return {
       inputCode: "",

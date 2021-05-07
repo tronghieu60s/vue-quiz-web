@@ -1,18 +1,33 @@
 <template>
-  <div v-if="quiz" class="container">
-    <div
-      v-if="question"
-      class="w-100 d-flex justify-content-center align-items-center mt-5"
-    >
-      <p v-if="answer && !showResult" class="mb-0 py-5 my-5">
-        Câu hỏi:
-        <span class="text-primary font-weight-bold"
-          >{{ question.question }}.</span
-        ><br />
+  <layout-top>
+    <h1 class="mb-0">{{ username }}</h1>
+    <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
+      790
+    </div>
+  </layout-top>
+  <layout-center v-if="quiz">
+    <div v-if="question">
+      <div v-if="showResult">
+        <h1
+          :class="{
+            'text-success': answerStatus === 'correct',
+            'text-danger': answerStatus === 'incorrect',
+            'text-warning': answerStatus === 'nochoose',
+            'text-center': true,
+          }"
+        >
+          {{ answerStatus === "correct" ? "✔️ Chính Xác" : "" }}
+          {{ answerStatus === "incorrect" ? "❌ Sai Mất Rồi" : "" }}
+          {{ answerStatus === "nochoose" ? "🤔 Bạn Chưa Chọn Đáp Án Nào" : "" }}
+        </h1>
+      </div>
+      <div v-if="answer && !showResult" class="mb-0 py-5 my-5">
+        <h1 class="mb-0">Awesome</h1>
         Bạn đã chọn đáp án:
-        <span class="text-danger font-weight-bold">{{ answer.answer }}</span
-        >.<br />Vui lòng chờ một chút để người khác trả lời...
-      </p>
+        <span class="text-primary font-weight-bold"> {{ answer.answer }} </span
+        >. <br />
+        Vui lòng chờ một chút để người khác trả lời...
+      </div>
       <quiz-answer
         v-else
         :question="question"
@@ -20,32 +35,28 @@
         @onSelectAnswer="(o) => (this.answer = o)"
       />
     </div>
-    <div
-      v-else
-      class="d-flex justify-content-center align-items-center"
-      style="height: 100vh"
-    >
-      <div>
-        <div>Vui lòng chờ người khác vào...</div>
-        <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
-        <button
-          @click="onOutRoom"
-          type="button"
-          class="btn btn-default btn-sm mt-3"
-        >
-          Rời khỏi phòng
-          <i class="fa fa-arrow-right" aria-hidden="true"></i>
-        </button>
-      </div>
+    <div v-else>
+      <div>Vui lòng chờ người khác vào...</div>
+      <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
+      <button
+        @click="onOutRoom"
+        type="button"
+        class="btn btn-default btn-sm mt-3"
+      >
+        Rời khỏi phòng
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </button>
     </div>
-  </div>
+  </layout-center>
 </template>
 
 <script>
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
+import LayoutCenter from "@components/Layout/LayoutCenter.vue";
+import LayoutTop from "@components/Layout/LayoutTop.vue";
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
 export default {
-  components: { QuizAnswer },
+  components: { QuizAnswer, LayoutCenter, LayoutTop },
   props: {
     quiz_code: { type: String },
     username: { type: String },
@@ -53,25 +64,11 @@ export default {
   data() {
     return {
       answer: null,
+      answerStatus: null,
       quiz: null,
       question: null,
       showResult: false,
     };
-  },
-  watch: {
-    showResult() {
-      const body = document.querySelector("body");
-      if (!this.answer) return body.classList.add("bg-danger");
-
-      const correctAnswer = this.question.answers.find((o) => o.isCorrect);
-      if (correctAnswer.answer === this.answer.answer)
-        body.classList.add("bg-success");
-      else body.classList.add("bg-danger");
-    },
-    question() {
-      const body = document.querySelector("body");
-      if (!this.answer) return (body.className = "");
-    },
   },
   created() {
     this.$store.dispatch("actLoadingAction", async () => {
@@ -87,6 +84,15 @@ export default {
       this.$store.state.socket.emit("client-join-user", payload);
       this.onLoadSocket();
     });
+  },
+  watch: {
+    showResult() {
+      if (!this.answer) return (this.answerStatus = "nochoose");
+      const correctAnswer = this.question.answers.find((o) => o.isCorrect);
+      if (correctAnswer.answer === this.answer.answer)
+        return (this.answerStatus = "correct");
+      this.answerStatus = "incorrect";
+    },
   },
   methods: {
     onLoadSocket() {

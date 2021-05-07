@@ -2,11 +2,9 @@
   <button
     @click="$emit('onSelectAnswer')"
     type="button"
-    :class="[
-      `btn ${color} btn-block rounded-lg m-0 py-5 mb-3 mx-2`,
-      [isDisable && 'btn-dark'],
-    ]"
+    :class="[`btn ${color} btn-block rounded-lg m-0 py-5 mb-3 mx-2`]"
     style="width: 44%"
+    :disabled="isDisable"
   >
     <div :class="['w-75 mx-auto', [isDisable && 'del']]">
       <img :src="icon" style="width: 20px" />

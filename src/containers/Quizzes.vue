@@ -79,6 +79,7 @@ export default {
     async onLoadQuizzes() {
       // get quizzes by database and set to quizzes and quizzesbase
       const quizzes = await getQuizzes();
+      quizzes.reverse();
       this.quizzes = quizzes;
       this.quizzesbase = quizzes;
     },
