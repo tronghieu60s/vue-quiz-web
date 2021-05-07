@@ -35,6 +35,13 @@ const socketConnect = (io) => {
       io.to(quiz_code).emit("server-show-result", showResult);
     });
 
+    socket.on("admin-stop-quiz", (quiz_code) => {
+      delete quiz[quiz_code];
+      delete users[quiz_code];
+
+      socket.to(quiz_code).emit("server-stop-quiz");
+    });
+
     // socket normal user
     socket.on("client-register-user", ({ username, quiz_code }) => {
       if (!users[quiz_code]) users[quiz_code] = {};
