@@ -21,6 +21,7 @@ const socketConnect = (io) => {
     });
 
     socket.on("admin-send-question", ({ quiz_code, question }) => {
+      quiz[quiz_code]["question"] = question;
       const showResult = (quiz[quiz_code]["show-result"] = false);
       socket.emit("server-show-result", showResult);
       io.to(quiz_code).emit("server-show-result", showResult);
@@ -44,18 +45,19 @@ const socketConnect = (io) => {
 
     // socket normal user
     socket.on("client-register-user", ({ username, quiz_code }) => {
-      if (!users[quiz_code]) users[quiz_code] = {};
       if (users[quiz_code][username])
         return socket.emit("server-username-exists");
       socket.emit("server-register-user-success", username);
     });
 
     socket.on("client-join-user", ({ username, quiz_code }) => {
-      if (!users[quiz_code]) users[quiz_code] = {};
-
       // user join room quiz_code
       socket.join(quiz_code);
       users[quiz_code][username] = "online";
+
+      // send question
+      socket.emit("server-send-question", quiz[quiz_code]["question"]);
+      socket.emit("server-show-result", quiz[quiz_code]["show-result"]);
 
       // client connected send to control
       socket.emit("server-user-connected", username);
