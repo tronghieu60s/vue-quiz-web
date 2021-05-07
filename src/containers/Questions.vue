@@ -86,7 +86,6 @@ export default {
     },
     async onLoadQuestions() {
       const questions = await getQuestionsByQuizId(this.quiz_id);
-      questions.reverse();
       this.questions = questions;
       this.questionsbase = questions;
     },

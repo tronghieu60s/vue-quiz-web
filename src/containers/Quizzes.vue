@@ -79,7 +79,6 @@ export default {
     async onLoadQuizzes() {
       // get quizzes by database and set to quizzes and quizzesbase
       const quizzes = await getQuizzes();
-      quizzes.reverse();
       this.quizzes = quizzes;
       this.quizzesbase = quizzes;
     },
@@ -137,6 +136,7 @@ export default {
           );
 
         await this.onLoadQuizzes();
+        this.$store.state.socket.emit("admin-stop-quiz", quiz.quiz_code);
       });
     },
     routerQuizStart(quiz_id) {

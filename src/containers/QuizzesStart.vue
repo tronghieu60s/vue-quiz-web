@@ -125,6 +125,9 @@ export default {
           this.quiz.quiz_code
         );
 
+      if (this.quiz.quiz_current >= this.questions.length)
+        return this.onSetQuizCurrent(0);
+
       this.onSetQuizCurrent(this.quiz.quiz_current + 1);
     },
     onSetQuizCurrent(quiz_current) {

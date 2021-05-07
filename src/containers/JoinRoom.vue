@@ -1,32 +1,35 @@
 <template>
-  <div
-    v-if="question"
-    class="w-100 d-flex justify-content-center align-items-center mt-5"
-  >
-    <quiz-answer :question="question" :showResult="showResult" />
-  </div>
-  <div
-    v-else
-    class="d-flex justify-content-center align-items-center"
-    style="height: 100vh"
-  >
-    <div>
-      <div>Vui lòng chờ người khác vào...</div>
-      <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
-      <button
-        @click="onOutRoom"
-        type="button"
-        class="btn btn-default btn-sm mt-3"
-      >
-        Rời khỏi phòng
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      </button>
+  <div v-if="quiz" class="container">
+    <div
+      v-if="question"
+      class="w-100 d-flex justify-content-center align-items-center mt-5"
+    >
+      <quiz-answer :question="question" :showResult="showResult" />
+    </div>
+    <div
+      v-else
+      class="d-flex justify-content-center align-items-center"
+      style="height: 100vh"
+    >
+      <div>
+        <div>Vui lòng chờ người khác vào...</div>
+        <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
+        <button
+          @click="onOutRoom"
+          type="button"
+          class="btn btn-default btn-sm mt-3"
+        >
+          Rời khỏi phòng
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
+import { getQuizByQuizCode } from "@models/quizzes.firebase";
 export default {
   components: { QuizAnswer },
   props: {
@@ -35,18 +38,25 @@ export default {
   },
   data() {
     return {
+      quiz: null,
       question: null,
       showResult: false,
     };
   },
   created() {
-    const storage = localStorage.getItem(".quiz_config_user") || "{}";
-    if (JSON.parse(storage)[this.quiz_code] !== this.username)
-      return this.$router.push({ name: "Home" });
+    this.$store.dispatch("actLoadingAction", async () => {
+      const getQuiz = await getQuizByQuizCode(this.quiz_code);
+      if (!getQuiz) return this.$router.push({ name: "Home" });
+      this.quiz = getQuiz;
 
-    const payload = { username: this.username, quiz_code: this.quiz_code };
-    this.$store.state.socket.emit("client-join-user", payload);
-    this.onLoadSocket();
+      const storage = localStorage.getItem(".quiz_config_user") || "{}";
+      if (JSON.parse(storage)[this.quiz_code] !== this.username)
+        return this.$router.push({ name: "Home" });
+
+      const payload = { username: this.username, quiz_code: this.quiz_code };
+      this.$store.state.socket.emit("client-join-user", payload);
+      this.onLoadSocket();
+    });
   },
   methods: {
     onLoadSocket() {
@@ -60,10 +70,15 @@ export default {
         (question) => (this.question = question)
       );
 
+      this.$store.state.socket.on("server-stop-quiz", () => {
+        this.$router.push({ name: "Home" });
+        this.onStorageOutRoom();
+      });
+
       // DISCONNECT
       this.$store.state.socket.on("server-user-disconnect", (username) => {
         if (this.username === username) {
-          this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
+          // this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
           this.onStorageOutRoom();
         }
       });
@@ -71,7 +86,7 @@ export default {
       // KICK
       this.$store.state.socket.on("server-user-kick", (username) => {
         if (this.username === username) {
-          this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
+          // this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
           this.onStorageOutRoom();
         }
       });

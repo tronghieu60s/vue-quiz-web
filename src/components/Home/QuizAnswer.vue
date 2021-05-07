@@ -1,5 +1,5 @@
 <template>
-  <div v-if="question">
+  <div class="mt-3" v-if="question">
     <div class="bg-dark rounded-lg w-75 mx-auto">
       <h1 class="text-center p-4 mb-0" style="color: white; font-size: 1.7em">
         {{ question.question }}
