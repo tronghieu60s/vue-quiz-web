@@ -16,6 +16,13 @@ export default createStore({
     setIsLoadingAction(state, payload) {
       state.isLoadingAction = payload;
     },
+    setQuizUserStorage(_, payload) {
+      const { quiz_code, username } = payload;
+      const quizStorage =
+        JSON.parse(localStorage.getItem(".quiz_config_user")) || {};
+      quizStorage[quiz_code] = username;
+      localStorage.setItem(".quiz_config_user", JSON.stringify(quizStorage));
+    },
   },
   actions: {
     async actLoadingPage(context) {

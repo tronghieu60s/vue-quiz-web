@@ -11,15 +11,15 @@
     <quiz-answer
       v-if="question"
       :question="question"
-      :showAnswer="showAnswer"
+      :showResult="showResult"
     />
     <quizzes-start-users
       v-if="!question"
       :users="users"
       @onKickUser="onKickUser"
     />
+    <footer-custom />
   </div>
-  <footer-custom />
 </template>
 
 <script>
@@ -43,7 +43,7 @@ export default {
       users: [],
       question: null,
       questions: [],
-      showAnswer: false,
+      showResult: false,
     };
   },
   created() {
@@ -55,6 +55,48 @@ export default {
     });
   },
   methods: {
+    onLoadSocket() {
+      this.$store.state.socket.emit("admin-join-control", this.quiz.quiz_code);
+
+      this.$store.state.socket.on("server-send-users", (users) => {
+        const mapUsers = Object.entries(users)
+          .map(([name, status]) => ({ name, status }))
+          .filter((o) => o.status === "online")
+          .map((o) => o.name);
+        this.users = mapUsers;
+      });
+
+      this.$store.state.socket.on(
+        "server-send-question",
+        (question) => (this.question = question)
+      );
+
+      this.$store.state.socket.on(
+        "server-show-result",
+        (show) => (this.showResult = show)
+      );
+
+      // // CONNECT
+      // this.$store.state.socket.on("server-user-connected", (username) =>
+      //   this.$toast.success(
+      //     username + this.$store.state.string.S_ALERT_USER_JOINED
+      //   )
+      // );
+
+      // // DISCONNECT
+      // this.$store.state.socket.on("server-user-disconnect", (username) =>
+      //   this.$toast.error(
+      //     username + this.$store.state.string.S_ALERT_USER_OUTED
+      //   )
+      // );
+
+      // // KICK
+      // this.$store.state.socket.on("server-user-kick", (username) =>
+      //   this.$toast.error(
+      //     username + this.$store.state.string.S_ALERT_USER_KICKED
+      //   )
+      // );
+    },
     async onLoadQuiz() {
       const quizItem = await getQuizById(this.quiz_id);
       if (!quizItem) return this.$router.back();
@@ -65,45 +107,6 @@ export default {
       const questions = await getQuestionsByQuizId(this.quiz._id);
       this.questions = questions;
       this.question = questions[this.quiz.quiz_current - 1];
-    },
-    onLoadSocket() {
-      this.$store.state.socket.emit("admin-join-control", this.quiz.quiz_code);
-
-      this.$store.state.socket.on(
-        "server-send-users",
-        (users) => (this.users = users)
-      );
-
-      this.$store.state.socket.on(
-        "server-send-question",
-        (question) => (this.question = question)
-      );
-
-      this.$store.state.socket.on(
-        "server-show-answer",
-        (show) => (this.showAnswer = show)
-      );
-
-      // CONNECT
-      this.$store.state.socket.on("server-user-connected", (username) =>
-        this.$toast.success(
-          username + this.$store.state.string.S_ALERT_USER_JOINED
-        )
-      );
-
-      // DISCONNECT
-      this.$store.state.socket.on("server-user-disconnect", (username) =>
-        this.$toast.error(
-          username + this.$store.state.string.S_ALERT_USER_OUTED
-        )
-      );
-
-      // KICK
-      this.$store.state.socket.on("server-user-kick", (username) =>
-        this.$toast.error(
-          username + this.$store.state.string.S_ALERT_USER_KICKED
-        )
-      );
     },
     onKickUser(index) {
       this.$store.state.socket.emit("admin-kick-user", {
@@ -116,9 +119,9 @@ export default {
       this.onSetQuizCurrent(1);
     },
     onQuizNext() {
-      if (!this.showAnswer)
+      if (!this.showResult)
         return this.$store.state.socket.emit(
-          "admin-show-answer",
+          "admin-show-result",
           this.quiz.quiz_code
         );
 

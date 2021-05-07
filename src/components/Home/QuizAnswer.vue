@@ -11,7 +11,7 @@
         :key="index"
         :index="index"
         :answer="answer"
-        :showAnswer="showAnswer"
+        :showResult="showResult"
       />
     </div>
   </div>
@@ -21,6 +21,6 @@
 import QuizAnswerItem from "./QuizAnswerItem.vue";
 export default {
   components: { QuizAnswerItem },
-  props: { question: { type: Object }, showAnswer: { type: Boolean } },
+  props: { question: { type: Object }, showResult: { type: Boolean } },
 };
 </script>

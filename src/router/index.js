@@ -1,8 +1,9 @@
-import Home from "@views/Home.vue";
+import Home from "@containers/Home.vue";
+import JoinRoom from "@containers/JoinRoom.vue";
+import Questions from "@containers/Questions.vue";
+import Quizzes from "@containers/Quizzes.vue";
+import QuizzesStart from "@containers/QuizzesStart.vue";
 import NotFound from "@views/NotFound.vue";
-import Questions from "@views/Questions.vue";
-import Quizzes from "@views/Quizzes.vue";
-import QuizzesStart from "@views/QuizzesStart.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [
@@ -10,6 +11,12 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/quiz/:quiz_code/:username",
+    name: "JoinRoom",
+    component: JoinRoom,
+    props: true,
   },
   {
     path: "/admin",
