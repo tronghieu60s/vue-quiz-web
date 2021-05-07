@@ -1,8 +1,9 @@
 <template>
   <button
+    @click="$emit('onSelectAnswer')"
     type="button"
     :class="[
-      `btn ${color} btn-block m-0 py-5 mb-3 mx-2`,
+      `btn ${color} btn-block rounded-lg m-0 py-5 mb-3 mx-2`,
       [isDisable && 'btn-dark'],
     ]"
     style="width: 44%"
@@ -16,6 +17,7 @@
 
 <script>
 export default {
+  emits: ["onSelectAnswer"],
   props: {
     index: { type: Number },
     answer: { type: Object },

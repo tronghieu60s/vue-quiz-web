@@ -3,7 +3,7 @@
     <h1 class="mb-3 mb-md-0" style="font-size: 2em">
       Code: {{ quiz.quiz_code }}
     </h1>
-    <div class="d-flex justify-content-center align-items-center flex-column">
+    <div class="d-flex justify-content-center flex-column">
       <div class="my-1">
         <button type="button" class="btn btn-default btn-sm">
           <i class="fa fa-user" aria-hidden="true"></i> {{ users.length }}
@@ -29,6 +29,10 @@
         </button>
       </div>
       <div>
+        <button v-if="question" type="button" class="btn btn-default btn-sm">
+          <i class="fa fa-user" aria-hidden="true"></i>
+          {{ quiz.quiz_current }}/{{ questions.length }}
+        </button>
         <button
           v-if="question"
           @click="$emit('onQuizNext')"
@@ -50,6 +54,7 @@ export default {
     quiz: { type: Object },
     users: { type: Object },
     question: { type: Object },
+    questions: { type: Array },
   },
   methods: {
     onQuizStop() {

@@ -4,7 +4,21 @@
       v-if="question"
       class="w-100 d-flex justify-content-center align-items-center mt-5"
     >
-      <quiz-answer :question="question" :showResult="showResult" />
+      <p v-if="answer && !showResult" class="mb-0 py-5 my-5">
+        Câu hỏi:
+        <span class="text-primary font-weight-bold"
+          >{{ question.question }}.</span
+        ><br />
+        Bạn đã chọn đáp án:
+        <span class="text-danger font-weight-bold">{{ answer.answer }}</span
+        >.<br />Vui lòng chờ một chút để người khác trả lời...
+      </p>
+      <quiz-answer
+        v-else
+        :question="question"
+        :showResult="showResult"
+        @onSelectAnswer="(o) => (this.answer = o)"
+      />
     </div>
     <div
       v-else
@@ -38,10 +52,26 @@ export default {
   },
   data() {
     return {
+      answer: null,
       quiz: null,
       question: null,
       showResult: false,
     };
+  },
+  watch: {
+    showResult() {
+      const body = document.querySelector("body");
+      if (!this.answer) return body.classList.add("bg-danger");
+
+      const correctAnswer = this.question.answers.find((o) => o.isCorrect);
+      if (correctAnswer.answer === this.answer.answer)
+        body.classList.add("bg-success");
+      else body.classList.add("bg-danger");
+    },
+    question() {
+      const body = document.querySelector("body");
+      if (!this.answer) return (body.className = "");
+    },
   },
   created() {
     this.$store.dispatch("actLoadingAction", async () => {
@@ -65,10 +95,10 @@ export default {
         (show) => (this.showResult = show)
       );
 
-      this.$store.state.socket.on(
-        "server-send-question",
-        (question) => (this.question = question)
-      );
+      this.$store.state.socket.on("server-send-question", (question) => {
+        this.question = question;
+        this.answer = null;
+      });
 
       this.$store.state.socket.on("server-stop-quiz", () => {
         this.$router.push({ name: "Home" });

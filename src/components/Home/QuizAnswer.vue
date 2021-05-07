@@ -1,5 +1,5 @@
 <template>
-  <div class="mt-3" v-if="question">
+  <div class="w-100 mt-3" v-if="question">
     <div class="bg-dark rounded-lg w-75 mx-auto">
       <h1 class="text-center p-4 mb-0" style="color: white; font-size: 1.7em">
         {{ question.question }}
@@ -12,6 +12,7 @@
         :index="index"
         :answer="answer"
         :showResult="showResult"
+        @onSelectAnswer="$emit('onSelectAnswer', answer)"
       />
     </div>
   </div>
@@ -21,6 +22,7 @@
 import QuizAnswerItem from "./QuizAnswerItem.vue";
 export default {
   components: { QuizAnswerItem },
+  emits: ["onSelectAnswer"],
   props: { question: { type: Object }, showResult: { type: Boolean } },
 };
 </script>

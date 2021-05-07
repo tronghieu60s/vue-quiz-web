@@ -4,6 +4,7 @@
       :quiz="quiz"
       :users="users"
       :question="question"
+      :questions="questions"
       @onQuizStart="onQuizStart"
       @onQuizStop="onSetQuizCurrent(0)"
       @onQuizNext="onQuizNext"
