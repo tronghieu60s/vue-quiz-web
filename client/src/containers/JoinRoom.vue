@@ -1,9 +1,9 @@
 <template>
   <layout-top>
     <h1 class="mb-0">{{ username }}</h1>
-    <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
+    <!-- <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
       790
-    </div>
+    </div> -->
   </layout-top>
   <layout-center v-if="quiz">
     <div v-if="question">
@@ -37,7 +37,7 @@
     </div>
     <div v-else>
       <div>Vui lòng chờ người khác vào...</div>
-      <h1 class="mt-2 mb-0">Tên của bạn là: {{ username }}</h1>
+      <h1 class="mt-2 mb-0">Bạn có thấy tên mình chưa nhỉ?</h1>
       <button
         @click="onOutRoom"
         type="button"
