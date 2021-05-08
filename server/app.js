@@ -1,3 +1,4 @@
+require("dotenv").config({ path: ".env.local" });
 const createError = require("http-errors");
 const express = require("express");
 const logger = require("morgan");
@@ -29,7 +30,10 @@ app.use(function (err, req, res, next) {
 });
 
 const socketConfig = {
-  cors: { origin: ["http://localhost", "http://localhost:8080"], credentials: true },
+  cors: {
+    origin: ["http://localhost", process.env.APP_CUSTOM_CLIENT_URL],
+    credentials: true,
+  },
 };
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, socketConfig);
