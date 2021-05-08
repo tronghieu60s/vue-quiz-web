@@ -26,12 +26,17 @@ const routes = [
     redirect: { name: "Quizzes" },
   },
   {
-    path: "/login",
+    path: "/auth",
+    name: "Authentication",
+    redirect: { name: "Login" },
+  },
+  {
+    path: "/auth/login",
     name: "Login",
     component: Login,
   },
   {
-    path: "/register",
+    path: "/auth/register",
     name: "Register",
     component: Register,
   },

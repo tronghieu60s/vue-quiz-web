@@ -10,7 +10,9 @@
           class="form-control"
           aria-describedby="helpId"
           placeholder="Nhập tên đăng nhập vào đây..."
+          pattern="[A-Za-z0-9]{6,}"
           required
+          title="Tên đăng nhập phải có ít nhất 6 ký tự và không chứa ký tự đặc biệt."
         />
       </div>
       <div class="form-group mb-3">
@@ -21,6 +23,7 @@
           class="form-control"
           aria-describedby="helpId"
           placeholder="Nhập mật khẩu vào đây..."
+          required
         />
       </div>
       <div class="form-group mb-1">
@@ -45,6 +48,7 @@
 
 <script>
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
+import { createUser } from "@models/users.firebase";
 export default {
   components: { LayoutCenter },
   data() {
@@ -53,6 +57,28 @@ export default {
       inputPassword: "",
       inputRePassword: "",
     };
+  },
+  methods: {
+    onSubmit() {
+      if (this.inputUsername.length < 6) return;
+      if (this.inputPassword.length === 0) return;
+      if (this.inputPassword !== this.inputRePassword)
+        return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);
+
+      this.$store.dispatch("actLoadingAction", this.onRegisterUser);
+    },
+    async onRegisterUser() {
+      const user_username = this.inputUsername;
+      const user_password = this.inputPassword;
+      const user = await createUser({ user_username, user_password });
+      if (!user)
+        return this.$toast.error(
+          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+        );
+
+      this.$toast.success(this.$store.state.string.S_CREATE_ACCOUNT_SUCCESS);
+      this.$router.push({ name: "Login" });
+    },
   },
 };
 </script>

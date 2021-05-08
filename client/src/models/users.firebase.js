@@ -10,18 +10,18 @@ export function getUsers() {
     .catch((err) => console.log(err));
 }
 
-export function getUserById(_id) {
-  return usersModel
-    .child(_id)
-    .once("value")
-    .then((snapshot) => ({ ...snapshot.val(), _id }))
-    .catch((err) => console.log(err));
-}
-
 export async function getUserByUsername(username) {
   const users = await getUsers();
   const user = users.find((o) => o.user_username === username);
   return user;
+}
+
+export function getUserById(_id) {
+  return usersModel
+    .child(_id)
+    .once("value")
+    .then((snapshot) => (snapshot.val() ? { ...snapshot.val(), _id } : null))
+    .catch((err) => console.log(err));
 }
 
 export function createUser(user) {
@@ -29,10 +29,4 @@ export function createUser(user) {
     .push({ ...user })
     .then((response) => getUserById(response.key))
     .catch((err) => console.log(err));
-}
-
-export function updateUser(_id, update) {
-  return getUserById(_id)
-    .then((user) => usersModel.child(_id).set({ ...user, ...update }))
-    .then((err) => console.log(err));
 }

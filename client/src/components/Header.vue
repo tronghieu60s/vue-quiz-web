@@ -6,7 +6,7 @@
     </div>
     <div class="mt-2 w-50 d-flex justify-content-end align-items-center">
       <div>
-        <button type="button" class="btn btn-danger btn-sm">
+        <button @click="onLogout" type="button" class="btn btn-danger btn-sm">
           Đăng Xuất <i class="fa fa-sign-out ml-1" aria-hidden="true"></i>
         </button>
       </div>
@@ -20,6 +20,13 @@ export default {
     title: {
       type: String,
       default: "",
+    },
+  },
+  methods: {
+    onLogout() {
+      localStorage.removeItem(".config_user");
+      this.$router.push({ name: "Login" });
+      this.$toast.success(this.$store.state.string.S_LOGOUT_ACCOUNT_SUCCESS);
     },
   },
 };

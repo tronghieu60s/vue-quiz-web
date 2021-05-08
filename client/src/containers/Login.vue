@@ -35,7 +35,9 @@
 </template>
 
 <script>
+import jwt from "jsonwebtoken";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
+import { getUserByUsername } from "@models/users.firebase";
 export default {
   components: { LayoutCenter },
   data() {
@@ -43,6 +45,32 @@ export default {
       inputUsername: "",
       inputPassword: "",
     };
+  },
+  methods: {
+    onSubmit() {
+      if (this.inputUsername.length === 0) return;
+
+      this.$store.dispatch("actLoadingAction", this.onLoginUser);
+    },
+
+    async onLoginUser() {
+      const user = await getUserByUsername(this.inputUsername);
+      if (!user)
+        return this.$toast.error(
+          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+        );
+
+      if (user.user_password !== this.inputPassword)
+        return this.$toast.error(
+          this.$store.state.string.E_PASSWORD_NOT_CORRECT
+        );
+
+      const token = jwt.sign(user, this.$store.state.jwtToken);
+      localStorage.setItem(".config_user", token);
+
+      this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
+      this.$router.push({ name: "Admin" });
+    },
   },
 };
 </script>

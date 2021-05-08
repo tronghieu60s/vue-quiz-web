@@ -10,8 +10,10 @@
   },
   "dependencies": {
     "@meforma/vue-toaster": "^1.2.2",
+    "bcryptjs": "^2.4.3",
     "core-js": "^3.6.5",
     "firebase": "^8.4.2",
+    "jsonwebtoken": "^8.5.1",
     "socket.io-client": "^4.0.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",

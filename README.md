@@ -1,5 +1,8 @@
 # Vue Quiz Web
 
-### To Build A Docker-Compose
-`docker-compose up --build`
+### Docker Compose
 
+```bash
+docker-compose up --build
+docker-compose -f docker-compose.prod.yml up --build
+```
