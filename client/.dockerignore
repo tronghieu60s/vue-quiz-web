@@ -47,5 +47,5 @@ jspm_packages
 # Docker
 docker-compose.yml
 
-# Folder Server
-server
+# Folder Build
+dist

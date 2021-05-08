@@ -1,0 +1,39 @@
+version: '3'
+services:
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: ./docker/Dockerfile.prod
+    volumes:
+      - ./client:/app
+    ports: 
+      - 8080:8080
+    networks: 
+      - common
+      
+  server:
+    container_name: server
+    build:
+      context: ./server
+      dockerfile: ./docker/Dockerfile.prod
+    volumes:
+      - ./server:/app
+    ports: 
+      - 4000:4000
+    networks: 
+      - common
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports: 
+      - 80:80
+    volumes: 
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+    networks: 
+      - common
+
+networks: 
+  common:
+    driver: bridge

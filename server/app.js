@@ -29,7 +29,7 @@ app.use(function (err, req, res, next) {
 });
 
 const socketConfig = {
-  cors: { origin: "http://localhost:8080", credentials: true },
+  cors: { origin: ["http://localhost", "http://localhost:8080"], credentials: true },
 };
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, socketConfig);
