@@ -10,6 +10,12 @@ export function getQuizzes() {
     .catch((err) => console.log(err));
 }
 
+export async function getQuizzesByUserId(user_id) {
+  const quizzes = await getQuizzes();
+  const findQuiz = quizzes.filter((o) => o.user_id === user_id);
+  return findQuiz;
+}
+
 export function getQuizById(_id) {
   return quizzesModel
     .child(_id)

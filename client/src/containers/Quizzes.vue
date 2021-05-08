@@ -32,6 +32,7 @@ import { searchString } from "@helpers/string";
 import {
   createQuiz,
   getQuizzes,
+  getQuizzesByUserId,
   deleteQuizById,
   updateQuizById,
 } from "@models/quizzes.firebase";
@@ -78,7 +79,7 @@ export default {
   methods: {
     async onLoadQuizzes() {
       // get quizzes by database and set to quizzes and quizzesbase
-      const quizzes = await getQuizzes();
+      const quizzes = await getQuizzesByUserId(this.$store.state.user._id);
       quizzes.reverse();
       this.quizzes = quizzes;
       this.quizzesbase = quizzes;

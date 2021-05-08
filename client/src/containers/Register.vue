@@ -47,8 +47,9 @@
 </template>
 
 <script>
+import bcrypt from "bcryptjs";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
-import { createUser } from "@models/users.firebase";
+import { createUser, getUserByUsername } from "@models/users.firebase";
 export default {
   components: { LayoutCenter },
   data() {
@@ -68,8 +69,15 @@ export default {
       this.$store.dispatch("actLoadingAction", this.onRegisterUser);
     },
     async onRegisterUser() {
+      const getUser = await getUserByUsername(this.inputUsername);
+      if (getUser)
+        return this.$toast.error(
+          this.$store.state.string.S_ALERT_USERNAME_EXISTS
+        );
+
       const user_username = this.inputUsername;
-      const user_password = this.inputPassword;
+      const user_password = bcrypt.hashSync(this.inputPassword, 10);
+
       const user = await createUser({ user_username, user_password });
       if (!user)
         return this.$toast.error(

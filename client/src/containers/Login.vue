@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
 import { getUserByUsername } from "@models/users.firebase";
@@ -49,7 +50,6 @@ export default {
   methods: {
     onSubmit() {
       if (this.inputUsername.length === 0) return;
-
       this.$store.dispatch("actLoadingAction", this.onLoginUser);
     },
 
@@ -60,16 +60,22 @@ export default {
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
 
-      if (user.user_password !== this.inputPassword)
-        return this.$toast.error(
-          this.$store.state.string.E_PASSWORD_NOT_CORRECT
-        );
+      bcrypt.compare(this.inputPassword, user.user_password, (err, res) => {
+        if (err)
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+        if (!res)
+          return this.$toast.error(
+            this.$store.state.string.E_PASSWORD_NOT_CORRECT
+          );
 
-      const token = jwt.sign(user, this.$store.state.jwtToken);
-      localStorage.setItem(".config_user", token);
+        const token = jwt.sign(user, this.$store.state.jwtToken);
+        localStorage.setItem(".config_user", token);
 
-      this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
-      this.$router.push({ name: "Admin" });
+        this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
+        this.$router.push({ name: "Admin" });
+      });
     },
   },
 };

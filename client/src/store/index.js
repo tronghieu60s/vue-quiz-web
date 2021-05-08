@@ -10,6 +10,7 @@ export default createStore({
   state: {
     string,
     jwtToken: JWT_TOKEN,
+    user: null,
     socket: null,
     isLoadingPage: false,
     isLoadingAction: false,
@@ -45,6 +46,7 @@ export default createStore({
         jwt.verify(token, context.state.jwtToken, (err, decoded) => {
           if (err) return router.push({ name: "Login" });
           if (decoded) {
+            context.state.user = decoded;
             if (currentPath.indexOf("/auth") !== -1)
               return router.push({ name: "Admin" });
           }
