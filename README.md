@@ -3,15 +3,47 @@
 A RealTime Quiz Application Using VueJS, SocketIO, Firebase.
 
 
-## Installation 
+## Installation
 
-For develop please clone (or fork) branch [develop](https://github.com/tronghieu60s/vue-quiz-web/tree/develop).
+On **Client** Folder:
+- Config `firebase.config.json` on root directory.
+```js
+{
+    "apiKey": "",
+    "authDomain": "",
+    "databaseURL": "",
+    "projectId": "",
+    "storageBucket": "",
+    "messagingSenderId": "",
+    "appId": ""
+}
+```
+- Config environment variables on file `.env.local`:
+```bash
+  VUE_APP_SERVER_URL=http://localhost:4000
+  VUE_APP_JWT_TOKEN=your-jwt-token
+```
+On **Server** Folder:
+- Config environment variables on file `.env.local`:
+```bash
+  APP_CUSTOM_CLIENT_URL=http://localhost:8080
+```
 
-Let's config `firebase.config.json` on root directory in `client` folder.
+## Run Docker Compose
+
+```bash
+docker-compose up --build
+docker-compose -f docker-compose.prod.yml up --build
+```
+
+## Run Without Docker Compose
+
+On root dicrectory:
 
 **Run Client:**
 
 ```bash
+$ cd client
 $ npm install
 $ npm run serve
 ```
@@ -21,13 +53,6 @@ $ npm run serve
 ```bash
 $ npm install
 $ npm run dev
-```
-
-## Docker Compose
-
-```bash
-docker-compose up --build
-docker-compose -f docker-compose.prod.yml up --build
 ```
 
 ## Contributing
