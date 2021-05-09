@@ -70,6 +70,8 @@ export default {
             this.$store.state.string.E_PASSWORD_NOT_CORRECT
           );
 
+        this.$store.state.user = user;
+
         const token = jwt.sign(user, this.$store.state.jwtToken);
         localStorage.setItem(".config_user", token);
 

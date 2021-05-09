@@ -75,9 +75,13 @@ export default {
         searchString(o.quiz_title, this.inputSearch)
       );
     },
+    "$store.state.user"() {
+      this.$store.dispatch("actLoadingAction", this.onLoadQuizzes);
+    },
   },
   methods: {
     async onLoadQuizzes() {
+      if (!this.$store.state.user) return;
       // get quizzes by database and set to quizzes and quizzesbase
       const quizzes = await getQuizzesByUserId(this.$store.state.user._id);
       quizzes.reverse();
@@ -86,10 +90,11 @@ export default {
     },
     onCreateQuiz(props) {
       const { quiz_title, quiz_desc } = props;
+      const user_id = this.$store.state.user._id;
 
       this.$store.dispatch("actLoadingAction", async () => {
         // create quiz and check exists (if not exists alert error)
-        const quiz = await createQuiz({ quiz_title, quiz_desc });
+        const quiz = await createQuiz({ quiz_title, quiz_desc, user_id });
         if (!quiz)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT

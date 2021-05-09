@@ -34,24 +34,20 @@ export default createStore({
     async actLoadingPage(context) {
       context.commit("setIsLoadingPage", true);
 
+      // socket connect
       const socket = await socketConnect();
       context.state.socket = socket;
 
+      // load user storage
+      await context.dispatch("actLoadUserStorage");
+
+      // middleware user login
       const currentPath = router.currentRoute.value.path;
-      if (
-        currentPath.indexOf("/admin") !== -1 ||
-        currentPath.indexOf("/auth") !== -1
-      ) {
-        const token = localStorage.getItem(".config_user");
-        jwt.verify(token, context.state.jwtToken, (err, decoded) => {
-          if (err) return router.push({ name: "Login" });
-          if (decoded) {
-            context.state.user = decoded;
-            if (currentPath.indexOf("/auth") !== -1)
-              return router.push({ name: "Admin" });
-          }
-        });
-      }
+      // middleware user login
+      if (currentPath.indexOf("/admin") === 0 && !context.state.user)
+        router.push({ name: "Login" });
+      if (currentPath.indexOf("/auth") === 0 && context.state.user)
+        router.push({ name: "Admin" });
 
       context.commit("setIsLoadingPage", false);
     },
@@ -59,6 +55,18 @@ export default createStore({
       context.commit("setIsLoadingAction", true);
       await callback();
       context.commit("setIsLoadingAction", false);
+    },
+    async actLoadUserStorage(context) {
+      const token = localStorage.getItem(".config_user");
+      return new Promise((resolve) => {
+        jwt.verify(token, context.state.jwtToken, (err, decoded) => {
+          if (err) return resolve(err);
+          if (decoded) {
+            context.state.user = decoded;
+            resolve(decoded);
+          }
+        });
+      });
     },
   },
   modules: {},

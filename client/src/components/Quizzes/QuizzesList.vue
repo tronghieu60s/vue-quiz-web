@@ -1,7 +1,5 @@
 <template>
-  <table
-    class="table table-striped table-hover table-bordered table-responsive-lg mt-3"
-  >
+  <table class="table table-striped table-hover table-bordered mt-3">
     <thead class="thead-inverse">
       <tr>
         <th style="width: 10%"></th>

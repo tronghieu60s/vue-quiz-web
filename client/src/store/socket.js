@@ -1,16 +1,12 @@
 import { io } from "socket.io-client";
 
+const SERVER = process.env.VUE_APP_SERVER_URL;
+
 export const socketConnect = () => {
-  const socket = io("http://localhost:4000");
+  const socket = io(SERVER);
   return new Promise((resolve, reject) => {
-    socket.on("connect", async () => {
-      resolve(socket);
-    });
-    socket.on("connect_error", function () {
-      reject(new Error("connect_error"));
-    });
-    socket.on("connect_timeout", function () {
-      reject(new Error("connect_timeout"));
-    });
+    socket.on("connect", () => resolve(socket));
+    socket.on("connect_error", () => reject(new Error("connect_error")));
+    socket.on("connect_timeout", () => reject(new Error("connect_timeout")));
   });
 };
