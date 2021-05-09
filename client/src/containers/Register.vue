@@ -69,13 +69,13 @@ export default {
       this.$store.dispatch("actLoadingAction", this.onRegisterUser);
     },
     async onRegisterUser() {
-      const getUser = await getUserByUsername(this.inputUsername);
+      const getUser = await getUserByUsername(this.inputUsername.toLowerCase());
       if (getUser)
         return this.$toast.error(
           this.$store.state.string.S_ALERT_USERNAME_EXISTS
         );
 
-      const user_username = this.inputUsername;
+      const user_username = this.inputUsername.toLowerCase();
       const user_password = bcrypt.hashSync(this.inputPassword, 10);
 
       const user = await createUser({ user_username, user_password });

@@ -30,3 +30,13 @@ export function createUser(user) {
     .then((response) => getUserById(response.key))
     .catch((err) => console.log(err));
 }
+
+export function updateUserById(_id, user) {
+  return getUserById(_id)
+    .then(async (snapshot) => {
+      const newUser = { ...snapshot, ...user };
+      await usersModel.child(_id).set(newUser);
+      return newUser;
+    })
+    .catch((err) => console.log(err));
+}

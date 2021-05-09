@@ -35,12 +35,12 @@ export function createQuestion(question) {
     .catch((err) => console.log(err));
 }
 
-export function updateQuestionById(_id, quiz) {
+export function updateQuestionById(_id, question) {
   return getQuestionById(_id)
     .then(async (snapshot) => {
-      const newQuiz = { ...snapshot, ...quiz };
-      await questionsModel.child(_id).set(newQuiz);
-      return newQuiz;
+      const newQuestion = { ...snapshot, ...question };
+      await questionsModel.child(_id).set(newQuestion);
+      return newQuestion;
     })
     .catch((err) => console.log(err));
 }

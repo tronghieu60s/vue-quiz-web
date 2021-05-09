@@ -32,7 +32,7 @@
           <div class="modal-body">
             <div class="form-group">
               <div class="d-flex justify-content-between">
-                <h4 class="text-capitalize">Tiêu Đề</h4>
+                <h4 class="text-capitalize">Tiêu đề</h4>
               </div>
               <input
                 v-model="inputTitle"
@@ -61,7 +61,7 @@
               class="btn btn-secondary"
               data-dismiss="modal"
             >
-              Close
+              Đóng
             </button>
             <button type="submit" class="btn btn-warning">Sửa</button>
           </div>

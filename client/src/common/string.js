@@ -1,6 +1,7 @@
 export const S_CREATE_ACCOUNT_SUCCESS = "Tạo tài khoản thành công.";
 export const S_LOGIN_ACCOUNT_SUCCESS = "Đăng nhập tài khoản thành công.";
 export const S_LOGOUT_ACCOUNT_SUCCESS = "Đăng xuất tài khoản thành công.";
+export const S_CHANGE_PASS_SUCCESS = "Đổi mật khẩu thành công.";
 export const S_ADD_VALUES_SUCCESS = "Thêm dữ liệu thành công.";
 export const S_EDIT_VALUES_SUCCESS = "Sửa các giá trị thành công.";
 export const S_DELETE_VALUES_SUCCESS = "Xóa các giá trị thành công.";
