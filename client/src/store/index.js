@@ -39,9 +39,8 @@ export default createStore({
       context.state.socket = socket;
 
       // load user storage
-      await context.dispatch("actLoadUserStorage");
+      context.state.user = await context.dispatch("actLoadUserStorage");
 
-      // middleware user login
       const currentPath = router.currentRoute.value.path;
       // middleware user login
       if (currentPath.indexOf("/admin") === 0 && !context.state.user)
@@ -60,11 +59,8 @@ export default createStore({
       const token = localStorage.getItem(".config_user");
       return new Promise((resolve) => {
         jwt.verify(token, context.state.jwtToken, (err, decoded) => {
-          if (err) return resolve(err);
-          if (decoded) {
-            context.state.user = decoded;
-            resolve(decoded);
-          }
+          if (err) resolve(null);
+          if (decoded) resolve(decoded);
         });
       });
     },
