@@ -25,12 +25,14 @@ On **Server** Folder:
   APP_CUSTOM_CLIENT_URL=http://localhost:8080
 ```
 
+
 ## Run Docker Compose
 
 ```bash
 docker-compose up --build
 docker-compose -f docker-compose.prod.yml up --build
 ```
+
 
 ## Run Without Docker Compose
 
@@ -47,9 +49,11 @@ $ npm run serve
 **Run Server:**
 
 ```bash
+$ cd server
 $ npm install
 $ npm run dev
 ```
+
 
 ## Contributing
 
