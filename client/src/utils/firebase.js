@@ -3,6 +3,7 @@ import "firebase/database";
 import "firebase/storage";
 
 const API_KEY = process.env.VUE_APP_FIREBASE_API_KEY;
+const DATABASE_URL = process.env.VUE_APP_FIREBASE_DATABASE_URL;
 const PROJECT_ID = process.env.VUE_APP_FIREBASE_PROJECT_ID;
 const SENDER_ID = process.env.VUE_APP_FIREBASE_SENDER_ID;
 const APP_ID = process.env.VUE_APP_FIREBASE_APP_ID;
@@ -10,6 +11,7 @@ const APP_ID = process.env.VUE_APP_FIREBASE_APP_ID;
 const firebaseConfig = {
   apiKey: API_KEY,
   authDomain: `${PROJECT_ID}.firebaseapp.com`,
+  databaseURL: DATABASE_URL,
   projectId: PROJECT_ID,
   storageBucket: `${PROJECT_ID}.appspot.com`,
   messagingSenderId: SENDER_ID,
