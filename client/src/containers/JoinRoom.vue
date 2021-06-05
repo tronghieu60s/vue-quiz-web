@@ -1,62 +1,69 @@
 <template>
-  <layout-top>
-    <h1 class="mb-0">{{ username }}</h1>
-    <!-- <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
+  <div>
+    <layout-top>
+      <h1 class="mb-0">{{ username }}</h1>
+      <!-- <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
       790
     </div> -->
-  </layout-top>
-  <layout-center v-if="quiz">
-    <div v-if="question">
-      <div v-if="showResult">
-        <h1
-          :class="{
-            'text-success': answerStatus === 'correct',
-            'text-danger': answerStatus === 'incorrect',
-            'text-warning': answerStatus === 'nochoose',
-            'text-center': true,
-          }"
+    </layout-top>
+    <layout-center v-if="quiz">
+      <div v-if="question">
+        <div v-if="showResult">
+          <firework v-show="answerStatus === 'correct'" />
+          <h1
+            :class="{
+              'text-success': answerStatus === 'correct',
+              'text-danger': answerStatus === 'incorrect',
+              'text-warning': answerStatus === 'nochoose',
+              'text-center': true,
+            }"
+          >
+            {{ answerStatus === "correct" ? "✔️ Chính Xác" : "" }}
+            {{ answerStatus === "incorrect" ? "❌ Sai Mất Rồi" : "" }}
+            {{
+              answerStatus === "nochoose" ? "🤔 Bạn Chưa Chọn Đáp Án Nào" : ""
+            }}
+          </h1>
+        </div>
+        <div v-if="answer && !showResult" class="mb-0 py-5 my-5">
+          <h1 class="mb-0">Awesome</h1>
+          Bạn đã chọn đáp án:
+          <span class="text-primary font-weight-bold">
+            {{ answer.answer }} </span
+          >. <br />
+          Vui lòng chờ một chút để người khác trả lời...
+        </div>
+        <quiz-answer
+          v-else
+          :question="question"
+          :showResult="showResult"
+          @onSelectAnswer="(o) => (this.answer = o)"
+        />
+      </div>
+      <div v-else>
+        <div>Vui lòng chờ người khác vào...</div>
+        <h1 class="mt-2 mb-0">Bạn có thấy tên mình chưa nhỉ?</h1>
+        <button
+          @click="onOutRoom"
+          type="button"
+          class="btn btn-default btn-sm mt-3"
         >
-          {{ answerStatus === "correct" ? "✔️ Chính Xác" : "" }}
-          {{ answerStatus === "incorrect" ? "❌ Sai Mất Rồi" : "" }}
-          {{ answerStatus === "nochoose" ? "🤔 Bạn Chưa Chọn Đáp Án Nào" : "" }}
-        </h1>
+          Rời khỏi phòng
+          <i class="fa fa-arrow-right" aria-hidden="true"></i>
+        </button>
       </div>
-      <div v-if="answer && !showResult" class="mb-0 py-5 my-5">
-        <h1 class="mb-0">Awesome</h1>
-        Bạn đã chọn đáp án:
-        <span class="text-primary font-weight-bold"> {{ answer.answer }} </span
-        >. <br />
-        Vui lòng chờ một chút để người khác trả lời...
-      </div>
-      <quiz-answer
-        v-else
-        :question="question"
-        :showResult="showResult"
-        @onSelectAnswer="(o) => (this.answer = o)"
-      />
-    </div>
-    <div v-else>
-      <div>Vui lòng chờ người khác vào...</div>
-      <h1 class="mt-2 mb-0">Bạn có thấy tên mình chưa nhỉ?</h1>
-      <button
-        @click="onOutRoom"
-        type="button"
-        class="btn btn-default btn-sm mt-3"
-      >
-        Rời khỏi phòng
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </layout-center>
+    </layout-center>
+  </div>
 </template>
 
 <script>
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
+import Firework from "../components/UI/Firework.vue";
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
 export default {
-  components: { QuizAnswer, LayoutCenter, LayoutTop },
+  components: { QuizAnswer, LayoutCenter, LayoutTop, Firework },
   props: {
     quiz_code: { type: String },
     username: { type: String },
