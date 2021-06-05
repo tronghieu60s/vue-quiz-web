@@ -1,6 +1,9 @@
 <template>
   <div class="lds-wrapper">
-    <div class="loading"></div>
+    <div class="lds-loader">
+      <img class="w-75 h-75" src="/assets/images/tenor.gif" alt="" />
+      <div class="lds-rotate"></div>
+    </div>
   </div>
 </template>
 
@@ -15,131 +18,33 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000000ba;
+  background-color: #fffc;
 }
-.loading {
-  width: 100%;
-  height: 100vh;
-  position: fixed;
+
+.lds-loader {
+  position: relative;
+  width: 60px;
+  height: 60px;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 5000;
 }
-.loading:before {
-  content: "";
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
+
+.lds-rotate {
+  position: absolute;
+  top: -5px;
   width: 100%;
   height: 100%;
-  background: radial-gradient(rgba(20, 20, 20, 0.8), rgba(0, 0, 0, 0.8));
-  background: -webkit-radial-gradient(
-    rgba(20, 20, 20, 0.55),
-    rgba(0, 0, 0, 0.55)
-  );
+  border: 8px solid #262626;
+  box-sizing: content-box;
+  animation: rotate 4s linear infinite;
 }
-.loading:not(:required) {
-  /* hide "loading..." text */
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-}
-.loading:not(:required):after {
-  content: "";
-  display: block;
-  font-size: 10px;
-  width: 1em;
-  height: 1em;
-  margin-top: -0.5em;
-  -webkit-animation: spinner 150ms infinite linear;
-  -moz-animation: spinner 150ms infinite linear;
-  -ms-animation: spinner 150ms infinite linear;
-  -o-animation: spinner 150ms infinite linear;
-  animation: spinner 150ms infinite linear;
-  border-radius: 0.5em;
-  -webkit-box-shadow: rgba(255, 255, 255, 0.75) 1.5em 0 0 0,
-    rgba(255, 255, 255, 0.75) 1.1em 1.1em 0 0,
-    rgba(255, 255, 255, 0.75) 0 1.5em 0 0,
-    rgba(255, 255, 255, 0.75) -1.1em 1.1em 0 0,
-    rgba(255, 255, 255, 0.75) -1.5em 0 0 0,
-    rgba(255, 255, 255, 0.75) -1.1em -1.1em 0 0,
-    rgba(255, 255, 255, 0.75) 0 -1.5em 0 0,
-    rgba(255, 255, 255, 0.75) 1.1em -1.1em 0 0;
-  box-shadow: rgba(255, 255, 255, 0.75) 1.5em 0 0 0,
-    rgba(255, 255, 255, 0.75) 1.1em 1.1em 0 0,
-    rgba(255, 255, 255, 0.75) 0 1.5em 0 0,
-    rgba(255, 255, 255, 0.75) -1.1em 1.1em 0 0,
-    rgba(255, 255, 255, 0.75) -1.5em 0 0 0,
-    rgba(255, 255, 255, 0.75) -1.1em -1.1em 0 0,
-    rgba(255, 255, 255, 0.75) 0 -1.5em 0 0,
-    rgba(255, 255, 255, 0.75) 1.1em -1.1em 0 0;
-}
-/* Animation */
-@-webkit-keyframes spinner {
+
+@keyframes rotate {
   0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
+    transform: rotate(0);
   }
   100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-moz-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@-o-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-@keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
     transform: rotate(360deg);
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <layout-center>
-    <div id="bubbles"></div>
+    <bubbles />
     <form @submit.prevent="onSubmit" class="form-responsive bg-secondary">
       <div class="form-group mb-1">
         <input
@@ -25,8 +25,9 @@
 <script>
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
+import Bubbles from "../components/UI/Bubbles.vue";
 export default {
-  components: { LayoutCenter },
+  components: { LayoutCenter, Bubbles },
   data() {
     return {
       inputCode: "",
@@ -76,20 +77,6 @@ export default {
         this.$store.state.socket.emit("client-register-user", payload);
       });
     },
-  },
-  mounted() {
-    // --- Animation ---
-    const NUM_OF_BUBBLES = 20;
-    const bubbles = document.getElementById("bubbles");
-    for (let index = 0; index < NUM_OF_BUBBLES; index += 1) {
-      const rndColor = Math.floor(Math.random() * 4) + 1;
-      const rndPos = Math.floor(Math.random() * 100) + 0;
-      const rndDelay = Math.floor(Math.random() * 20) + 0;
-      bubbles.innerHTML += `<div class="bubble bubble-c${rndColor}" style="
-        left: ${rndPos}%; 
-        animation-delay: ${rndDelay}s">
-      </div>`;
-    }
   },
 };
 </script>

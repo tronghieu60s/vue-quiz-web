@@ -34,6 +34,8 @@ export default createStore({
     async actLoadingPage(context) {
       context.commit("setIsLoadingPage", true);
 
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
       // socket connect
       const socket = await socketConnect();
       context.state.socket = socket;
