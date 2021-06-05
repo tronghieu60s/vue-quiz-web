@@ -1,7 +1,9 @@
 <template>
-  <loading-page v-if="$store.state.isLoadingPage" />
-  <loading-action v-show="$store.state.isLoadingAction" />
-  <router-view v-if="!$store.state.isLoadingPage" />
+  <div>
+    <loading-page v-if="$store.state.isLoadingPage" />
+    <loading-action v-show="$store.state.isLoadingAction" />
+    <router-view v-if="!$store.state.isLoadingPage" />
+  </div>
 </template>
 
 <script>

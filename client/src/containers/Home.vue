@@ -1,6 +1,7 @@
 <template>
   <layout-center>
-    <form @submit.prevent="onSubmit" class="form-responsive">
+    <div id="bubbles"></div>
+    <form @submit.prevent="onSubmit" class="form-responsive bg-secondary">
       <div class="form-group mb-1">
         <input
           v-model.trim="inputCode"
@@ -75,6 +76,20 @@ export default {
         this.$store.state.socket.emit("client-register-user", payload);
       });
     },
+  },
+  mounted() {
+    // --- Animation ---
+    const NUM_OF_BUBBLES = 20;
+    const bubbles = document.getElementById("bubbles");
+    for (let index = 0; index < NUM_OF_BUBBLES; index += 1) {
+      const rndColor = Math.floor(Math.random() * 4) + 1;
+      const rndPos = Math.floor(Math.random() * 100) + 0;
+      const rndDelay = Math.floor(Math.random() * 20) + 0;
+      bubbles.innerHTML += `<div class="bubble bubble-c${rndColor}" style="
+        left: ${rndPos}%; 
+        animation-delay: ${rndDelay}s">
+      </div>`;
+    }
   },
 };
 </script>
