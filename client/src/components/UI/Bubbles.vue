@@ -13,10 +13,10 @@ export default {
     const bubbles = document.getElementById("bubbles");
     for (let index = 0; index < NUM_OF_BUBBLES; index += 1)
       bubbles.innerHTML += `<div 
-        class="bubble bubble-c${randomBetween(1, 4)}" 
+        class="bubble bubble-c${randomBetween(1, 4)} bubble-x1" 
         style="
-          left: ${randomBetween(10, 90)}%; 
-          animation-delay: ${randomBetween(0, 20)}s">
+          left: ${(100 / NUM_OF_BUBBLES) * index + 2}%; 
+          animation-delay: -${randomBetween(0, 20)}s">
       </div>`;
   },
 };
@@ -34,31 +34,46 @@ export default {
 
 .bubble {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  box-shadow: inset 1px -1px 4px 0px var(--secondary);
-
   left: 50%;
   top: -10%;
-  animation: animateBubble 20s linear infinite,
-    sideWays 4s ease-in-out infinite alternate;
+  width: 30px;
+  height: 30px;
+  background-color: var(--secondary);
+  animation: animateBubble 20s linear infinite, animateRotate 7s linear infinite;
 }
 
 .bubble-c1 {
-  box-shadow: inset 1px -1px 4px 0px var(--primary);
+  width: 32px;
+  height: 32px;
+  clip-path: polygon(
+    50% 0%,
+    83% 12%,
+    100% 43%,
+    94% 78%,
+    68% 100%,
+    32% 100%,
+    6% 78%,
+    0% 43%,
+    17% 12%
+  );
+  background-color: var(--primary);
 }
 
 .bubble-c2 {
-  box-shadow: inset 1px -1px 4px 0px var(--danger);
+  border-radius: 5px;
+  background-color: var(--success);
 }
 
 .bubble-c3 {
-  box-shadow: inset 1px -1px 4px 0px var(--success);
+  width: 35px;
+  clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+  background-color: var(--danger);
 }
 
 .bubble-c4 {
-  box-shadow: inset 1px -1px 4px 0px var(--warning);
+  width: 35px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  background-color: var(--warning);
 }
 
 @keyframes animateBubble {
@@ -70,12 +85,12 @@ export default {
   }
 }
 
-@keyframes sideWays {
+@keyframes animateRotate {
   0% {
-    margin-left: 0px;
+    transform: rotate(0deg);
   }
   100% {
-    margin-left: 50px;
+    transform: rotate(360deg);
   }
 }
 </style>
