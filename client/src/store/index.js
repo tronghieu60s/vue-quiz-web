@@ -22,12 +22,20 @@ export default createStore({
     setIsLoadingAction(state, payload) {
       state.isLoadingAction = payload;
     },
-    setQuizUserStorage(_, payload) {
+    setQuizUserStorage(state, payload) {
       const { quiz_code, username } = payload;
-      const quizStorage =
-        JSON.parse(localStorage.getItem(".quiz_config_user")) || {};
-      quizStorage[quiz_code] = username;
-      localStorage.setItem(".quiz_config_user", JSON.stringify(quizStorage));
+      let storage = {};
+      try {
+        storage = jwt.verify(
+          localStorage.getItem(".quiz_config_user"),
+          state.jwtToken
+        );
+      } catch (err) {
+        localStorage.removeItem(".quiz_config_user");
+      }
+      storage[quiz_code] = username;
+      const tokenStorage = jwt.sign(storage, state.jwtToken);
+      localStorage.setItem(".quiz_config_user", tokenStorage);
     },
   },
   actions: {

@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import jwt from "jsonwebtoken";
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
 import Bubbles from "../components/UI/Bubbles.vue";
@@ -53,17 +54,22 @@ export default {
           return this.$toast.error(this.$store.state.string.E_NOT_FOUND_QUIZ);
 
         // catch user already exists on quiz
-        const storage = JSON.parse(
-          localStorage.getItem(".quiz_config_user") || "{}"
-        );
-        if (storage[this.inputCode])
-          return this.$router.push({
-            name: "JoinRoom",
-            params: {
-              quiz_code: this.inputCode,
-              username: storage[this.inputCode],
-            },
-          });
+        try {
+          const storage = jwt.verify(
+            localStorage.getItem(".quiz_config_user"),
+            this.$store.state.jwtToken
+          );
+          if (storage[this.inputCode])
+            return this.$router.push({
+              name: "JoinRoom",
+              params: {
+                quiz_code: this.inputCode,
+                username: storage[this.inputCode],
+              },
+            });
+        } catch (err) {
+          localStorage.removeItem(".quiz_config_user");
+        }
 
         // quiz running not access new user
         if (quizItem.quiz_current > 0)

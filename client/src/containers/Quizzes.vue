@@ -136,7 +136,10 @@ export default {
     async onStopQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
         const quiz_code = null;
-        const updateItem = await updateQuizById(quiz._id, { quiz_code });
+        const updateItem = await updateQuizById(quiz._id, {
+          quiz_code,
+          quiz_current: 0,
+        });
         if (!updateItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT

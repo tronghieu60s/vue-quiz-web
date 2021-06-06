@@ -13,14 +13,17 @@ const socketConnect = (io) => {
     });
 
     socket.on("admin-kick-user", ({ username, quiz_code }) => {
-      delete users[quiz_code][username];
+      if (!users[quiz_code]) return;
 
+      delete users[quiz_code][username];
       socket.emit("server-user-kick", username);
       socket.emit("server-send-users", users[quiz_code]);
       io.to(quiz_code).emit("server-user-kick", username);
     });
 
     socket.on("admin-send-question", ({ quiz_code, question }) => {
+      if (!users[quiz_code]) return;
+
       quiz[quiz_code]["question"] = question;
       const showResult = (quiz[quiz_code]["show-result"] = false);
       socket.emit("server-show-result", showResult);
@@ -31,12 +34,16 @@ const socketConnect = (io) => {
     });
 
     socket.on("admin-show-result", (quiz_code) => {
+      if (!users[quiz_code]) return;
+
       const showResult = (quiz[quiz_code]["show-result"] = true);
       socket.emit("server-show-result", showResult);
       io.to(quiz_code).emit("server-show-result", showResult);
     });
 
     socket.on("admin-stop-quiz", (quiz_code) => {
+      if (!users[quiz_code]) return;
+
       delete quiz[quiz_code];
       delete users[quiz_code];
 
@@ -51,6 +58,8 @@ const socketConnect = (io) => {
     });
 
     socket.on("client-join-user", ({ username, quiz_code }) => {
+      if (!users[quiz_code]) return;
+
       // user join room quiz_code
       socket.join(quiz_code);
       users[quiz_code][username] = "online";
@@ -66,8 +75,9 @@ const socketConnect = (io) => {
 
       // listener user disconnect
       socket.on("disconnect", () => {
-        users[quiz_code][username] = "offline";
+        if (!users[quiz_code]) return;
 
+        users[quiz_code][username] = "offline";
         io.to(quiz_code + "-control").emit("server-user-disconnect", username);
         io.to(quiz_code + "-control").emit(
           "server-send-users",
@@ -77,8 +87,9 @@ const socketConnect = (io) => {
     });
 
     socket.on("client-out-user", ({ username, quiz_code }) => {
-      delete users[quiz_code][username];
+      if (!users[quiz_code]) return;
 
+      delete users[quiz_code][username];
       socket.emit("server-user-disconnect", username);
       io.to(quiz_code + "-control").emit("server-user-disconnect", username);
       io.to(quiz_code + "-control").emit("server-send-users", users[quiz_code]);

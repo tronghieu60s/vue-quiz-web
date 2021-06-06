@@ -1,5 +1,4 @@
 <template>
-  <countdown v-if="countdown" :value="countdown" />
   <layout-top v-if="quiz">
     <quizzes-start-control
       :quiz="quiz"
@@ -12,7 +11,13 @@
     />
   </layout-top>
   <layout-center v-if="quiz">
-    <div v-if="question" class="d-flex justify-content-end align-items-center">
+    <div
+      v-if="question"
+      class="d-flex justify-content-between align-items-center"
+    >
+      <div class="sec">
+        <h2>{{ "0" + countdown }}</h2>
+      </div>
       <button @click="onQuizNext" type="button" class="btn btn-default btn-sm">
         Tiếp theo <i class="fa fa-arrow-right" aria-hidden="true"></i>
       </button>
@@ -38,7 +43,6 @@ import LayoutTop from "@components/Layout/LayoutTop.vue";
 import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import { getQuizById, updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
-import Countdown from "../components/UI/Countdown.vue";
 export default {
   components: {
     QuizzesStartControl,
@@ -46,7 +50,6 @@ export default {
     QuizAnswer,
     LayoutTop,
     LayoutCenter,
-    Countdown,
   },
   props: ["quiz_id"],
   data() {
@@ -87,10 +90,13 @@ export default {
         this.users = mapUsers;
       });
 
-      this.$store.state.socket.on(
-        "server-send-question",
-        (question) => (this.question = question)
-      );
+      this.$store.state.socket.on("server-send-question", (question) => {
+        if (question) {
+          this.countdown = 3;
+          this.onCountDownTimer();
+        }
+        this.question = question;
+      });
 
       this.$store.state.socket.on(
         "server-show-result",
@@ -137,9 +143,6 @@ export default {
     },
     onQuizStart() {
       if (this.users.length === 0) return;
-
-      this.countdown = 3;
-      this.onCountDownTimer();
       this.onSetQuizCurrent(1);
     },
     onQuizNext() {
@@ -173,3 +176,21 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.sec {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.sec h2 {
+  color: hsl(345, 95%, 68%);
+  font-size: 1.5em;
+  background: hsl(236, 21%, 26%);
+  padding: 7px 20px;
+  border-radius: 1rem;
+  margin-bottom: 0;
+}
+</style>

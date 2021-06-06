@@ -53,6 +53,7 @@
 </template>
 
 <script>
+import jwt from "jsonwebtoken";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
@@ -81,9 +82,16 @@ export default {
       if (!getQuiz) return this.$router.push({ name: "Home" });
       this.quiz = getQuiz;
 
-      const storage = localStorage.getItem(".quiz_config_user") || "{}";
-      if (JSON.parse(storage)[this.quiz_code] !== this.username)
+      try {
+        const storage = jwt.verify(
+          localStorage.getItem(".quiz_config_user") || "",
+          this.$store.state.jwtToken
+        );
+        if (storage[this.quiz_code] !== this.username)
+          return this.$router.push({ name: "Home" });
+      } catch (err) {
         return this.$router.push({ name: "Home" });
+      }
 
       const payload = { username: this.username, quiz_code: this.quiz_code };
       this.$store.state.socket.emit("client-join-user", payload);
@@ -97,6 +105,9 @@ export default {
       if (correctAnswer.answer === this.answer.answer)
         return (this.answerStatus = "correct");
       this.answerStatus = "incorrect";
+    },
+    $route() {
+      this.onOutRoom();
     },
   },
   methods: {
@@ -152,11 +163,18 @@ export default {
       });
     },
     onStorageOutRoom() {
-      const storage = JSON.parse(
-        localStorage.getItem(".quiz_config_user") || "{}"
-      );
-      delete storage[this.quiz_code];
-      localStorage.setItem(".quiz_config_user", JSON.stringify(storage));
+      try {
+        const storage = jwt.verify(
+          localStorage.getItem(".quiz_config_user"),
+          this.$store.state.jwtToken
+        );
+        delete storage[this.quiz_code];
+        const tokenStorage = jwt.sign(storage, this.$store.state.jwtToken);
+        localStorage.setItem(".quiz_config_user", tokenStorage);
+      } catch (err) {
+        //empty
+        localStorage.removeItem(".quiz_config_user");
+      }
       this.$router.push({ name: "Home" });
     },
   },
