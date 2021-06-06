@@ -6,9 +6,9 @@
       790
     </div> -->
   </layout-top>
-  <layout-center v-if="quiz">
+  <div class="container my-5" v-if="quiz">
     <div v-if="question">
-      <div v-if="showResult">
+      <div v-show="showResult">
         <firework v-show="answerStatus === 'correct'" />
         <h1
           :class="{
@@ -37,7 +37,7 @@
         @onSelectAnswer="(o) => (this.answer = o)"
       />
     </div>
-    <div v-else>
+    <div class="mb-0 py-5 my-5" v-else>
       <div>Vui lòng chờ người khác vào...</div>
       <h1 class="mt-2 mb-0">Bạn có thấy tên mình chưa nhỉ?</h1>
       <button
@@ -49,19 +49,18 @@
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
       </button>
     </div>
-  </layout-center>
+  </div>
 </template>
 
 <script>
 import jwt from "jsonwebtoken";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
-import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
 import Firework from "../components/UI/Firework.vue";
 import Countdown from "../components/UI/Countdown.vue";
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
 export default {
-  components: { QuizAnswer, LayoutCenter, LayoutTop, Firework, Countdown },
+  components: { QuizAnswer, LayoutTop, Firework, Countdown },
   props: {
     quiz_code: { type: String },
     username: { type: String },

@@ -10,20 +10,21 @@
       @onQuizNext="onQuizNext"
     />
   </layout-top>
-  <layout-center v-if="quiz">
+  <div class="container my-5" v-if="quiz">
     <div
       v-if="question"
-      class="d-flex justify-content-between align-items-center"
+      class="d-flex justify-content-center align-items-center mb-3"
     >
-      <div class="sec">
-        <h2>{{ "0" + countdown }}</h2>
-      </div>
-      <button @click="onQuizNext" type="button" class="btn btn-default btn-sm">
+      <button type="button" class="btn btn-default">
+        Thời Gian: {{ "0" + countdown }}
+      </button>
+      <button @click="onQuizNext" type="button" class="btn btn-default">
         Tiếp theo <i class="fa fa-arrow-right" aria-hidden="true"></i>
       </button>
     </div>
     <quiz-answer
       v-if="question"
+      :countdown="countdown !== 0"
       :question="question"
       :showResult="showResult"
     />
@@ -32,7 +33,7 @@
       :users="users"
       @onKickUser="onKickUser"
     />
-  </layout-center>
+  </div>
 </template>
 
 <script>
@@ -40,7 +41,6 @@ import QuizzesStartControl from "@components/QuizzesStart/QuizzesStartControl.vu
 import QuizzesStartUsers from "@components/QuizzesStart/QuizzesStartUsers.vue";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
-import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import { getQuizById, updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
 export default {
@@ -49,7 +49,6 @@ export default {
     QuizzesStartUsers,
     QuizAnswer,
     LayoutTop,
-    LayoutCenter,
   },
   props: ["quiz_id"],
   data() {
@@ -176,21 +175,3 @@ export default {
   },
 };
 </script>
-
-<style scoped>
-.sec {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-}
-
-.sec h2 {
-  color: hsl(345, 95%, 68%);
-  font-size: 1.5em;
-  background: hsl(236, 21%, 26%);
-  padding: 7px 20px;
-  border-radius: 1rem;
-  margin-bottom: 0;
-}
-</style>

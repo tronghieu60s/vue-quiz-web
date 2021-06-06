@@ -30,17 +30,6 @@
         <i class="fa fa-times" aria-hidden="true"></i>
       </button>
     </div>
-    <div>
-      <!-- <button
-        v-if="question"
-        @click="$emit('onQuizNext')"
-        type="button"
-        class="btn btn-default btn-sm"
-      >
-        Tiếp theo
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      </button> -->
-    </div>
   </div>
 </template>
 

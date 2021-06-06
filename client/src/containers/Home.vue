@@ -77,7 +77,8 @@ export default {
 
         // input user name and send to user
         const username = prompt("Nhập tên của bạn để tiếp tục.");
-        if (!username) return;
+        if (!new RegExp(/^[a-zA-Z0-9]+$/).test(username))
+          return alert(this.$store.state.string.E_USERNAME_NOT_ALLOW);
 
         const payload = { username, quiz_code: quizItem.quiz_code };
         this.$store.state.socket.emit("client-register-user", payload);

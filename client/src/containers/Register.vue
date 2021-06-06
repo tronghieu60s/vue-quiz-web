@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     onSubmit() {
-      if (this.inputUsername.length < 6) return;
+      if (!new RegExp(/^[a-zA-Z0-9]{6,}$/).test(this.inputUsername)) return;
       if (this.inputPassword.length === 0) return;
       if (this.inputPassword !== this.inputRePassword)
         return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);

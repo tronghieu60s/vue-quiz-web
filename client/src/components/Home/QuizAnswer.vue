@@ -5,7 +5,10 @@
         {{ question.question }}
       </h1>
     </div>
-    <div class="w-100 d-flex justify-content-center flex-wrap mt-4">
+    <div
+      v-if="!countdown"
+      class="w-100 d-flex justify-content-center flex-wrap mt-4"
+    >
       <quiz-answer-item
         v-for="(answer, index) in question.answers"
         :key="index"
@@ -26,6 +29,7 @@ export default {
   props: {
     question: { type: Object },
     showResult: { type: Boolean },
+    countdown: { type: Boolean, default: false },
   },
 };
 </script>
