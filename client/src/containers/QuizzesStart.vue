@@ -1,4 +1,5 @@
 <template>
+  <countdown v-if="countdown" :value="countdown" />
   <layout-top v-if="quiz">
     <quizzes-start-control
       :quiz="quiz"
@@ -37,6 +38,7 @@ import LayoutTop from "@components/Layout/LayoutTop.vue";
 import LayoutCenter from "@components/Layout/LayoutCenter.vue";
 import { getQuizById, updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
+import Countdown from "../components/UI/Countdown.vue";
 export default {
   components: {
     QuizzesStartControl,
@@ -44,6 +46,7 @@ export default {
     QuizAnswer,
     LayoutTop,
     LayoutCenter,
+    Countdown,
   },
   props: ["quiz_id"],
   data() {
@@ -53,6 +56,7 @@ export default {
       question: null,
       questions: [],
       showResult: false,
+      countdown: 0,
     };
   },
   created() {
@@ -64,6 +68,14 @@ export default {
     });
   },
   methods: {
+    onCountDownTimer() {
+      if (this.countdown > 0) {
+        setTimeout(() => {
+          this.countdown -= 1;
+          this.onCountDownTimer();
+        }, 1000);
+      }
+    },
     onLoadSocket() {
       this.$store.state.socket.emit("admin-join-control", this.quiz.quiz_code);
 
@@ -125,6 +137,9 @@ export default {
     },
     onQuizStart() {
       if (this.users.length === 0) return;
+
+      this.countdown = 3;
+      this.onCountDownTimer();
       this.onSetQuizCurrent(1);
     },
     onQuizNext() {

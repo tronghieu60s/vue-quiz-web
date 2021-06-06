@@ -5,6 +5,7 @@
     </div>
     <input
       :value="input.answer"
+      :required="input.isCorrect"
       @input="onInputAnswer"
       type="text"
       class="form-control"
