@@ -41,19 +41,19 @@ export default {
   created() {
     switch (this.index) {
       case 0:
-        this.icon = "/assets/images/circle.svg";
+        this.icon = "/images/circle.svg";
         this.color = "bg-primary";
         break;
       case 1:
-        this.icon = "/assets/images/rectangle.svg";
+        this.icon = "/images/rectangle.svg";
         this.color = "bg-success";
         break;
       case 2:
-        this.icon = "/assets/images/hexagon.svg";
+        this.icon = "/images/hexagon.svg";
         this.color = "bg-danger";
         break;
       case 3:
-        this.icon = "/assets/images/triangle.svg";
+        this.icon = "/images/triangle.svg";
         this.color = "bg-warning";
         break;
       default:

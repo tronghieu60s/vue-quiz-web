@@ -31,19 +31,19 @@ export default {
     switch (this.index) {
       case 0:
         this.color = "btn-primary";
-        this.icon = "/assets/images/circle.svg";
+        this.icon = "/images/circle.svg";
         break;
       case 1:
         this.color = "btn-success";
-        this.icon = "/assets/images/rectangle.svg";
+        this.icon = "/images/rectangle.svg";
         break;
       case 2:
         this.color = "btn-danger";
-        this.icon = "/assets/images/hexagon.svg";
+        this.icon = "/images/hexagon.svg";
         break;
       case 3:
         this.color = "btn-warning";
-        this.icon = "/assets/images/triangle.svg";
+        this.icon = "/images/triangle.svg";
         break;
       default:
         break;

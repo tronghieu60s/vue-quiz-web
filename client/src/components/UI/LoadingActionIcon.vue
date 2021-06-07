@@ -1,6 +1,6 @@
 <template>
   <div class="lds-loader">
-    <img class="w-75 h-75" src="/assets/images/tenor.gif" alt="" />
+    <img class="w-75 h-75" src="/images/loading.gif" alt="" />
     <div class="lds-rotate"></div>
   </div>
 </template>
