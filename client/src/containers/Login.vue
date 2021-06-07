@@ -71,12 +71,9 @@ export default {
           );
 
         this.$store.state.user = user;
-
         const token = jwt.sign(user, this.$store.state.jwtToken);
         localStorage.setItem(".config_user", token);
-
         this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
-        this.$router.push({ name: "Admin" });
       });
     },
   },

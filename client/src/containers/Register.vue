@@ -12,7 +12,7 @@
           placeholder="Nhập tên đăng nhập vào đây..."
           pattern="[A-Za-z0-9]{6,}"
           required
-          title="Tên đăng nhập phải có ít nhất 6 ký tự và không chứa ký tự đặc biệt."
+          title="Tên đăng nhập phải có ít nhất 6 ký tự, chỉ có chữ cái và số. Không chứa khoảng trắng và các ký tự đặc biệt."
         />
       </div>
       <div class="form-group mb-3">

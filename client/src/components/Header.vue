@@ -13,7 +13,7 @@
           data-target="#modelId"
         >
           <i class="fa fa-user" aria-hidden="true"></i>
-          {{ $store.state.user.user_username }}
+          {{ $store.state.user ? $store.state.user.user_username : "" }}
         </button>
         <div
           class="modal fade"
@@ -118,7 +118,7 @@ export default {
   methods: {
     onLogout() {
       localStorage.removeItem(".config_user");
-      this.$router.push({ name: "Login" });
+      this.$store.state.user = null;
       this.$toast.success(this.$store.state.string.S_LOGOUT_ACCOUNT_SUCCESS);
     },
     onSubmit() {
