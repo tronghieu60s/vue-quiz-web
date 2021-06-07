@@ -28,5 +28,5 @@ export const E_REQUIRED_ANSWER_CORRECT =
 export const E_NOT_FOUND_QUIZ = "Không tìm thấy cuộc thi nào.";
 export const E_QUIZ_IS_RUNNING =
   "Cuộc thi này đang diễn ra, không thể tham gia.";
-export const E_QUIZZES_NOT_FOUND =
+export const E_QUESTIONS_NOT_FOUND =
   "Không có câu hỏi nào, hãy thêm câu hỏi trước.";
