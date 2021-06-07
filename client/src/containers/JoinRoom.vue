@@ -1,13 +1,27 @@
 <template>
-  <countdown v-if="countdown" :value="countdown" />
   <layout-top>
     <h1 class="mb-0">{{ username }}</h1>
     <!-- <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
       790
     </div> -->
+    <div>
+      <button @click="onOutRoom" type="button" class="btn btn-default btn-sm">
+        Rời Khỏi Phòng
+        <i class="fa fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    </div>
   </layout-top>
+  <div v-show="!question">
+    <animate-quiz />
+    <div class="mb-0 py-5 my-5 d-flex flex-column align-items-center">
+      <loading-action-icon />
+      <div class="mt-5">Vui lòng chờ người khác vào...</div>
+      <h1 class="mt-2 mb-0">Bạn có thấy tên của mình chưa nhỉ?</h1>
+    </div>
+  </div>
   <div class="container my-5" v-if="quiz">
-    <div v-if="question">
+    <countdown v-show="countdown" :value="countdown" />
+    <div v-if="question && !countdown">
       <div v-show="showResult">
         <firework v-show="answerStatus === 'correct'" />
         <h1
@@ -23,12 +37,19 @@
           {{ answerStatus === "nochoose" ? "🤔 Bạn Chưa Chọn Đáp Án Nào" : "" }}
         </h1>
       </div>
-      <div v-if="answer && !showResult" class="mb-0 py-5 my-5">
-        <h1 class="mb-0">Awesome</h1>
-        Bạn đã chọn đáp án:
-        <span class="text-primary font-weight-bold"> {{ answer.answer }} </span
-        >. <br />
-        Vui lòng chờ một chút để người khác trả lời...
+      <div
+        v-if="answer && !showResult"
+        class="mb-0 py-5 my-5 d-flex flex-column align-items-center"
+      >
+        <loading-action-icon />
+        <div class="mt-5 text-center">
+          <h1 class="mb-0">Awesome</h1>
+          Bạn đã chọn đáp án:
+          <span class="text-primary font-weight-bold">
+            {{ answer.answer }} </span
+          >. <br />
+          Vui lòng chờ một chút để người khác trả lời...
+        </div>
       </div>
       <quiz-answer
         v-else
@@ -36,18 +57,6 @@
         :showResult="showResult"
         @onSelectAnswer="(o) => (this.answer = o)"
       />
-    </div>
-    <div class="mb-0 py-5 my-5" v-else>
-      <div>Vui lòng chờ người khác vào...</div>
-      <h1 class="mt-2 mb-0">Bạn có thấy tên mình chưa nhỉ?</h1>
-      <button
-        @click="onOutRoom"
-        type="button"
-        class="btn btn-default btn-sm mt-3"
-      >
-        Rời khỏi phòng
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      </button>
     </div>
   </div>
 </template>
@@ -57,10 +66,19 @@ import jwt from "jsonwebtoken";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
 import Firework from "../components/UI/Firework.vue";
+import AnimateQuiz from "../components/UI/AnimateQuiz.vue";
 import Countdown from "../components/UI/Countdown.vue";
 import { getQuizByQuizCode } from "@models/quizzes.firebase";
+import LoadingActionIcon from "../components/UI/LoadingActionIcon.vue";
 export default {
-  components: { QuizAnswer, LayoutTop, Firework, Countdown },
+  components: {
+    QuizAnswer,
+    LayoutTop,
+    Firework,
+    Countdown,
+    AnimateQuiz,
+    LoadingActionIcon,
+  },
   props: {
     quiz_code: { type: String },
     username: { type: String },

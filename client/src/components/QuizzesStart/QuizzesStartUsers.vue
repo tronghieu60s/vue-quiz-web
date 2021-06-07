@@ -4,7 +4,7 @@
       {{
         users.length === 0
           ? "Sử dụng mã code phía trên để mời mọi người tham gia :3"
-          : `Đang có ${users.length} người dùng tham gia. Bạn có thể bắt đầu bất cứ lúc nào!`
+          : `Đang có ${users.length} người tham gia. Bạn có thể bắt đầu bất cứ lúc nào!`
       }}
     </h2>
     <div class="d-flex justify-content-center">

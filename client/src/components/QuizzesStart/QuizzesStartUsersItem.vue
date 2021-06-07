@@ -15,3 +15,9 @@ export default {
   props: { user: { type: String } },
 };
 </script>
+
+<style scoped>
+.btn.btn-primary:hover {
+  text-decoration: line-through;
+}
+</style>

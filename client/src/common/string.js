@@ -20,7 +20,7 @@ export const Q_CONFIRM_STOP_QUIZ = "Bạn có muốn dừng ngay bây giờ khô
 export const E_UNKNOWN_ERROR_DETECT =
   "Lỗi không xác định, vui lòng thử lại sau.";
 export const E_USERNAME_NOT_ALLOW =
-  "Tên người dùng của bạn chỉ được có kí tự và số, không có khoảng trắng và không có kí tự đặc biệt, đặc biệt không chơi Hack ở đây =)).";
+  "Tên người dùng của bạn chỉ được có kí tự và số, không có khoảng trắng và không có kí tự đặc biệt.";
 export const E_PASSWORD_NOT_MATCH = "Mật khẩu nhập lại không khớp.";
 export const E_PASSWORD_NOT_CORRECT = "Mật khẩu không chính xác.";
 export const E_REQUIRED_ANSWER_CORRECT =

@@ -1,4 +1,5 @@
 <template>
+  <animate-quiz v-show="!question" />
   <layout-top v-if="quiz">
     <quizzes-start-control
       :quiz="quiz"
@@ -43,12 +44,14 @@ import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
 import { getQuizById, updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
+import AnimateQuiz from "../components/UI/AnimateQuiz.vue";
 export default {
   components: {
     QuizzesStartControl,
     QuizzesStartUsers,
     QuizAnswer,
     LayoutTop,
+    AnimateQuiz,
   },
   props: ["quiz_id"],
   data() {
