@@ -68,8 +68,8 @@ import LayoutTop from "@components/Layout/LayoutTop.vue";
 import Firework from "../components/UI/Firework.vue";
 import AnimateQuiz from "../components/UI/AnimateQuiz.vue";
 import Countdown from "../components/UI/Countdown.vue";
-import { getQuizByQuizCode } from "@models/quizzes.firebase";
 import LoadingActionIcon from "../components/UI/LoadingActionIcon.vue";
+import { getQuizByQuizCode } from "@models/quizzes.firebase";
 export default {
   components: {
     QuizAnswer,

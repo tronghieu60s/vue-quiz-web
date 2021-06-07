@@ -36,6 +36,7 @@ import {
   deleteQuizById,
   updateQuizById,
 } from "@models/quizzes.firebase";
+import { getQuestionsByQuizId } from "@models/questions.firebase";
 export default {
   components: {
     HeaderCustom,
@@ -123,6 +124,12 @@ export default {
       if (quiz) if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
 
       this.$store.dispatch("actLoadingAction", async () => {
+        const questions = await getQuestionsByQuizId(quiz._id);
+        if (questions.length === 0)
+          return this.$toast.error(
+            this.$store.state.string.E_QUIZZES_NOT_FOUND
+          );
+
         const quiz_code = await this.generateCodeQuiz();
         const updateItem = await updateQuizById(quiz._id, { quiz_code });
         if (!updateItem)
@@ -131,6 +138,12 @@ export default {
           );
 
         this.routerQuizStart(quiz._id);
+      });
+    },
+    routerQuizStart(quiz_id) {
+      this.$router.push({
+        name: "Quizzes-Start",
+        params: { quiz_id: quiz_id },
       });
     },
     async onStopQuiz(quiz) {
@@ -147,12 +160,6 @@ export default {
 
         await this.onLoadQuizzes();
         this.$store.state.socket.emit("admin-stop-quiz", quiz.quiz_code);
-      });
-    },
-    routerQuizStart(quiz_id) {
-      this.$router.push({
-        name: "Quizzes-Start",
-        params: { quiz_id: quiz_id },
       });
     },
     async generateCodeQuiz(quizzes = null) {
