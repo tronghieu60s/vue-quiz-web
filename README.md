@@ -2,11 +2,16 @@
 
 A RealTime Quiz Application Using VueJS, SocketIO, Firebase.
 
+
 ## Installation
 
-On **Client** Folder:
+1. On Root Directory:
 
-- Config environment variables on file `.env.local`:
+```bash
+$ cd client
+```
+
+2. Config Environment Variables on File `.env.local`:
 
 ```bash
   VUE_APP_SERVER_URL=http://localhost:4000
@@ -18,26 +23,25 @@ On **Client** Folder:
   VUE_APP_FIREBASE_APP_ID=your-firebase-appId
 ```
 
-On **Server** Folder:
-
-- Config environment variables on file `.env.local`:
-
-```bash
-  APP_CUSTOM_CLIENT_URL=http://localhost:8080
-```
-
 
 ## Run Docker Compose
 
+### 1. Development
+
 ```bash
-docker-compose up --build
-docker-compose -f docker-compose.prod.yml up --build
+$ docker-compose up --build
+```
+
+### 2. Production
+
+```bash
+$ docker-compose -f docker-compose.prod.yml up --build
 ```
 
 
 ## Run Without Docker Compose
 
-On root directory:
+### 1. Development
 
 **Run Client:**
 
@@ -53,6 +57,32 @@ $ npm run serve
 $ cd server
 $ npm install
 $ npm run dev
+```
+
+### 2. Production
+
+**Run Client:**
+
+```bash
+$ cd client
+$ npm install
+$ npm run production
+```
+
+**Build Production (Static File)**
+```bash
+$ cd client
+$ npm install
+$ npm run build
+$ npm start
+```
+
+**Run Server:**
+
+```bash
+$ cd server
+$ npm install
+$ npm start
 ```
 
 
