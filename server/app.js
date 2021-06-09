@@ -1,4 +1,3 @@
-require("dotenv").config({ path: ".env.local" });
 const express = require("express");
 const logger = require("morgan");
 
@@ -12,7 +11,7 @@ app.use(express.urlencoded({ extended: false }));
 
 const socketConfig = {
   cors: {
-    origin: ["http://localhost", process.env.APP_CUSTOM_CLIENT_URL],
+    origin: "*",
     credentials: true,
   },
 };
