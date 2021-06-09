@@ -14,13 +14,13 @@ $ cd client
 2. Config Environment Variables on File `.env.local`:
 
 ```bash
-  VUE_APP_SERVER_URL=http://localhost:4000
-  VUE_APP_JWT_TOKEN=your-jwt-token
-  VUE_APP_FIREBASE_API_KEY=your-firebase-apiKey
-  VUE_APP_FIREBASE_DATABASE_URL=your-database-url
-  VUE_APP_FIREBASE_PROJECT_ID=your-firebase-projectId
-  VUE_APP_FIREBASE_SENDER_ID=your-firebase-senderId
-  VUE_APP_FIREBASE_APP_ID=your-firebase-appId
+VUE_APP_SERVER_URL=http://localhost:4000
+VUE_APP_JWT_TOKEN=your-jwt-token
+VUE_APP_FIREBASE_API_KEY=your-firebase-apiKey
+VUE_APP_FIREBASE_DATABASE_URL=your-database-url
+VUE_APP_FIREBASE_PROJECT_ID=your-firebase-projectId
+VUE_APP_FIREBASE_SENDER_ID=your-firebase-senderId
+VUE_APP_FIREBASE_APP_ID=your-firebase-appId
 ```
 
 
