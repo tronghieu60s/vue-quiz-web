@@ -90,7 +90,11 @@
             </form>
           </div>
         </div>
-        <button @click="onLogout" type="button" class="btn btn-danger btn-sm">
+        <button
+          @click="onLogout"
+          type="button"
+          class="btn btn-danger btn-sm mt-2 mt-md-0"
+        >
           Đăng Xuất <i class="fa fa-sign-out ml-1" aria-hidden="true"></i>
         </button>
       </div>

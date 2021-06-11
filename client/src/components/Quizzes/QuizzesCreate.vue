@@ -1,8 +1,8 @@
 <template>
-  <form @submit.prevent="onSubmit" class="border">
-    <div class="alert alert-primary rounded-0" role="alert">
-      <strong>Thêm Bộ Câu Hỏi Mới</strong>
-    </div>
+  <form @submit.prevent="onSubmit">
+    <h4 class="text-center bg-primary rounded mb-4 py-2" style="color: #f6f9fc">
+      Thêm Bộ Câu Hỏi Mới
+    </h4>
     <div class="pb-3 px-3">
       <div class="form-group">
         <div class="d-flex justify-content-between">

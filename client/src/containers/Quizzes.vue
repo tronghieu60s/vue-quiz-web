@@ -2,14 +2,11 @@
   <div class="container">
     <header-custom title="Trang Chủ" />
     <div class="row px-3 px-md-0">
-      <div :class="classLeftCol">
+      <div class="col-lg-4 col-md-5">
         <quizzes-create @onCreateQuiz="onCreateQuiz" />
       </div>
-      <div :class="[classRightCol, 'mt-5 mt-md-0']">
-        <quizzes-filter
-          @onToggleCreate="isCreate = !isCreate"
-          @onInputSearch="(s) => (inputSearch = s)"
-        />
+      <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
+        <quizzes-filter @onInputSearch="(s) => (inputSearch = s)" />
         <quizzes-list
           :quizzes="quizzes"
           @onStartQuiz="onStartQuiz"
@@ -53,20 +50,11 @@ export default {
       quizzes: [],
       quizzesbase: [],
       inputSearch: "",
-      isCreate: false,
     };
   },
   created() {
     // load quizzes first
     this.$store.dispatch("actLoadingAction", this.onLoadQuizzes);
-  },
-  computed: {
-    classLeftCol() {
-      return this.isCreate ? "col-lg-4 col-md-5" : "d-none";
-    },
-    classRightCol() {
-      return this.isCreate ? "col-lg-8 col-md-7" : "col-12 col-lg-10 mx-auto";
-    },
   },
   watch: {
     inputSearch() {

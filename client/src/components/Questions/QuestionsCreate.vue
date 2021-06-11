@@ -1,5 +1,8 @@
 <template>
   <form @submit.prevent="onSubmit">
+    <h4 class="text-center bg-primary rounded mb-4 py-2" style="color: #f6f9fc">
+      Thêm Câu Hỏi Mới
+    </h4>
     <div class="form-group">
       <div class="d-flex justify-content-between">
         <h4 class="text-capitalize">Câu Hỏi</h4>
