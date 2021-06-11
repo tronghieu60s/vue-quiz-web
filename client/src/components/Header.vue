@@ -10,14 +10,14 @@
           type="button"
           class="btn btn-primary btn-sm"
           data-toggle="modal"
-          data-target="#modelId"
+          data-target="#modelUpdateUser"
         >
           <i class="fa fa-user" aria-hidden="true"></i>
           {{ $store.state.user ? $store.state.user.user_username : "" }}
         </button>
         <div
           class="modal fade"
-          id="modelId"
+          id="modelUpdateUser"
           tabindex="-1"
           role="dialog"
           aria-labelledby="modelTitleId"
@@ -103,6 +103,7 @@
 </template>
 
 <script>
+import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { updateUserById } from "@models/users.firebase";
 export default {
@@ -120,6 +121,11 @@ export default {
     };
   },
   methods: {
+    onReset() {
+      this.inputOldPass = "";
+      this.inputNewPass = "";
+      this.inputReNewPass = "";
+    },
     onLogout() {
       localStorage.removeItem(".config_user");
       this.$store.state.user = null;
@@ -147,7 +153,14 @@ export default {
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
 
+      // update user to state and storage
+      this.$store.state.user = updateUser;
+      const token = jwt.sign(updateUser, this.$store.state.jwtToken);
+      localStorage.setItem(".config_user", token);
+
+      // toast and reset
       this.$toast.success(this.$store.state.string.S_CHANGE_PASS_SUCCESS);
+      this.onReset();
     },
   },
 };

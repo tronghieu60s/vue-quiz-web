@@ -18,6 +18,7 @@
         :quiz="quiz"
         @onStartQuiz="$emit('onStartQuiz', quiz)"
         @onStopQuiz="$emit('onStopQuiz', quiz)"
+        @onSelectEditQuiz="$emit('onSelectEditQuiz', quiz)"
         @onDeleteQuiz="$emit('onDeleteQuiz', quiz)"
       />
     </tbody>
@@ -28,7 +29,7 @@
 import QuizzesItem from "./QuizzesItem.vue";
 export default {
   components: { QuizzesItem },
-  emits: ["onStartQuiz", "onStopQuiz", "onDeleteQuiz"],
+  emits: ["onStartQuiz", "onStopQuiz", "onSelectEditQuiz", "onDeleteQuiz"],
   props: { quizzes: { type: Array } },
 };
 </script>

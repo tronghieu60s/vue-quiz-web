@@ -3,7 +3,7 @@
     <td>
       <div class="d-flex justify-content-center">
         <button
-          @click="this.$emit('onStartQuiz')"
+          @click="$emit('onStartQuiz')"
           type="button"
           class="btn btn-sm btn-primary"
           title="Bắt đầu ngay"
@@ -12,7 +12,7 @@
         </button>
         <button
           v-if="quiz.quiz_code"
-          @click="this.$emit('onStopQuiz')"
+          @click="$emit('onStopQuiz')"
           type="button"
           class="btn btn-sm btn-danger"
           title="Dừng ngay"
@@ -33,6 +33,14 @@
           @click="$router.push(routerQuestions)"
           type="button"
           class="btn btn-primary btn-sm mb-2"
+          title="Thêm"
+        >
+          <i class="fa fa-plus" aria-hidden="true"></i>
+        </button>
+        <button
+          @click="$emit('onSelectEditQuiz')"
+          type="button"
+          class="btn btn-success btn-sm mb-2"
           title="Sửa"
         >
           <i class="fa fa-pencil-square" aria-hidden="true"></i>
@@ -53,7 +61,7 @@
 
 <script>
 export default {
-  emits: ["onStartQuiz", "onStopQuiz", "onDeleteQuiz"],
+  emits: ["onStartQuiz", "onStopQuiz", "onSelectEditQuiz", "onDeleteQuiz"],
   props: {
     quiz: {
       type: Object,

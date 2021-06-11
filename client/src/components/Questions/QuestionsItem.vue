@@ -9,7 +9,7 @@
       <button
         @click="$emit('onSelectEditQuestion')"
         type="button"
-        class="btn btn-primary btn-sm mb-2"
+        class="btn btn-success btn-sm mb-2"
         title="Sửa"
       >
         <i class="fa fa-pencil-square" aria-hidden="true"></i>

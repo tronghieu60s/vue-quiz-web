@@ -1,8 +1,6 @@
 <template>
   <div class="d-flex justify-content-between align-items-center">
-    <div>
-      <h4>Danh sách câu hỏi</h4>
-    </div>
+    <div></div>
     <search @onInputSearch="(s) => $emit('onInputSearch', s)" />
   </div>
 </template>

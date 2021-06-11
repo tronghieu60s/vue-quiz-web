@@ -52,7 +52,6 @@ export default {
       if (this.inputUsername.length === 0) return;
       this.$store.dispatch("actLoadingAction", this.onLoginUser);
     },
-
     async onLoginUser() {
       const user = await getUserByUsername(this.inputUsername);
       if (!user)

@@ -1,11 +1,17 @@
 <template>
   <form @submit.prevent="onSubmit">
-    <h4 class="text-center bg-primary rounded mb-4 py-2" style="color: #f6f9fc">
-      Thêm Câu Hỏi Mới
+    <h4
+      :class="[
+        'text-center rounded mb-4 py-2',
+        [this.question ? 'bg-success' : 'bg-primary'],
+      ]"
+      style="color: #f6f9fc"
+    >
+      {{ this.question ? "Sửa Câu Hỏi" : "Thêm Câu Hỏi Mới" }}
     </h4>
     <div class="form-group">
       <div class="d-flex justify-content-between">
-        <h4 class="text-capitalize">Câu Hỏi</h4>
+        <h4 class="text-capitalize">Câu Hỏi:</h4>
         <h5>{{ this.question ? this.question._id : "" }}</h5>
       </div>
       <textarea
@@ -17,7 +23,7 @@
       ></textarea>
     </div>
     <div class="form-group">
-      <h4 class="text-capitalize">Câu Trả Lời</h4>
+      <h4 class="text-capitalize">Câu Trả Lời:</h4>
       <questions-input-answer
         v-for="(input, index) in inputAnswer"
         :key="index"
@@ -32,7 +38,7 @@
       <button @click="onReset" type="button" class="btn btn-danger btn-sm">
         Reset
       </button>
-      <button v-if="question" type="submit" class="btn btn-warning btn-sm">
+      <button v-if="question" type="submit" class="btn btn-success btn-sm">
         Sửa Câu Hỏi
       </button>
       <button v-if="!question" type="submit" class="btn btn-primary btn-sm">

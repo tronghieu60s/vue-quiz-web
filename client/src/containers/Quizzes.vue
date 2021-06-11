@@ -1,9 +1,13 @@
 <template>
   <div class="container">
-    <header-custom title="Trang Chủ" />
+    <header-custom title="Bộ Câu Hỏi" />
     <div class="row px-3 px-md-0">
       <div class="col-lg-4 col-md-5">
-        <quizzes-create @onCreateQuiz="onCreateQuiz" />
+        <quizzes-create
+          :quiz="quiz"
+          @onActionQuiz="onActionQuiz"
+          @onResetSelected="this.quiz = null"
+        />
       </div>
       <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
         <quizzes-filter @onInputSearch="(s) => (inputSearch = s)" />
@@ -11,6 +15,7 @@
           :quizzes="quizzes"
           @onStartQuiz="onStartQuiz"
           @onStopQuiz="onStopQuiz"
+          @onSelectEditQuiz="(q) => (quiz = q)"
           @onDeleteQuiz="onDeleteQuiz"
         />
       </div>
@@ -47,6 +52,7 @@ export default {
   },
   data() {
     return {
+      quiz: null,
       quizzes: [],
       quizzesbase: [],
       inputSearch: "",
@@ -72,6 +78,14 @@ export default {
     },
   },
   methods: {
+    onActionQuiz(props) {
+      this.$store.dispatch(
+        "actLoadingAction",
+        this.quiz
+          ? () => this.onUpdateQuiz(props)
+          : () => this.onCreateQuiz(props)
+      );
+    },
     async onLoadQuizzes() {
       if (!this.$store.state.user) return;
       // get quizzes by database and set to quizzes and quizzesbase
@@ -80,22 +94,31 @@ export default {
       this.quizzes = quizzes;
       this.quizzesbase = quizzes;
     },
-    onCreateQuiz(props) {
+    async onCreateQuiz(props) {
       const { quiz_title, quiz_desc } = props;
       const user_id = this.$store.state.user._id;
 
-      this.$store.dispatch("actLoadingAction", async () => {
-        // create quiz and check exists (if not exists alert error)
-        const quiz = await createQuiz({ quiz_title, quiz_desc, user_id });
-        if (!quiz)
-          return this.$toast.error(
-            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-          );
+      // create quiz and check exists (if not exists alert error)
+      const quiz = await createQuiz({ quiz_title, quiz_desc, user_id });
+      if (!quiz)
+        return this.$toast.error(
+          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+        );
 
-        // reload quizzes on table and toast success
-        await this.onLoadQuizzes();
-        this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
-      });
+      // reload quizzes on table and toast success
+      await this.onLoadQuizzes();
+      this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
+    },
+    async onUpdateQuiz(props) {
+      const updateItem = await updateQuizById(this.quiz._id, { ...props });
+      if (!updateItem)
+        return this.$toast.error(
+          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+        );
+
+      // reload quizzes on table and toast success
+      await this.onLoadQuizzes();
+      this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
     },
     onDeleteQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
