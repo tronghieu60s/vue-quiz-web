@@ -1,8 +1,6 @@
 import jwt from "jsonwebtoken";
 import { createStore } from "vuex";
 import * as string from "../common/string";
-import router from "../router/index";
-import { socketConnect } from "./socket";
 
 const JWT_TOKEN = process.env.VUE_APP_JWT_TOKEN;
 
@@ -39,40 +37,15 @@ export default createStore({
     },
   },
   actions: {
-    async actLoadingPage(context) {
+    async actLoadingPage(context, callback) {
       context.commit("setIsLoadingPage", true);
-
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
-      // socket connect
-      const socket = await socketConnect();
-      context.state.socket = socket;
-
-      // load user storage
-      context.state.user = await context.dispatch("actLoadUserStorage");
-
-      const currentPath = router.currentRoute.value.path;
-      // middleware user login
-      if (currentPath.indexOf("/admin") === 0 && !context.state.user)
-        router.push({ name: "Login" });
-      if (currentPath.indexOf("/auth") === 0 && context.state.user)
-        router.push({ name: "Admin" });
-
+      await callback();
       context.commit("setIsLoadingPage", false);
     },
     async actLoadingAction(context, callback) {
       context.commit("setIsLoadingAction", true);
       await callback();
       context.commit("setIsLoadingAction", false);
-    },
-    async actLoadUserStorage(context) {
-      const token = localStorage.getItem(".config_user");
-      return new Promise((resolve) => {
-        jwt.verify(token, context.state.jwtToken, (err, decoded) => {
-          if (err) resolve(null);
-          if (decoded) resolve(decoded);
-        });
-      });
     },
   },
   modules: {},
