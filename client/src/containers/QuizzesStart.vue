@@ -19,7 +19,7 @@
       <button type="button" class="btn btn-default">
         Thời Gian: {{ "0" + countdown }}
       </button>
-      <button @click="onQuizNext" type="button" class="btn btn-default">
+      <button @click="onQuizNext" type="button" class="btn btn-default" :disabled="countdown !== 0">
         Tiếp theo <i class="fa fa-arrow-right" aria-hidden="true"></i>
       </button>
     </div>
