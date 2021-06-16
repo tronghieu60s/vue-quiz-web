@@ -34,7 +34,7 @@ export function createUser(user) {
 export function updateUserById(_id, user) {
   return getUserById(_id)
     .then(async (snapshot) => {
-      const newUser = { ...snapshot, ...user };
+      const newUser = { ...snapshot, ...user, _id: null };
       await usersModel.child(_id).set(newUser);
       return newUser;
     })

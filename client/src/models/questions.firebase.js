@@ -38,7 +38,7 @@ export function createQuestion(question) {
 export function updateQuestionById(_id, question) {
   return getQuestionById(_id)
     .then(async (snapshot) => {
-      const newQuestion = { ...snapshot, ...question };
+      const newQuestion = { ...snapshot, ...question, _id: null };
       await questionsModel.child(_id).set(newQuestion);
       return newQuestion;
     })

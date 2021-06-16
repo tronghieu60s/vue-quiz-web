@@ -49,7 +49,7 @@ export function deleteQuizById(_id) {
 export function updateQuizById(_id, quiz) {
   return getQuizById(_id)
     .then(async (snapshot) => {
-      const newQuiz = { ...snapshot, ...quiz };
+      const newQuiz = { ...snapshot, ...quiz, _id: null };
       await quizzesModel.child(_id).set(newQuiz);
       return newQuiz;
     })
