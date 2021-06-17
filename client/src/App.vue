@@ -30,6 +30,9 @@ export default {
     "$store.state.user"() {
       this.onRedirectPermission();
     },
+    $route() {
+      this.onRedirectPermission();
+    },
   },
   methods: {
     onRedirectPermission() {
