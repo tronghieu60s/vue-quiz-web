@@ -59,8 +59,8 @@ export function updateQuizById(_id, quiz) {
 export function deleteQuizById(_id) {
   return getQuizById(_id)
     .then(async (snapshot) => {
-      await quizzesModel.child(_id).remove();
       await deleteQuestionsByQuizId(_id);
+      await quizzesModel.child(_id).remove();
       return snapshot;
     })
     .catch((err) => console.log(err));
