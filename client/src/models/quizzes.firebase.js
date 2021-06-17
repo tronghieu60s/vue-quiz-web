@@ -11,9 +11,12 @@ export function getQuizzes() {
 }
 
 export async function getQuizzesByUserId(user_id) {
-  const quizzes = await getQuizzes();
-  const findQuiz = quizzes.filter((o) => o.user_id === user_id);
-  return findQuiz;
+  return quizzesModel
+    .orderByChild("user_id")
+    .equalTo(user_id)
+    .once("value")
+    .then((snapshot) => objectToArray(snapshot.val()))
+    .catch((err) => console.log(err));
 }
 
 export function getQuizById(_id) {
@@ -25,9 +28,14 @@ export function getQuizById(_id) {
 }
 
 export async function getQuizByQuizCode(quiz_code) {
-  const quizzes = await getQuizzes();
-  const findQuiz = quizzes.find((o) => o.quiz_code === quiz_code);
-  return findQuiz;
+  return quizzesModel
+    .orderByChild("quiz_code")
+    .equalTo(quiz_code)
+    .once("value")
+    .then((snapshot) =>
+      snapshot.val() ? objectToArray(snapshot.val())[0] : null
+    )
+    .catch((err) => console.log(err));
 }
 
 export function createQuiz(quiz) {

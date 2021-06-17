@@ -12,11 +12,10 @@ export function getQuestions() {
 
 export function getQuestionsByQuizId(quiz_id) {
   return questionsModel
+    .orderByChild("quiz_id")
+    .equalTo(quiz_id)
     .once("value")
-    .then((snapshot) => {
-      const questions = objectToArray(snapshot.val());
-      return questions.filter((o) => o.quiz_id === quiz_id);
-    })
+    .then((snapshot) => objectToArray(snapshot.val()))
     .catch((err) => console.log(err));
 }
 

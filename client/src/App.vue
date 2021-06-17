@@ -12,6 +12,11 @@ import router from "./router/index";
 import { socketConnect } from "./store/socket";
 export default {
   components: { LoadingPage, LoadingAction },
+  data() {
+    return {
+      loadFirst: false,
+    };
+  },
   created() {
     this.$store.dispatch("actLoadingPage", async () => {
       await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -24,6 +29,7 @@ export default {
       this.$store.state.user = await this.actLoadUserStorage();
 
       this.onRedirectPermission();
+      this.loadFirst = true;
     });
   },
   watch: {
@@ -31,7 +37,7 @@ export default {
       this.onRedirectPermission();
     },
     $route() {
-      this.onRedirectPermission();
+      if (this.loadFirst) this.onRedirectPermission();
     },
   },
   methods: {
