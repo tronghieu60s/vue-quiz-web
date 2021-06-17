@@ -38,10 +38,7 @@ import {
   deleteQuizById,
   updateQuizById,
 } from "@models/quizzes.firebase";
-import {
-  getQuestionsByQuizId,
-  deleteQuestionById,
-} from "@models/questions.firebase";
+import { getQuestionsByQuizId } from "@models/questions.firebase";
 export default {
   components: {
     HeaderCustom,
@@ -122,19 +119,6 @@ export default {
     },
     onDeleteQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
-        // delete questions relationship (quiz)
-        let errorDelete = false;
-        const questions = await getQuestionsByQuizId(quiz._id);
-        for (let i = 0; i < questions.length; i += 1) {
-          const deleteItem = await deleteQuestionById(questions[i]._id);
-          if (!deleteItem) errorDelete = true;
-        }
-        // handle error
-        if (errorDelete)
-          return this.$toast.error(
-            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-          );
-
         // delete quizzes by id
         const deleteItem = await deleteQuizById(quiz._id);
         if (!deleteItem)

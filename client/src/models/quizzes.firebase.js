@@ -1,5 +1,6 @@
 import firebase from "@utils/firebase";
 import { objectToArray } from "@helpers/object";
+import { deleteQuestionsByQuizId } from "./questions.firebase";
 
 const quizzesModel = firebase.database().ref("/quizzes");
 
@@ -45,21 +46,22 @@ export function createQuiz(quiz) {
     .catch((err) => console.log(err));
 }
 
-export function deleteQuizById(_id) {
-  return getQuizById(_id)
-    .then(async (snapshot) => {
-      await quizzesModel.child(_id).remove();
-      return snapshot;
-    })
-    .catch((err) => console.log(err));
-}
-
 export function updateQuizById(_id, quiz) {
   return getQuizById(_id)
     .then(async (snapshot) => {
       const newQuiz = { ...snapshot, ...quiz };
       await quizzesModel.child(_id).set({ ...newQuiz, _id: null });
       return newQuiz;
+    })
+    .catch((err) => console.log(err));
+}
+
+export function deleteQuizById(_id) {
+  return getQuizById(_id)
+    .then(async (snapshot) => {
+      await quizzesModel.child(_id).remove();
+      await deleteQuestionsByQuizId(_id);
+      return snapshot;
     })
     .catch((err) => console.log(err));
 }

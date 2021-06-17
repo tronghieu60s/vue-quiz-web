@@ -1,11 +1,16 @@
 <template>
-  <div class="d-flex justify-content-between py-4 pb-5">
-    <div class="mt-3">
+  <div class="row py-4 pb-5">
+    <div class="col-md-6 mt-3">
       <h2>{{ title }}</h2>
       <slot></slot>
     </div>
-    <div class="mt-2 w-50 d-flex justify-content-end align-items-center">
-      <div>
+    <div class="col-md-6 mt-2">
+      <div
+        :class="{
+          'h-100 d-flex align-items-center': true,
+          'justify-content-start justify-content-md-end': true,
+        }"
+      >
         <button
           type="button"
           class="btn btn-primary btn-sm"
@@ -90,11 +95,7 @@
             </form>
           </div>
         </div>
-        <button
-          @click="onLogout"
-          type="button"
-          class="btn btn-danger btn-sm mt-2 mt-md-0"
-        >
+        <button @click="onLogout" type="button" class="btn btn-danger btn-sm">
           Đăng Xuất <i class="fa fa-sign-out ml-1" aria-hidden="true"></i>
         </button>
       </div>

@@ -52,3 +52,15 @@ export function deleteQuestionById(_id) {
     })
     .catch((err) => console.log(err));
 }
+
+export function deleteQuestionsByQuizId(quiz_id) {
+  return questionsModel
+    .orderByChild("quiz_id")
+    .equalTo(quiz_id)
+    .once("value")
+    .then((snapshot) =>
+      snapshot.forEach((child) => {
+        child.ref.remove();
+      })
+    );
+}

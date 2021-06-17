@@ -127,12 +127,10 @@ export default {
     },
     onSubmit() {
       if (this.inputQuestion.length === 0) return;
+
       // find correct answer and check answer is empty
       const correctAnswer = this.inputAnswer.find((o) => o.isCorrect);
-      if (correctAnswer.answer.length === 0)
-        return this.$toast.error(
-          this.$store.state.string.E_REQUIRED_ANSWER_CORRECT
-        );
+      if (correctAnswer.answer.length === 0) return;
 
       // get data and pass action to parent
       const question = this.inputQuestion;

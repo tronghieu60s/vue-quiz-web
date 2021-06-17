@@ -10,6 +10,14 @@ export function getUsers() {
     .catch((err) => console.log(err));
 }
 
+export function getUserById(_id) {
+  return usersModel
+    .child(_id)
+    .once("value")
+    .then((snapshot) => (snapshot.val() ? { ...snapshot.val(), _id } : null))
+    .catch((err) => console.log(err));
+}
+
 export async function getUserByUsername(username) {
   return usersModel
     .orderByChild("user_username")
@@ -18,14 +26,6 @@ export async function getUserByUsername(username) {
     .then((snapshot) =>
       snapshot.val() ? objectToArray(snapshot.val())[0] : null
     )
-    .catch((err) => console.log(err));
-}
-
-export function getUserById(_id) {
-  return usersModel
-    .child(_id)
-    .once("value")
-    .then((snapshot) => (snapshot.val() ? { ...snapshot.val(), _id } : null))
     .catch((err) => console.log(err));
 }
 

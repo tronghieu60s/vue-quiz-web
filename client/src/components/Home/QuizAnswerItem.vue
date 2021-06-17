@@ -1,5 +1,6 @@
 <template>
   <button
+    v-if="answer.answer !== ''"
     @click="$emit('onSelectAnswer')"
     type="button"
     :class="[`btn ${color} btn-block rounded-lg m-0 py-5 mb-3 mx-2`]"

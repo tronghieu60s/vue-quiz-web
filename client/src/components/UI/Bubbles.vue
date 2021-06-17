@@ -1,29 +1,29 @@
 <template>
-  <div id="bubbles"></div>
+  <div class="bubbles">
+    <div
+      v-for="n in 20"
+      :key="n"
+      :class="['bubble', `bubble-c${randomBetween(1, 4)}`]"
+      :style="{
+        left: `${(100 / 20) * (n - 1) + 2}%`,
+        'animation-delay': `-${randomBetween(0, 20)}s`,
+      }"
+    ></div>
+  </div>
 </template>
 
 <script>
 export default {
-  mounted() {
-    // --- Animation ---
-    const randomBetween = (smallest, biggest) =>
-      Math.floor(Math.random() * biggest) + smallest;
-
-    const NUM_OF_BUBBLES = 20;
-    const bubbles = document.getElementById("bubbles");
-    for (let index = 0; index < NUM_OF_BUBBLES; index += 1)
-      bubbles.innerHTML += `<div 
-        class="bubble bubble-c${randomBetween(1, 4)} bubble-x1" 
-        style="
-          left: ${(100 / NUM_OF_BUBBLES) * index + 2}%; 
-          animation-delay: -${randomBetween(0, 20)}s">
-      </div>`;
+  methods: {
+    randomBetween(smallest, biggest) {
+      return Math.floor(Math.random() * biggest) + smallest;
+    },
   },
 };
 </script>
 
 <style>
-#bubbles {
+.bubbles {
   position: fixed;
   top: 0;
   right: 0;
