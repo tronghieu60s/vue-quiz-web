@@ -5,13 +5,13 @@ A RealTime Quiz Application Using VueJS, SocketIO, Firebase.
 
 ## Installation
 
-1. On Root Directory:
+1. On root firectory:
 
 ```bash
 $ cd client
 ```
 
-2. Config Environment Variables on File `.env.local`:
+2. Config environment variables on file `.env.local`:
 
 ```bash
 VUE_APP_SERVER_URL=http://localhost:4000
@@ -70,6 +70,7 @@ $ npm run production
 ```
 
 **Build Production (Static File)**
+
 ```bash
 $ cd client
 $ npm install
@@ -84,6 +85,39 @@ $ cd server
 $ npm install
 $ npm start
 ```
+
+
+## Deploy
+
+### 1. Server
+
+1. Create a new branch with `server` folder:
+
+```bash 
+$ git subtree push --prefix server origin <name-branch>
+```
+
+2. Deploy server with branch `<name-branch>`.
+
+### 2. Client
+
+**Deploy to Firebase Hosting**
+
+1. Config Firebase Hosting in `.firebaserc`:
+
+```js
+{
+  "projects": {
+    "default": "<your-firebase-hosting>"
+  }
+}
+```
+
+2. (Optional) Config environment variables.
+
+3. Build project by production (static file).
+
+4. Using ```firebase deploy``` to deploy Firebase Hosting.
 
 
 ## Contributing
