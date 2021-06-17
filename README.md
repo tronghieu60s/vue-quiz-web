@@ -113,7 +113,7 @@ $ git subtree push --prefix server origin <name-branch>
 }
 ```
 
-2. (Optional) Config environment variables.
+2. (Optional) Re config environment variables.
 
 3. Build project by production (static file).
 

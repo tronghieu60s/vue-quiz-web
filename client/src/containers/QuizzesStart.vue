@@ -14,7 +14,7 @@
   <div class="container my-5" v-if="quiz">
     <div
       v-if="question"
-      class="d-flex justify-content-center align-items-center mb-3"
+      class="d-flex justify-content-center align-items-center mb-2"
     >
       <button type="button" class="btn btn-default">
         Thời Gian: {{ "0" + countdown }}

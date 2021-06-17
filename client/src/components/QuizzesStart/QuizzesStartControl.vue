@@ -1,11 +1,11 @@
 <template>
-  <h1 class="mb-0">
+  <h1 class="mb-0 mr-4">
     Code: {{ quiz.quiz_code }}<br />
     <h5 v-if="quiz.quiz_current > 0" class="mb-0">
       {{ quiz.quiz_current }} trên {{ questions.length }} câu hỏi
     </h5>
   </h1>
-  <div class="d-flex justify-content-center flex-column">
+  <div class="d-flex justify-content-center flex-column my-2 my-sm-0">
     <div class="my-1">
       <button type="button" class="btn btn-default btn-sm">
         <i class="fa fa-user" aria-hidden="true"></i> {{ users.length }}

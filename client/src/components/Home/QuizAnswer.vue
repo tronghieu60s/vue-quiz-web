@@ -1,7 +1,10 @@
 <template>
   <div class="w-100" v-if="question">
     <div class="w-75 rounded-lg mx-auto">
-      <h1 class="text-dark text-center p-4 mb-0" style="font-size: 1.7em">
+      <h1
+        class="text-dark text-center py-4 py-lg-4 mb-0"
+        style="font-size: 1.7em"
+      >
         {{ question.question }}
       </h1>
     </div>

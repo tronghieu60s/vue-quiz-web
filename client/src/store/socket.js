@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const SERVER = process.env.VUE_APP_SERVER_URL;
+const SERVER = process.env.VUE_APP_SERVER_URL || "http://localhost:4000";
 
 export const socketConnect = () => {
   const socket = io(SERVER);

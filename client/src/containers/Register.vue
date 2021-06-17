@@ -40,7 +40,7 @@
         <router-link :to="{ name: 'Login' }">Bạn đã có tài khoản?</router-link>
       </small>
       <button type="submit" class="btn btn-primary btn-block mt-3">
-        Tham Gia
+        Đăng Ký
       </button>
     </form>
   </layout-center>

@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 py-5 my-5" style="min-height: 50vh">
-    <h2 class="w-50 text-center mb-4 mx-auto">
+    <h2 class="w-75 w-lg-50 text-center mb-4 mx-auto bg-secondary p-3">
       {{
         users.length === 0
           ? "Sử dụng mã code phía trên để mời mọi người tham gia :3"

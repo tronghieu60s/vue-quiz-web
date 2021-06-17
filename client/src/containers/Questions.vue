@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header-custom :title="`[${quiz._id}] ${quiz.quiz_title}`" />
-    <div class="row px-3 px-md-0">
+    <div class="row">
       <div class="col-lg-4 col-md-5">
         <questions-create
           :question="question"

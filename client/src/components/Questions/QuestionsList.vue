@@ -1,6 +1,6 @@
 <template>
   <table
-    class="table table-striped table-hover table-bordered table-responsive-lg mt-3"
+    class="table table-striped table-hover table-bordered table-responsive-md mt-3"
   >
     <thead class="thead-inverse">
       <tr>
