@@ -36,7 +36,7 @@ export default {
   },
   created() {
     this.$store.state.socket.on("server-username-exists", () =>
-      this.$toast.error(this.$store.state.string.S_ALERT_USERNAME_EXISTS)
+      this.$toast.error(this.$store.state.string.E_ALERT_USERNAME_EXISTS)
     );
 
     // CONNECT

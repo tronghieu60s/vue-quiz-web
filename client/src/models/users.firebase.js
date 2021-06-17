@@ -11,9 +11,14 @@ export function getUsers() {
 }
 
 export async function getUserByUsername(username) {
-  const users = await getUsers();
-  const user = users.find((o) => o.user_username === username);
-  return user;
+  return usersModel
+    .orderByChild("user_username")
+    .equalTo(username)
+    .once("value")
+    .then((snapshot) =>
+      snapshot.val() ? objectToArray(snapshot.val())[0] : null
+    )
+    .catch((err) => console.log(err));
 }
 
 export function getUserById(_id) {

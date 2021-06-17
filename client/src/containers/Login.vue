@@ -55,9 +55,7 @@ export default {
     async onLoginUser() {
       const user = await getUserByUsername(this.inputUsername);
       if (!user)
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
+        return this.$toast.error(this.$store.state.string.E_ACCOUNT_NOT_MATCH);
 
       bcrypt.compare(this.inputPassword, user.user_password, (err, res) => {
         if (err)
@@ -66,7 +64,7 @@ export default {
           );
         if (!res)
           return this.$toast.error(
-            this.$store.state.string.E_PASSWORD_NOT_CORRECT
+            this.$store.state.string.E_ACCOUNT_NOT_MATCH
           );
 
         this.$store.state.user = user;

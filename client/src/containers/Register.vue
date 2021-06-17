@@ -72,7 +72,7 @@ export default {
       const getUser = await getUserByUsername(this.inputUsername.toLowerCase());
       if (getUser)
         return this.$toast.error(
-          this.$store.state.string.S_ALERT_USERNAME_EXISTS
+          this.$store.state.string.E_ALERT_USERNAME_EXISTS
         );
 
       const user_username = this.inputUsername.toLowerCase();
