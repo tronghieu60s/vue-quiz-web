@@ -10,7 +10,10 @@
         />
       </div>
       <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
-        <quizzes-filter @onInputSearch="(s) => (inputSearch = s)" />
+        <quizzes-filter
+          :quizzes="quizzes"
+          @onInputSearch="(s) => (inputSearch = s)"
+        />
         <quizzes-list
           :quizzes="quizzes"
           @onStartQuiz="onStartQuiz"

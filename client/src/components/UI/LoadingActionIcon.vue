@@ -1,6 +1,7 @@
 <template>
   <div class="lds-loader">
     <img class="w-75 h-75" src="/images/loading.gif" alt="" />
+    <div class="lds-back"></div>
     <div class="lds-rotate"></div>
   </div>
 </template>
@@ -13,6 +14,15 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.lds-back {
+  position: absolute;
+  width: 115%;
+  height: 115%;
+  background-color: #fff;
+  z-index: -1;
+  animation: rotate-77708760 4s linear infinite;
 }
 
 .lds-rotate {

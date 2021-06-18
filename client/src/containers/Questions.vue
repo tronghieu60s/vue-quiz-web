@@ -10,7 +10,10 @@
         />
       </div>
       <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
-        <questions-filter @onInputSearch="(s) => (inputSearch = s)" />
+        <questions-filter
+          :questions="questions"
+          @onInputSearch="(s) => (inputSearch = s)"
+        />
         <questions-list
           :questions="questions"
           @onDeleteQuestion="onDeleteQuestion"

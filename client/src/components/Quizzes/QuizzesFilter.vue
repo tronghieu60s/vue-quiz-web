@@ -1,6 +1,8 @@
 <template>
   <div class="d-flex justify-content-between align-items-center">
-    <div></div>
+    <div>
+      <h5 class="mb-0">{{ quizzes.length || 0 }} mục</h5>
+    </div>
     <search @onInputSearch="(s) => $emit('onInputSearch', s)" />
   </div>
 </template>
@@ -10,5 +12,6 @@ import Search from "@components/UI/Search.vue";
 export default {
   components: { Search },
   emits: ["onInputSearch"],
+  props: { quizzes: { type: Array } },
 };
 </script>
