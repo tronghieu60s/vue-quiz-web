@@ -7,7 +7,7 @@
           : `Đang có ${users.length} người tham gia. Bạn có thể bắt đầu bất cứ lúc nào!`
       }}
     </h2>
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center flex-wrap">
       <quizzes-start-users-item
         v-for="(user, index) in users"
         :key="index"
