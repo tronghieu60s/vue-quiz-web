@@ -117,6 +117,7 @@ export default {
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
 
+        this.question = null;
         await this.onLoadQuestions();
         this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
       });

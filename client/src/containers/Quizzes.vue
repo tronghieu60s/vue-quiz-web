@@ -130,6 +130,7 @@ export default {
           );
 
         // reload quizzes and toast success
+        this.quiz = null;
         await this.onLoadQuizzes();
         this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
       });
