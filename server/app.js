@@ -1,7 +1,6 @@
+require("module-alias/register");
 const logger = require("morgan");
 const express = require("express");
-const { graphqlHTTP } = require("express-graphql");
-const mongoose = require("mongoose");
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -12,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 /* MongoDB */
+const mongoose = require("mongoose");
 mongoose
   .connect(process.env.MONGODB_URI || "mongodb://localhost/myproject", {
     useNewUrlParser: true,
@@ -23,8 +23,9 @@ mongoose
   .catch((err) => console.log(`❌ Failed To Connect To Database!\n ${err}`));
 
 /* Graphql */
-const graphQlSchema = require("./src/graphql/schema");
-const graphqlResolvers = require("./src/graphql/resolvers");
+const { graphqlHTTP } = require("express-graphql");
+const graphQlSchema = require("@graphql/schema");
+const graphqlResolvers = require("@graphql/resolvers");
 app.use(
   "/graphql",
   graphqlHTTP({

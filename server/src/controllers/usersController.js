@@ -1,8 +1,11 @@
-const usersModel = require("../models/usersModel");
+const usersModel = require("@models/usersModel");
 
-async function getUsers() {
-  const users = await usersModel.find({}).exec();
-  console.log(users);
-}
+const getUsers = async () => await usersModel.find({}).exec();
 
-module.exports = { getUsers };
+const createUser = async (args) => {
+  const { user_username, user_password } = args;
+  const newUser = new usersModel({ user_username, user_password });
+  return newUser.save();
+};
+
+module.exports = { getUsers, createUser };
