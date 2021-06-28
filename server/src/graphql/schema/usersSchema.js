@@ -16,7 +16,16 @@ const UsersType = new GraphQLObjectType({
   }),
 });
 
-const query = { users: { type: GraphQLList(UsersType) } };
+const query = {
+  user: {
+    type: UsersType,
+    args: {
+      key: { type: GraphQLNonNull(GraphQLString) },
+      value: { type: GraphQLNonNull(GraphQLString) },
+    },
+  },
+  users: { type: GraphQLList(UsersType) },
+};
 
 const mutation = {
   createUser: {
@@ -24,6 +33,14 @@ const mutation = {
     args: {
       user_username: { type: GraphQLNonNull(GraphQLString) },
       user_password: { type: GraphQLNonNull(GraphQLString) },
+    },
+  },
+  updateUserById: {
+    type: UsersType,
+    args: {
+      _id: { type: GraphQLNonNull(GraphQLString) },
+      user_username: { type: GraphQLString },
+      user_password: { type: GraphQLString },
     },
   },
 };

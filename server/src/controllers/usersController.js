@@ -1,11 +1,17 @@
 const usersModel = require("@models/usersModel");
 
+const getUser = async (args) =>
+  await usersModel.findOne({ [args.key]: args.value }).exec();
+
 const getUsers = async () => await usersModel.find({}).exec();
 
-const createUser = async (args) => {
-  const { user_username, user_password } = args;
-  const newUser = new usersModel({ user_username, user_password });
-  return newUser.save();
-};
+const createUser = async (args) => new usersModel({ ...args }).save();
 
-module.exports = { getUsers, createUser };
+const updateUserById = async (args) =>
+  await usersModel.findOneAndUpdate(
+    { _id: args._id },
+    { ...args },
+    { new: true }
+  );
+
+module.exports = { getUser, getUsers, createUser, updateUserById };
