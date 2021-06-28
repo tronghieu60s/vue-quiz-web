@@ -50,7 +50,7 @@ export default {
   props: ["quiz_id"],
   data() {
     return {
-      quiz: { _id: "", quiz_title: "", quiz_desc: "" },
+      quiz: { _id: "", quiz_title: "" },
       question: null,
       questions: [],
       questionsbase: [],
@@ -106,8 +106,36 @@ export default {
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
 
-      await this.onLoadQuestions();
+      // load questions on table
+      const questionsbase = this.questionsbase;
+      questionsbase.push(createItem);
+      this.questionsbase = questionsbase;
+
+      // toast success
       this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
+    },
+    async onUpdateQuestion(props) {
+      const { question, answers } = props;
+
+      // get id and update item
+      const questionId = this.question._id;
+      const update = { question, answers };
+      const updateItem = await updateQuestionById(questionId, update);
+      if (!updateItem)
+        return this.$toast.error(
+          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+        );
+
+      // load quizzes on table
+      const questionsbase = this.questionsbase;
+      const questionIndex = questionsbase.findIndex(
+        (o) => o._id === questionId
+      );
+      questionsbase[questionIndex] = updateItem;
+      this.questionsbase = questionsbase;
+
+      // toast success
+      this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
     },
     async onDeleteQuestion(question) {
       this.$store.dispatch("actLoadingAction", async () => {
@@ -117,22 +145,18 @@ export default {
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
 
+        // load questions on table
         this.question = null;
-        await this.onLoadQuestions();
+        const questionsbase = this.questionsbase;
+        const questionIndex = questionsbase.findIndex(
+          (o) => o._id === question._id
+        );
+        questionsbase.splice(questionIndex, 1);
+        this.questionsbase = questionsbase;
+
+        // toast success
         this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
       });
-    },
-    async onUpdateQuestion(props) {
-      const { question, answers } = props;
-      const update = { question, answers };
-      const updateItem = await updateQuestionById(this.question._id, update);
-      if (!updateItem)
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
-
-      await this.onLoadQuestions();
-      this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
     },
   },
 };

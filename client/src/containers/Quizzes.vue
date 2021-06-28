@@ -86,6 +86,13 @@ export default {
           : () => this.onCreateQuiz(props)
       );
     },
+    routerQuizStart(quiz_id) {
+      this.$router.push({
+        name: "Quizzes-Start",
+        params: { quiz_id: quiz_id },
+      });
+    },
+    // load - create - update - delete
     async onLoadQuizzes() {
       if (!this.$store.state.user) return;
       // get quizzes by database and set to quizzes and quizzesbase
@@ -99,28 +106,38 @@ export default {
       const user_id = this.$store.state.user._id;
 
       // create quiz and check exists (if not exists alert error)
-      const quiz = await createQuiz({ quiz_title, quiz_desc, user_id });
-      if (!quiz)
+      const createItem = await createQuiz({ quiz_title, quiz_desc, user_id });
+      if (!createItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
 
-      // reload quizzes on table and toast success
-      await this.onLoadQuizzes();
+      // load quizzes on table
+      const quizzesbase = this.quizzesbase;
+      quizzesbase.unshift(createItem);
+      this.quizzesbase = quizzesbase;
+
+      // toast success
       this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
     },
     async onUpdateQuiz(props) {
-      const updateItem = await updateQuizById(this.quiz._id, { ...props });
+      const quizId = this.quiz._id;
+      const updateItem = await updateQuizById(quizId, { ...props });
       if (!updateItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
 
-      // reload quizzes on table and toast success
-      await this.onLoadQuizzes();
+      // load quizzes on table
+      const quizzesbase = this.quizzesbase;
+      const quizIndex = quizzesbase.findIndex((o) => o._id === quizId);
+      quizzesbase[quizIndex] = updateItem;
+      this.quizzesbase = quizzesbase;
+
+      // toast success
       this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
     },
-    onDeleteQuiz(quiz) {
+    async onDeleteQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete quizzes by id
         const deleteItem = await deleteQuizById(quiz._id);
@@ -129,13 +146,19 @@ export default {
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
 
-        // reload quizzes and toast success
+        // load quizzes
         this.quiz = null;
-        await this.onLoadQuizzes();
+        const quizzesbase = this.quizzesbase;
+        const quizIndex = quizzesbase.findIndex((o) => o._id === quiz._id);
+        quizzesbase.splice(quizIndex, 1);
+        this.quizzesbase = quizzesbase;
+
+        // toast success
         this.$toast.success(this.$store.state.string.S_DELETE_VALUES_SUCCESS);
       });
     },
-    onStartQuiz(quiz) {
+    // action quiz
+    async onStartQuiz(quiz) {
       if (quiz) if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
 
       this.$store.dispatch("actLoadingAction", async () => {
@@ -155,25 +178,22 @@ export default {
         this.routerQuizStart(quiz._id);
       });
     },
-    routerQuizStart(quiz_id) {
-      this.$router.push({
-        name: "Quizzes-Start",
-        params: { quiz_id: quiz_id },
-      });
-    },
     async onStopQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const quiz_code = null;
-        const updateItem = await updateQuizById(quiz._id, {
-          quiz_code,
-          quiz_current: 0,
-        });
+        const update = { quiz_code: null, quiz_current: 0 };
+        const updateItem = await updateQuizById(quiz._id, update);
         if (!updateItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
 
-        await this.onLoadQuizzes();
+        // load quizzes on table
+        const quizzesbase = this.quizzesbase;
+        const quizIndex = quizzesbase.findIndex((o) => o._id === quiz._id);
+        quizzesbase[quizIndex] = updateItem;
+        this.quizzesbase = quizzesbase;
+
+        // request server stop quiz
         this.$store.state.socket.emit("admin-stop-quiz", quiz.quiz_code);
       });
     },
