@@ -1,5 +1,6 @@
 const logger = require("morgan");
 const express = require("express");
+const { graphqlHTTP } = require("express-graphql");
 const mongoose = require("mongoose");
 
 const app = express();
@@ -20,6 +21,18 @@ mongoose
   })
   .then(() => console.log("✔️ Connected To Database Successfully!"))
   .catch((err) => console.log(`❌ Failed To Connect To Database!\n ${err}`));
+
+/* Graphql */
+const graphQlSchema = require("./src/graphql/schema");
+const graphqlResolvers = require("./src/graphql/resolvers");
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema: graphQlSchema,
+    rootValue: graphqlResolvers,
+    graphiql: true,
+  })
+);
 
 /* SocketIO */
 const socketConfig = {
