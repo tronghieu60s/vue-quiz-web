@@ -1,9 +1,12 @@
 const usersModel = require("@models/usersModel");
 
+const getAllUsers = async () => await usersModel.find({}).exec();
+
+const getUsers = async (args) =>
+  await usersModel.find({ [args.key]: args.value }).exec();
+
 const getUser = async (args) =>
   await usersModel.findOne({ [args.key]: args.value }).exec();
-
-const getUsers = async () => await usersModel.find({}).exec();
 
 const createUser = async (args) => new usersModel({ ...args }).save();
 
@@ -14,4 +17,4 @@ const updateUserById = async (args) =>
     { new: true }
   );
 
-module.exports = { getUser, getUsers, createUser, updateUserById };
+module.exports = { getAllUsers, getUsers, getUser, createUser, updateUserById };

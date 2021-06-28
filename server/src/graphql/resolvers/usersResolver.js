@@ -1,8 +1,9 @@
 const usersController = require("@controllers/usersController");
 
 module.exports = {
-  user: usersController.getUser,
+  allUsers: usersController.getAllUsers,
   users: usersController.getUsers,
+  user: usersController.getUser,
   createUser: usersController.createUser,
   updateUserById: usersController.updateUserById,
 };

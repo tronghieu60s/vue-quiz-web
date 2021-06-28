@@ -17,6 +17,14 @@ const UsersType = new GraphQLObjectType({
 });
 
 const query = {
+  allUsers: { type: GraphQLList(UsersType) },
+  users: {
+    type: GraphQLList(UsersType),
+    args: {
+      key: { type: GraphQLNonNull(GraphQLString) },
+      value: { type: GraphQLNonNull(GraphQLString) },
+    },
+  },
   user: {
     type: UsersType,
     args: {
@@ -24,7 +32,6 @@ const query = {
       value: { type: GraphQLNonNull(GraphQLString) },
     },
   },
-  users: { type: GraphQLList(UsersType) },
 };
 
 const mutation = {
