@@ -11,10 +11,6 @@ const getUser = async (args) =>
 const createUser = async (args) => new usersModel({ ...args }).save();
 
 const updateUserById = async (args) =>
-  await usersModel.findOneAndUpdate(
-    { _id: args._id },
-    { ...args },
-    { new: true }
-  );
+  await usersModel.findByIdAndUpdate(args._id, { ...args }, { new: true });
 
 module.exports = { getAllUsers, getUsers, getUser, createUser, updateUserById };

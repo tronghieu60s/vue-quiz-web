@@ -1,31 +1,16 @@
-const {
-  GraphQLList,
-  GraphQLString,
-  GraphQLObjectType,
-  GraphQLNonNull,
-} = require("graphql");
-
-const UsersType = new GraphQLObjectType({
-  name: "Users",
-  fields: () => ({
-    _id: { type: GraphQLString },
-    user_username: { type: GraphQLString },
-    user_password: { type: GraphQLString },
-    created_at: { type: GraphQLString },
-    updated_at: { type: GraphQLString },
-  }),
-});
+const { GraphQLList, GraphQLString, GraphQLNonNull } = require("graphql");
+const { UsersType } = require("@graphql/types");
 
 const query = {
   allUsers: { type: GraphQLList(UsersType) },
-  users: {
+  getUsers: {
     type: GraphQLList(UsersType),
     args: {
       key: { type: GraphQLNonNull(GraphQLString) },
       value: { type: GraphQLNonNull(GraphQLString) },
     },
   },
-  user: {
+  getUser: {
     type: UsersType,
     args: {
       key: { type: GraphQLNonNull(GraphQLString) },
