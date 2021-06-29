@@ -2,7 +2,6 @@
 
 A RealTime Quiz Application Using VueJS, SocketIO, Firebase.
 
-
 ## Installation
 
 Config environment variables on file `/client/.env.local`:
@@ -17,7 +16,6 @@ VUE_APP_FIREBASE_SENDER_ID=your-firebase-senderId
 VUE_APP_FIREBASE_APP_ID=your-firebase-appId
 ```
 
-
 ## Run Docker Compose
 
 ### 1. Development
@@ -31,7 +29,6 @@ $ docker-compose up --build
 ```bash
 $ docker-compose -f docker-compose.prod.yml up --build
 ```
-
 
 ## Run Without Docker Compose
 
@@ -71,14 +68,13 @@ $ npm install
 $ npm start
 ```
 
-
 ## Deploy
 
 ### 1. Server
 
 1. Create a new branch with `server` folder:
 
-```bash 
+```bash
 $ git subtree push --prefix server origin <name-branch>
 ```
 
@@ -119,8 +115,19 @@ https://cli.vuejs.org/guide/deployment.html#netlify
 { "projects": { "default": "<your-firebase-hosting>" } }
 ```
 
-2. Open terminal and run command ```firebase deploy```.
+2. Open terminal and run command `firebase deploy`.
 
+## Bugs
+
+### 1. Package: apollo-composable (4.0.0-alpha.12)
+
+- Errors:
+```shell
+warning  in ./node_modules/@vue/apollo-composable/dist/useQuery.js
+export 'onServerPrefetch' was not found in 'vue-demi'
+```
+
+- Solve Errors: https://github.com/quasarframework/app-extension-apollo/issues/51#issuecomment-791977057
 
 ## Contributing
 
