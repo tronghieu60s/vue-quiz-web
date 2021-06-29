@@ -1,7 +1,18 @@
 import Toaster from "@meforma/vue-toaster";
-import { createApp } from "vue";
+import apolloClient from "@utils/graphql";
+import { DefaultApolloClient } from "@vue/apollo-composable";
+import { createApp, h, provide } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 
-createApp(App).use(store).use(router).use(Toaster).mount("#app");
+createApp({
+  setup() {
+    provide(DefaultApolloClient, apolloClient);
+  },
+  render: () => h(App),
+})
+  .use(store)
+  .use(router)
+  .use(Toaster)
+  .mount("#app");
