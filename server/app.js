@@ -1,4 +1,5 @@
 require("module-alias/register");
+const cors = require("cors");
 const logger = require("morgan");
 const express = require("express");
 
@@ -6,6 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 /* Middleware */
+app.use(cors());
 app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
