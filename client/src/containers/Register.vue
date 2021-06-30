@@ -80,7 +80,6 @@ export default {
         );
 
       const resultUser = await createUser({ user_username, user_password });
-      console.log(resultUser);
       if (!resultUser)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT

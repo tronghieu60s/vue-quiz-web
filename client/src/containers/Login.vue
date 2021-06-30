@@ -38,7 +38,8 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
-import { getUserByUsername } from "@models/users.firebase";
+import { getUserByUsername } from "@models/usersModel";
+
 export default {
   components: { LayoutCenter },
   data() {
@@ -53,7 +54,8 @@ export default {
       this.$store.dispatch("actLoadingAction", this.onLoginUser);
     },
     async onLoginUser() {
-      const user = await getUserByUsername(this.inputUsername);
+      const user_username = this.inputUsername.toLowerCase();
+      const user = await getUserByUsername({ user_username });
       if (!user)
         return this.$toast.error(this.$store.state.string.E_ACCOUNT_NOT_MATCH);
 

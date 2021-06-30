@@ -44,6 +44,8 @@ export default createStore({
     },
     async actLoadingAction(context, callback) {
       context.commit("setIsLoadingAction", true);
+      // wait 300 milliseconds
+      await new Promise((res) => setTimeout(res, 300));
       await callback();
       context.commit("setIsLoadingAction", false);
     },
