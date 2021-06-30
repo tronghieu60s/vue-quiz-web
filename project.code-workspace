@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": "E:\\WORKS\\vue-quiz-web"
+		},
+		{
+			"path": "E:\\WORKS\\vue-quiz-web\\client"
+		},
+		{
+			"path": "E:\\WORKS\\vue-quiz-web\\server"
+		}
+	],
+	"settings": {
+		"cSpell.words": [
+			"QLID",
+			"graphiql"
+		]
+	}
+}
