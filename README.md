@@ -117,6 +117,7 @@ https://cli.vuejs.org/guide/deployment.html#netlify
 
 2. Open terminal and run command `firebase deploy`.
 
+
 ## Bugs
 
 ### 1. Package: apollo-composable (4.0.0-alpha.12)
@@ -128,6 +129,7 @@ export 'onServerPrefetch' was not found in 'vue-demi'
 ```
 
 - Solve Errors: https://github.com/quasarframework/app-extension-apollo/issues/51#issuecomment-791977057
+
 
 ## Contributing
 

@@ -4,13 +4,23 @@ import {
   InMemoryCache,
 } from "@apollo/client/core";
 
-// HTTP connection to the API
+/* Config apolloClient */
 const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
 
-// Cache implementation
 const cache = new InMemoryCache();
 
-// Create the apollo client
-const apolloClient = new ApolloClient({ link: httpLink, cache });
+export const apolloClient = new ApolloClient({ link: httpLink, cache });
 
-export default apolloClient;
+export const executeQuery = (query, variables = {}) => {
+  return apolloClient
+    .query({ query, variables })
+    .then((res) => res.data)
+    .catch((err) => console.error(err));
+};
+
+export const executeMutation = (mutation, variables = {}) => {
+  return apolloClient
+    .mutate({ mutation, variables })
+    .then((res) => res.data)
+    .catch((err) => console.error(err));
+};

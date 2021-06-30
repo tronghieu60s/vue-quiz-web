@@ -49,7 +49,8 @@
 <script>
 import bcrypt from "bcryptjs";
 import LayoutCenter from "../components/Layout/LayoutCenter.vue";
-import { createUser, getUserByUsername } from "@models/users.firebase";
+import { getUserByUsername, createUser } from "@models/usersModel";
+
 export default {
   components: { LayoutCenter },
   data() {
@@ -69,17 +70,18 @@ export default {
       this.$store.dispatch("actLoadingAction", this.onRegisterUser);
     },
     async onRegisterUser() {
-      const getUser = await getUserByUsername(this.inputUsername.toLowerCase());
+      const user_username = this.inputUsername.toLowerCase();
+      const user_password = bcrypt.hashSync(this.inputPassword, 10);
+
+      const getUser = await getUserByUsername({ user_username });
       if (getUser)
         return this.$toast.error(
           this.$store.state.string.E_ALERT_USERNAME_EXISTS
         );
 
-      const user_username = this.inputUsername.toLowerCase();
-      const user_password = bcrypt.hashSync(this.inputPassword, 10);
-
-      const user = await createUser({ user_username, user_password });
-      if (!user)
+      const resultUser = await createUser({ user_username, user_password });
+      console.log(resultUser);
+      if (!resultUser)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
