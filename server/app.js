@@ -26,11 +26,15 @@ mongoose
 
 /* Graphql */
 const { graphqlHTTP } = require("express-graphql");
-const schema = require("@graphql/schema");
-const resolvers = require("@graphql/resolvers");
+const schemaGraphQL = require("@graphql/schema");
+const resolversGraphQL = require("@graphql/resolvers");
 app.use(
   "/graphql",
-  graphqlHTTP({ schema, rootValue: resolvers, graphiql: true })
+  graphqlHTTP({
+    schema: schemaGraphQL,
+    rootValue: resolversGraphQL,
+    graphiql: process.env.NODE_ENV === "development",
+  })
 );
 
 /* SocketIO */
