@@ -3,6 +3,7 @@ const {
   GraphQLString,
   GraphQLID,
   GraphQLInt,
+  GraphQLList,
 } = require("graphql");
 
 const UsersType = new GraphQLObjectType({
@@ -11,6 +12,7 @@ const UsersType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     user_username: { type: GraphQLString },
     user_password: { type: GraphQLString },
+    user_quizzes: { type: GraphQLList(QuizzesType) },
     created_at: { type: GraphQLString },
     updated_at: { type: GraphQLString },
   }),
@@ -24,7 +26,6 @@ const QuizzesType = new GraphQLObjectType({
     quiz_desc: { type: GraphQLString },
     quiz_code: { type: GraphQLString },
     quiz_current: { type: GraphQLInt },
-    quiz_user: { type: UsersType },
     created_at: { type: GraphQLString },
     updated_at: { type: GraphQLString },
   }),

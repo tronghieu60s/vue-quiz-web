@@ -1,5 +1,5 @@
 const { GraphQLList, GraphQLString, GraphQLNonNull } = require("graphql");
-const { UsersType } = require("@graphql/types");
+const { UsersType } = require("../types");
 
 const query = {
   allUsers: { type: GraphQLList(UsersType) },

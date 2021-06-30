@@ -1,4 +1,3 @@
-require("module-alias/register");
 const cors = require("cors");
 const logger = require("morgan");
 const express = require("express");
@@ -26,8 +25,8 @@ mongoose
 
 /* Graphql */
 const { graphqlHTTP } = require("express-graphql");
-const schemaGraphQL = require("@graphql/schema");
-const resolversGraphQL = require("@graphql/resolvers");
+const schemaGraphQL = require("./src/graphql/schema");
+const resolversGraphQL = require("./src/graphql/resolvers");
 app.use(
   "/graphql",
   graphqlHTTP({

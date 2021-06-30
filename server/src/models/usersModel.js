@@ -10,6 +10,7 @@ const UsersSchema = new Schema(
       unique: true,
     },
     user_password: { type: String, required: true },
+    user_quizzes: [{ type: Schema.Types.ObjectId, ref: "Quizzes" }],
   },
   {
     collection: "Users",
