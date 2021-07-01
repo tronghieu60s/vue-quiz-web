@@ -13,6 +13,13 @@ const query = {
     type: GraphQLList(QuizzesType),
     args: { user_id: { type: GraphQLNonNull(GraphQLID) } },
   },
+  getQuiz: {
+    type: QuizzesType,
+    args: {
+      key: { type: GraphQLNonNull(GraphQLString) },
+      value: { type: GraphQLNonNull(GraphQLString) },
+    },
+  },
 };
 
 const mutation = {

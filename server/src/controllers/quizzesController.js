@@ -1,6 +1,9 @@
 const usersModel = require("../models/usersModel");
 const quizzesModel = require("../models/quizzesModel");
 
+const getQuiz = async (args) =>
+  await quizzesModel.findOne({ [args.key]: args.value }).exec();
+
 const getAllQuizzes = async () => await quizzesModel.find({}).exec();
 
 const getQuizzesByUserId = async (args) => {
@@ -38,6 +41,7 @@ const deleteQuizById = async (args) => {
 };
 
 module.exports = {
+  getQuiz,
   getAllQuizzes,
   getQuizzesByUserId,
   createQuiz,

@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <header-custom :title="`[${quiz._id}] ${quiz.quiz_title}`" />
+    <header-custom :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`" />
     <div class="row">
       <div class="col-lg-4 col-md-5">
         <questions-create
@@ -38,7 +38,7 @@ import {
   deleteQuestionById,
   updateQuestionById,
 } from "@models/questions.firebase";
-import { getQuizById } from "@models/quizzes.firebase";
+import { getQuizById } from "@models/quizzesModel";
 export default {
   components: {
     HeaderCustom,
@@ -86,7 +86,7 @@ export default {
       );
     },
     async onLoadQuiz() {
-      const quizItem = await getQuizById(this.quiz_id);
+      const quizItem = await getQuizById({ _id: this.quiz_id });
       if (!quizItem) return this.$router.back();
       if (quizItem.quiz_code) return this.$router.back();
       return (this.quiz = quizItem);
