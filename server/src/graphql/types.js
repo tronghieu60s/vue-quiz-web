@@ -4,6 +4,7 @@ const {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
+  GraphQLBoolean,
 } = require("graphql");
 
 const UsersType = new GraphQLObjectType({
@@ -26,9 +27,29 @@ const QuizzesType = new GraphQLObjectType({
     quiz_desc: { type: GraphQLString },
     quiz_code: { type: GraphQLString },
     quiz_current: { type: GraphQLInt },
+    quiz_questions: {type: GraphQLList(QuestionsType) },
     created_at: { type: GraphQLString },
     updated_at: { type: GraphQLString },
   }),
 });
 
-module.exports = { UsersType, QuizzesType };
+const AnswersType = new GraphQLObjectType({
+  name: "Answers",
+  fields: () => ({
+    answer_content: { type: GraphQLString },
+    answer_isCorrect: { type: GraphQLBoolean },
+  }),
+});
+
+const QuestionsType = new GraphQLObjectType({
+  name: "Questions",
+  fields: () => ({
+    _id: { type: GraphQLID },
+    question_content: { type: GraphQLString },
+    question_answers: { type: GraphQLList(AnswersType) },
+    created_at: { type: GraphQLString },
+    updated_at: { type: GraphQLString },
+  }),
+});
+
+module.exports = { UsersType, QuizzesType, QuestionsType, AnswersType };

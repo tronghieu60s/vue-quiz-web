@@ -7,6 +7,7 @@ const QuizzesSchema = new Schema(
     quiz_desc: { type: String },
     quiz_code: { type: String },
     quiz_current: { type: Number, default: 0 },
+    quiz_questions: [{ type: Schema.Types.ObjectId, ref: "Questions" }],
   },
   {
     collection: "Quizzes",

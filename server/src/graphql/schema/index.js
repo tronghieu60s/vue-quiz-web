@@ -1,16 +1,25 @@
 const { GraphQLObjectType, GraphQLSchema } = require("graphql");
 
 const usersSchema = require("./usersSchema");
-const quizzesScheme = require("./quizzesScheme");
+const quizzesSchema = require("./quizzesSchema");
+const questionsSchema = require("./questionsSchema");
 
 const RootQuery = new GraphQLObjectType({
   name: "Query",
-  fields: () => ({ ...usersSchema.query, ...quizzesScheme.query }),
+  fields: () => ({
+    ...usersSchema.query,
+    ...quizzesSchema.query,
+    ...questionsSchema.query,
+  }),
 });
 
 const Mutation = new GraphQLObjectType({
   name: "Mutation",
-  fields: () => ({ ...usersSchema.mutation, ...quizzesScheme.mutation }),
+  fields: () => ({
+    ...usersSchema.mutation,
+    ...quizzesSchema.mutation,
+    ...questionsSchema.mutation,
+  }),
 });
 
 module.exports = new GraphQLSchema({ query: RootQuery, mutation: Mutation });

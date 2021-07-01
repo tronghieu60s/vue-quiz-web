@@ -2,15 +2,14 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AnswerSchema = new Schema({
-  answer_content: { type: String },
-  answer_isCorrect: { type: Boolean },
+  answer_content: { type: String, required: true },
+  answer_isCorrect: { type: Boolean, required: true },
 });
 
 const QuestionsSchema = new Schema(
   {
-    question_content: { type: String },
-    question_answers: [{ type: AnswerSchema }],
-    question_quiz: { type: Schema.Types.ObjectId, ref: "Quizzes" },
+    question_content: { type: String, required: true },
+    question_answers: [{ type: AnswerSchema, required: true }],
   },
   {
     collection: "Questions",
