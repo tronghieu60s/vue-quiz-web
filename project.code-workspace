@@ -13,7 +13,10 @@
 	"settings": {
 		"cSpell.words": [
 			"QLID",
-			"graphiql"
+			"graphiql",
+			"meforma",
+			"vetur",
+			"vuex"
 		]
 	}
 }
