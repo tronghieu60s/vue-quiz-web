@@ -73,14 +73,14 @@ export default {
       const user_username = this.inputUsername.toLowerCase();
       const user_password = bcrypt.hashSync(this.inputPassword, 10);
 
-      const getUser = await getUserByUsername({ user_username });
-      if (getUser)
+      const getItem = await getUserByUsername({ user_username });
+      if (getItem)
         return this.$toast.error(
           this.$store.state.string.E_ALERT_USERNAME_EXISTS
         );
 
-      const resultUser = await createUser({ user_username, user_password });
-      if (!resultUser)
+      const createItem = await createUser({ user_username, user_password });
+      if (!createItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );

@@ -55,11 +55,11 @@ export default {
     },
     async onLoginUser() {
       const user_username = this.inputUsername.toLowerCase();
-      const user = await getUserByUsername({ user_username });
-      if (!user)
+      const getItem = await getUserByUsername({ user_username });
+      if (!getItem)
         return this.$toast.error(this.$store.state.string.E_ACCOUNT_NOT_MATCH);
 
-      bcrypt.compare(this.inputPassword, user.user_password, (err, res) => {
+      bcrypt.compare(this.inputPassword, getItem.user_password, (err, res) => {
         if (err)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -69,8 +69,8 @@ export default {
             this.$store.state.string.E_ACCOUNT_NOT_MATCH
           );
 
-        this.$store.state.user = user;
-        const token = jwt.sign(user, this.$store.state.jwtToken);
+        this.$store.state.user = getItem;
+        const token = jwt.sign(getItem, this.$store.state.jwtToken);
         localStorage.setItem(".config_user", token);
         this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
       });

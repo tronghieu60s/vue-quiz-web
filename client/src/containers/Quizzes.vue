@@ -98,12 +98,12 @@ export default {
 
       // get quizzes by database and set to quizzes and quizzesbase
       const user_id = this.$store.state.user._id;
-      const quizzes = [...(await getQuizzesByUserId({ user_id }))];
-      quizzes.reverse();
+      const getItem = [...(await getQuizzesByUserId({ user_id }))];
+      getItem.reverse();
 
       // set quizzes to base
-      this.quizzes = quizzes;
-      this.quizzesbase = quizzes;
+      this.quizzes = getItem;
+      this.quizzesbase = getItem;
     },
     async onCreateQuiz(props) {
       const { quiz_title, quiz_desc } = props;
