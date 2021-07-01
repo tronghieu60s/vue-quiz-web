@@ -34,13 +34,13 @@ import QuizzesCreate from "@components/Quizzes/QuizzesCreate.vue";
 import QuizzesList from "@components/Quizzes/QuizzesList.vue";
 import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
 import { searchString } from "@helpers/string";
-import { updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
 import {
   getAllQuizzes,
   getQuizzesByUserId,
   createQuiz,
   deleteQuizById,
+  updateQuizById,
 } from "@models/quizzesModel";
 export default {
   components: {
@@ -125,8 +125,11 @@ export default {
       this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
     },
     async onUpdateQuiz(props) {
-      const quizId = this.quiz._id;
-      const updateItem = await updateQuizById(quizId, { ...props });
+      const quiz_id = this.quiz._id;
+      this.quiz = null;
+
+      // update quiz
+      const updateItem = await updateQuizById({ ...props, _id: quiz_id });
       if (!updateItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -134,7 +137,7 @@ export default {
 
       // load quizzes on table
       const quizzesbase = this.quizzesbase;
-      const quizIndex = quizzesbase.findIndex((o) => o._id === quizId);
+      const quizIndex = quizzesbase.findIndex((o) => o._id === quiz_id);
       quizzesbase[quizIndex] = updateItem;
       this.quizzesbase = quizzesbase;
 
@@ -174,7 +177,7 @@ export default {
           );
 
         const quiz_code = await this.generateCodeQuiz();
-        const updateItem = await updateQuizById(quiz._id, { quiz_code });
+        const updateItem = await updateQuizById({ _id: quiz._id, quiz_code });
         if (!updateItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -186,7 +189,7 @@ export default {
     async onStopQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
         const update = { quiz_code: null, quiz_current: 0 };
-        const updateItem = await updateQuizById(quiz._id, update);
+        const updateItem = await updateQuizById({ ...update, _id: quiz._id });
         if (!updateItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT

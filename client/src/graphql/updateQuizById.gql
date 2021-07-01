@@ -1,0 +1,21 @@
+mutation updateQuizById(
+  $_id: ID!
+  $quiz_title: String
+  $quiz_desc: String
+  $quiz_code: String
+  $quiz_current: Int
+) {
+  updateQuizById(
+    _id: $_id
+    quiz_title: $quiz_title
+    quiz_desc: $quiz_desc
+    quiz_code: $quiz_code
+    quiz_current: $quiz_current
+  ) {
+    _id
+    quiz_title
+    quiz_desc
+    quiz_code
+    quiz_current
+  }
+}

@@ -82,7 +82,9 @@ export default {
       const quiz_title = this.inputTitle;
       const quiz_desc = this.inputDesc;
       this.$emit("onActionQuiz", { quiz_title, quiz_desc });
-      this.onReset();
+
+      this.inputTitle = "";
+      this.inputDesc = "";
     },
   },
 };

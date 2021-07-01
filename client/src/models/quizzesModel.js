@@ -2,6 +2,7 @@ import createQuizQuery from "@graphql/createQuiz.gql";
 import deleteQuizByIdQuery from "@graphql/deleteQuizById.gql";
 import getAllQuizzesQuery from "@graphql/getAllQuizzes.gql";
 import getQuizzesByUserIdQuery from "@graphql/getQuizzesByUserId.gql";
+import updateQuizByIdQuery from "@graphql/updateQuizById.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
 
 /* quizzes = { 
@@ -32,6 +33,17 @@ export function createQuiz(args) {
     quiz_title,
     quiz_desc,
   }).then((res) => res.createQuiz);
+}
+
+export function updateQuizById(args) {
+  const { _id, quiz_title, quiz_desc, quiz_code, quiz_current } = args;
+  return executeMutation(updateQuizByIdQuery, {
+    _id,
+    quiz_title,
+    quiz_desc,
+    quiz_code,
+    quiz_current,
+  }).then((res) => res.updateQuizById);
 }
 
 export function deleteQuizById(args) {
