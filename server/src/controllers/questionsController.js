@@ -12,10 +12,7 @@ const createQuestion = async (args) => {
   const { quiz_id, question_content, question_answers } = args;
 
   // create question
-  const createItem = new questionsModel({
-    question_content,
-    question_answers,
-  });
+  const createItem = new questionsModel({ question_content, question_answers });
   await createItem.save();
 
   // save createItem to quiz

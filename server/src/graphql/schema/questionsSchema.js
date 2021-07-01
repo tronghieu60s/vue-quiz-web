@@ -3,8 +3,18 @@ const {
   GraphQLString,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLBoolean,
 } = require("graphql");
-const { QuestionsType, AnswersType } = require("../types");
+const { QuestionsType } = require("../types");
+
+const AnswersInput = new GraphQLInputObjectType({
+  name: "AnswersInput",
+  fields: {
+    answer_content: { type: GraphQLString },
+    answer_isCorrect: { type: GraphQLBoolean },
+  },
+});
 
 const query = {
   getQuestionsByQuizId: {
@@ -19,7 +29,7 @@ const mutation = {
     args: {
       quiz_id: { type: GraphQLNonNull(GraphQLID) },
       question_content: { type: GraphQLNonNull(GraphQLString) },
-      question_answers: { type: GraphQLNonNull(GraphQLList(AnswersType)) },
+      question_answers: { type: GraphQLNonNull(GraphQLList(AnswersInput)) },
     },
   },
 };
