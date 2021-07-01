@@ -1,5 +1,5 @@
-import allUsersQuery from "@graphql/allUsers.gql";
 import createUserQuery from "@graphql/createUser.gql";
+import getAllUsersQuery from "@graphql/getAllUsers.gql";
 import getUserQuery from "@graphql/getUser.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
 
@@ -13,7 +13,7 @@ import { executeMutation, executeQuery } from "@utils/graphql";
 */
 
 export function getUsers() {
-  return executeQuery(allUsersQuery).then((res) => res.allUsers);
+  return executeQuery(getAllUsersQuery).then((res) => res.allUsers);
 }
 
 export function getUserById(args) {

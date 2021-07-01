@@ -3,11 +3,13 @@ const {
   GraphQLString,
   GraphQLNonNull,
   GraphQLID,
+  GraphQLInt,
 } = require("graphql");
 const { QuizzesType } = require("../types");
 
 const query = {
-  getQuizzesByUser: {
+  getAllQuizzes: { type: GraphQLList(QuizzesType) },
+  getQuizzesByUserId: {
     type: GraphQLList(QuizzesType),
     args: { user_id: { type: GraphQLNonNull(GraphQLID) } },
   },
@@ -20,6 +22,23 @@ const mutation = {
       user_id: { type: GraphQLNonNull(GraphQLID) },
       quiz_title: { type: GraphQLNonNull(GraphQLString) },
       quiz_desc: { type: GraphQLString },
+    },
+  },
+  updateQuizById: {
+    type: QuizzesType,
+    args: {
+      _id: { type: GraphQLNonNull(GraphQLID) },
+      quiz_title: { type: GraphQLString },
+      quiz_desc: { type: GraphQLString },
+      quiz_code: { type: GraphQLString },
+      quiz_current: { type: GraphQLInt },
+    },
+  },
+  deleteQuizById: {
+    type: QuizzesType,
+    args: {
+      _id: { type: GraphQLNonNull(GraphQLID) },
+      user_id: { type: GraphQLNonNull(GraphQLID) },
     },
   },
 };

@@ -1,0 +1,9 @@
+query {
+  getAllQuizzes {
+    _id
+    quiz_title
+    quiz_desc
+    quiz_code
+    quiz_current
+  }
+}

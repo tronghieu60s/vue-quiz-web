@@ -1,0 +1,19 @@
+mutation createQuiz(
+  $user_id: ID!
+  $quiz_title: String!
+  $quiz_desc: String
+) {
+  createQuiz(
+    user_id: $user_id
+    quiz_title: $quiz_title
+    quiz_desc: $quiz_desc
+  ) {
+    _id
+    quiz_title
+    quiz_desc
+    quiz_code
+    quiz_current
+    created_at
+    updated_at
+  }
+}

@@ -34,14 +34,14 @@ import QuizzesCreate from "@components/Quizzes/QuizzesCreate.vue";
 import QuizzesList from "@components/Quizzes/QuizzesList.vue";
 import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
 import { searchString } from "@helpers/string";
-import {
-  createQuiz,
-  getQuizzes,
-  getQuizzesByUserId,
-  deleteQuizById,
-  updateQuizById,
-} from "@models/quizzes.firebase";
+import { updateQuizById } from "@models/quizzes.firebase";
 import { getQuestionsByQuizId } from "@models/questions.firebase";
+import {
+  getAllQuizzes,
+  getQuizzesByUserId,
+  createQuiz,
+  deleteQuizById,
+} from "@models/quizzesModel";
 export default {
   components: {
     HeaderCustom,
@@ -95,9 +95,13 @@ export default {
     // load - create - update - delete
     async onLoadQuizzes() {
       if (!this.$store.state.user) return;
+
       // get quizzes by database and set to quizzes and quizzesbase
-      const quizzes = await getQuizzesByUserId(this.$store.state.user._id);
+      const user_id = this.$store.state.user._id;
+      const quizzes = [...(await getQuizzesByUserId({ user_id }))];
       quizzes.reverse();
+
+      // set quizzes to base
       this.quizzes = quizzes;
       this.quizzesbase = quizzes;
     },
@@ -140,7 +144,8 @@ export default {
     async onDeleteQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete quizzes by id
-        const deleteItem = await deleteQuizById(quiz._id);
+        const user_id = this.$store.state.user._id;
+        const deleteItem = await deleteQuizById({ _id: quiz._id, user_id });
         if (!deleteItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -200,7 +205,7 @@ export default {
     async generateCodeQuiz(quizzes = null) {
       // random and check if quizzes exists
       const random = Math.random().toString(36).substring(7);
-      if (!quizzes) quizzes = await getQuizzes();
+      if (!quizzes) quizzes = await getAllQuizzes();
 
       // find code exists on quizzes
       const findCode = quizzes.find((o) => o.quiz_code === random);
