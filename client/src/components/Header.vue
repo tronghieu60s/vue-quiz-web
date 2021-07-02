@@ -110,17 +110,10 @@ import { updateUserById } from "@models/usersModel";
 
 export default {
   props: {
-    title: {
-      type: String,
-      default: "",
-    },
+    title: { type: String, default: "" },
   },
   data() {
-    return {
-      inputOldPass: "",
-      inputNewPass: "",
-      inputReNewPass: "",
-    };
+    return { inputOldPass: "", inputNewPass: "", inputReNewPass: "" };
   },
   methods: {
     onReset() {
@@ -134,22 +127,26 @@ export default {
       this.$toast.success(this.$store.state.string.S_LOGOUT_ACCOUNT_SUCCESS);
     },
     onSubmit() {
-      if (this.inputNewPass !== this.inputReNewPass)
-        return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);
       this.$store.dispatch("actLoadingAction", this.onChangePass);
     },
     async onChangePass() {
+      // check password match
+      if (this.inputNewPass !== this.inputReNewPass)
+        return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);
+
       const { _id, user_password } = this.$store.state.user;
-      const decoded = await bcrypt
-        .compare(this.inputOldPass, user_password)
-        .then((res) => res);
+
+      // decoded password
+      const decoded = await bcrypt.compare(this.inputOldPass, user_password);
       if (!decoded)
         return this.$toast.error(
           this.$store.state.string.E_PASSWORD_NOT_CORRECT
         );
 
+      // hash pass and update
       const hash = bcrypt.hashSync(this.inputNewPass, 10);
-      const updateUser = await updateUserById(_id, { user_password: hash });
+      console.log(_id);
+      const updateUser = await updateUserById({ _id, user_password: hash });
       if (!updateUser)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT

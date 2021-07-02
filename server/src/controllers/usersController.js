@@ -14,12 +14,7 @@ const createUser = async (args) => {
   return createItem;
 };
 
-const updateUserById = async (args) => {
-  const { _id, user_username, user_password } = args;
-  return await usersModel.findByIdAndUpdate(
-    _id,
-    { user_username, user_password },
-    { new: true }
-  );
-};
+const updateUserById = async (args) =>
+  await usersModel.findByIdAndUpdate(args._id, { ...args }, { new: true });
+
 module.exports = { getAllUsers, getUsers, getUser, createUser, updateUserById };

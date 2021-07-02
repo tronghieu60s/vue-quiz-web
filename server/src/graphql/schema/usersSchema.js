@@ -1,4 +1,4 @@
-const { GraphQLList, GraphQLString, GraphQLNonNull } = require("graphql");
+const { GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } = require("graphql");
 const { UsersType } = require("../types");
 
 const query = {
@@ -30,7 +30,7 @@ const mutation = {
   updateUserById: {
     type: UsersType,
     args: {
-      _id: { type: GraphQLNonNull(GraphQLString) },
+      _id: { type: GraphQLNonNull(GraphQLID) },
       user_username: { type: GraphQLString },
       user_password: { type: GraphQLString },
     },
