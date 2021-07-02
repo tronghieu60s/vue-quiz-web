@@ -1,10 +1,10 @@
-mutation createQuestion(
-  $quiz_id: ID!
-  $question_content: String!
-  $question_answers: [AnswersInput]!
+mutation updateQuestionById(
+  $_id: ID!
+  $question_content: String
+  $question_answers: [AnswerInput]
 ) {
-  createQuestion(
-    quiz_id: $quiz_id
+  updateQuestionById(
+    _id: $_id
     question_content: $question_content
     question_answers: $question_answers
   ) {

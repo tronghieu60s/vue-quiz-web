@@ -22,14 +22,14 @@ export function getAllQuizzes() {
 }
 
 export function getQuizzesByUserId(args) {
-  return executeQuery(getQuizzesByUserIdQuery, { user_id: args.user_id }).then(
-    (res) => res.getQuizzesByUserId
-  );
+  return executeQuery(getQuizzesByUserIdQuery, {
+    user_id: args.user_id,
+  }).then((res) => (res ? res.getQuizzesByUserId : null));
 }
 
 export function getQuizById(args) {
-  return executeQuery(getQuizByIdQuery, { value: args._id }).then(
-    (res) => res.getQuiz
+  return executeQuery(getQuizByIdQuery, { value: args._id }).then((res) =>
+    res ? res.getQuiz : null
   );
 }
 
@@ -39,7 +39,7 @@ export function createQuiz(args) {
     user_id,
     quiz_title,
     quiz_desc,
-  }).then((res) => res.createQuiz);
+  }).then((res) => (res ? res.createQuiz : null));
 }
 
 export function updateQuizById(args) {
@@ -50,7 +50,7 @@ export function updateQuizById(args) {
     quiz_desc,
     quiz_code,
     quiz_current,
-  }).then((res) => res.updateQuizById);
+  }).then((res) => (res ? res.updateQuizById : null));
 }
 
 export function deleteQuizById(args) {
@@ -58,5 +58,5 @@ export function deleteQuizById(args) {
   return executeMutation(deleteQuizByIdQuery, {
     _id,
     user_id,
-  }).then((res) => res.deleteQuizById);
+  }).then((res) => (res ? res.deleteQuizById : null));
 }

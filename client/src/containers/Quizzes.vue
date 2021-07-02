@@ -125,11 +125,13 @@ export default {
       this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
     },
     async onUpdateQuiz(props) {
+      const { quiz_title, quiz_desc } = props;
       const quiz_id = this.quiz._id;
       this.quiz = null;
 
       // update quiz
-      const updateItem = await updateQuizById({ ...props, _id: quiz_id });
+      const update = { _id: quiz_id, quiz_title, quiz_desc };
+      const updateItem = await updateQuizById(update);
       if (!updateItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT

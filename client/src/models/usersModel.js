@@ -14,19 +14,21 @@ import { executeMutation, executeQuery } from "@utils/graphql";
 */
 
 export function getUsers() {
-  return executeQuery(getAllUsersQuery).then((res) => res.allUsers);
+  return executeQuery(getAllUsersQuery).then((res) =>
+    res ? res.allUsers : null
+  );
 }
 
 export function getUserById(args) {
-  return executeQuery(getUserByIdQuery, { value: args._id }).then(
-    (res) => res.getUser
+  return executeQuery(getUserByIdQuery, { value: args._id }).then((res) =>
+    res ? res.getUser : null
   );
 }
 
 export function getUserByUsername(args) {
   return executeQuery(getUserByUsernameQuery, {
     value: args.user_username,
-  }).then((res) => res.getUser);
+  }).then((res) => (res ? res.getUser : null));
 }
 
 export function createUser(args) {
@@ -34,5 +36,5 @@ export function createUser(args) {
   return executeMutation(createUserQuery, {
     user_username,
     user_password,
-  }).then((res) => res.createUser);
+  }).then((res) => (res ? res.createUser : null));
 }

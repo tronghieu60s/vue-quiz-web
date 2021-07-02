@@ -95,12 +95,12 @@ export default {
   methods: {
     onInputAnswer(props) {
       const { index, value } = props;
-      this.inputAnswer[index].question_answers = value;
+      this.inputAnswer[index].answer_content = value;
     },
     onToggleIsCorrect(index) {
       // set all isCorrect = false
-      this.inputAnswer = this.inputAnswer.map((o) => ({
-        ...o,
+      this.inputAnswer = this.inputAnswer.map((answer) => ({
+        ...answer,
         answer_isCorrect: false,
       }));
       this.inputAnswer[index].answer_isCorrect = !this.inputAnswer[index]
@@ -110,19 +110,19 @@ export default {
       this.inputQuestion = "";
       this.inputAnswer = [
         {
-          answer: "",
+          answer_content: "",
           answer_isCorrect: true,
         },
         {
-          answer: "",
+          answer_content: "",
           answer_isCorrect: false,
         },
         {
-          answer: "",
+          answer_content: "",
           answer_isCorrect: false,
         },
         {
-          answer: "",
+          answer_content: "",
           answer_isCorrect: false,
         },
       ];
@@ -133,13 +133,33 @@ export default {
 
       // find correct answer and check answer is empty
       const correctAnswer = this.inputAnswer.find((o) => o.answer_isCorrect);
-      if (correctAnswer.answer.length === 0) return;
+      if (correctAnswer.answer_content.length === 0) return;
 
       // get data and pass action to parent
-      const question = this.inputQuestion;
-      const answers = this.inputAnswer;
-      this.$emit("onActionQuestion", { question, answers });
-      this.onReset();
+      const question_content = this.inputQuestion;
+      const question_answers = this.inputAnswer;
+      this.$emit("onActionQuestion", { question_content, question_answers });
+
+      // reset
+      this.inputQuestion = "";
+      this.inputAnswer = [
+        {
+          answer_content: "",
+          answer_isCorrect: true,
+        },
+        {
+          answer_content: "",
+          answer_isCorrect: false,
+        },
+        {
+          answer_content: "",
+          answer_isCorrect: false,
+        },
+        {
+          answer_content: "",
+          answer_isCorrect: false,
+        },
+      ];
     },
   },
 };

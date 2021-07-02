@@ -1,6 +1,7 @@
 import createQuestionQuery from "@graphql/createQuestion.gql";
 import deleteQuestionByIdQuery from "@graphql/deleteQuestionById.gql";
 import getQuestionsByQuizIdQuery from "@graphql/getQuestionsByQuizId.gql";
+import updateQuestionByIdQuery from "@graphql/updateQuestionById.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
 
 /* questions = {
@@ -18,7 +19,7 @@ import { executeMutation, executeQuery } from "@utils/graphql";
 export function getQuestionsByQuizId(args) {
   return executeQuery(getQuestionsByQuizIdQuery, {
     quiz_id: args.quiz_id,
-  }).then((res) => res.getQuestionsByQuizId);
+  }).then((res) => (res ? res.getQuestionsByQuizId : null));
 }
 
 export function createQuestion(args) {
@@ -27,7 +28,16 @@ export function createQuestion(args) {
     quiz_id,
     question_content,
     question_answers,
-  }).then((res) => res.createQuestion);
+  }).then((res) => (res ? res.createQuestion : null));
+}
+
+export function updateQuestionById(args) {
+  const { _id, question_content, question_answers } = args;
+  return executeMutation(updateQuestionByIdQuery, {
+    _id,
+    question_content,
+    question_answers,
+  }).then((res) => (res ? res.updateQuestionById : null));
 }
 
 export function deleteQuestionById(args) {
@@ -35,5 +45,5 @@ export function deleteQuestionById(args) {
   return executeMutation(deleteQuestionByIdQuery, {
     _id,
     quiz_id,
-  }).then((res) => res.deleteQuestionById);
+  }).then((res) => (res ? res.deleteQuestionById : null));
 }

@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const AnswerSchema = new Schema({
-  answer_content: { type: String, required: true },
-  answer_isCorrect: { type: Boolean, required: true },
+  answer_content: { type: String, default: "" },
+  answer_isCorrect: { type: Boolean, default: false, required: true },
 });
 
 const QuestionsSchema = new Schema(

@@ -32,10 +32,11 @@ import QuestionsCreate from "@components/Questions/QuestionsCreate.vue";
 import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
 import QuestionsList from "@components/Questions/QuestionsList.vue";
 import { searchString } from "@helpers/string";
-import { createQuestion, updateQuestionById } from "@models/questions.firebase";
 import { getQuizById } from "@models/quizzesModel";
 import {
+  createQuestion,
   getQuestionsByQuizId,
+  updateQuestionById,
   deleteQuestionById,
 } from "@models/questionsModel";
 export default {
@@ -97,10 +98,14 @@ export default {
       this.questionsbase = questions;
     },
     async onCreateQuestion(props) {
-      const { question, answers } = props;
+      const { question_content, question_answers } = props;
       // create question, if not exists return fail
       const quiz_id = this.quiz._id;
-      const createItem = await createQuestion({ question, answers, quiz_id });
+      const createItem = await createQuestion({
+        quiz_id,
+        question_content,
+        question_answers,
+      });
       if (!createItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -115,12 +120,15 @@ export default {
       this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
     },
     async onUpdateQuestion(props) {
-      const { question, answers } = props;
+      const { question_content, question_answers } = props;
 
-      // get id and update item
-      const questionId = this.question._id;
-      const update = { question, answers };
-      const updateItem = await updateQuestionById(questionId, update);
+      // get id and set question = null
+      const question_id = this.question._id;
+      this.question = null;
+
+      // update item
+      const update = { _id: question_id, question_content, question_answers };
+      const updateItem = await updateQuestionById(update);
       if (!updateItem)
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -129,7 +137,7 @@ export default {
       // load quizzes on table
       const questionsbase = this.questionsbase;
       const questionIndex = questionsbase.findIndex(
-        (o) => o._id === questionId
+        (o) => o._id === question_id
       );
       questionsbase[questionIndex] = updateItem;
       this.questionsbase = questionsbase;
@@ -140,9 +148,12 @@ export default {
     async onDeleteQuestion(question) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete question with quiz_id
-        const _id = question._id;
+        const question_id = question._id;
         const quiz_id = this.quiz._id;
-        const deleteItem = await deleteQuestionById({ _id, quiz_id });
+        const deleteItem = await deleteQuestionById({
+          _id: question_id,
+          quiz_id,
+        });
         if (!deleteItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -151,7 +162,9 @@ export default {
         // load questions on table
         this.question = null;
         const questionsbase = this.questionsbase;
-        const questionIndex = questionsbase.findIndex((o) => o._id === _id);
+        const questionIndex = questionsbase.findIndex(
+          (o) => o._id === question_id
+        );
         questionsbase.splice(questionIndex, 1);
         this.questionsbase = questionsbase;
 
