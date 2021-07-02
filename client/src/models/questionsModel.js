@@ -1,4 +1,5 @@
-import createQuestion from "@graphql/createQuestion.gql";
+import createQuestionQuery from "@graphql/createQuestion.gql";
+import deleteQuestionByIdQuery from "@graphql/deleteQuestionById.gql";
 import getQuestionsByQuizIdQuery from "@graphql/getQuestionsByQuizId.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
 
@@ -20,11 +21,19 @@ export function getQuestionsByQuizId(args) {
   }).then((res) => res.getQuestionsByQuizId);
 }
 
-export function createQuestionQuery(args) {
+export function createQuestion(args) {
   const { quiz_id, question_content, question_answers } = args;
-  return executeMutation(createQuestion, {
+  return executeMutation(createQuestionQuery, {
     quiz_id,
     question_content,
     question_answers,
   }).then((res) => res.createQuestion);
+}
+
+export function deleteQuestionById(args) {
+  const { _id, quiz_id } = args;
+  return executeMutation(deleteQuestionByIdQuery, {
+    _id,
+    quiz_id,
+  }).then((res) => res.deleteQuestionById);
 }

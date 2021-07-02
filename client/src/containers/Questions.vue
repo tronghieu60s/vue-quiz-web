@@ -32,13 +32,12 @@ import QuestionsCreate from "@components/Questions/QuestionsCreate.vue";
 import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
 import QuestionsList from "@components/Questions/QuestionsList.vue";
 import { searchString } from "@helpers/string";
-import {
-  createQuestion,
-  deleteQuestionById,
-  updateQuestionById,
-} from "@models/questions.firebase";
+import { createQuestion, updateQuestionById } from "@models/questions.firebase";
 import { getQuizById } from "@models/quizzesModel";
-import { getQuestionsByQuizId } from "@models/questionsModel";
+import {
+  getQuestionsByQuizId,
+  deleteQuestionById,
+} from "@models/questionsModel";
 export default {
   components: {
     HeaderCustom,
@@ -140,7 +139,10 @@ export default {
     },
     async onDeleteQuestion(question) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const deleteItem = await deleteQuestionById(question._id);
+        // delete question with quiz_id
+        const _id = question._id;
+        const quiz_id = this.quiz._id;
+        const deleteItem = await deleteQuestionById({ _id, quiz_id });
         if (!deleteItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -149,9 +151,7 @@ export default {
         // load questions on table
         this.question = null;
         const questionsbase = this.questionsbase;
-        const questionIndex = questionsbase.findIndex(
-          (o) => o._id === question._id
-        );
+        const questionIndex = questionsbase.findIndex((o) => o._id === _id);
         questionsbase.splice(questionIndex, 1);
         this.questionsbase = questionsbase;
 
