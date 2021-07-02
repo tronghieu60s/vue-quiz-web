@@ -32,6 +32,13 @@ const mutation = {
       question_answers: { type: GraphQLNonNull(GraphQLList(AnswersInput)) },
     },
   },
+  deleteQuestionById: {
+    type: QuestionsType,
+    args: {
+      _id: { type: GraphQLNonNull(GraphQLID) },
+      quiz_id: { type: GraphQLNonNull(GraphQLID) },
+    },
+  },
 };
 
 module.exports = { query, mutation };

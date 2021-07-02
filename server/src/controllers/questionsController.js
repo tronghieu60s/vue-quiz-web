@@ -23,4 +23,13 @@ const createQuestion = async (args) => {
   return createItem;
 };
 
-module.exports = { getQuestionsByQuizId, createQuestion };
+const deleteQuestionById = async (args) => {
+  const { _id, quiz_id } = args;
+  const deleteItem = await questionsModel.findByIdAndDelete(_id);
+  await quizzesModel.findByIdAndUpdate(quiz_id, {
+    $pullAll: { quiz_questions: [deleteItem] },
+  });
+  return deleteItem;
+};
+
+module.exports = { getQuestionsByQuizId, createQuestion, deleteQuestionById };
