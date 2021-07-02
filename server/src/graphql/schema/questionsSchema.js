@@ -32,6 +32,14 @@ const mutation = {
       question_answers: { type: GraphQLNonNull(GraphQLList(AnswersInput)) },
     },
   },
+  updateQuestionById: {
+    type: QuestionsType,
+    args: {
+      _id: { type: GraphQLNonNull(GraphQLID) },
+      question_content: { type: GraphQLString },
+      question_answers: { type: GraphQLList(AnswersInput) },
+    },
+  },
   deleteQuestionById: {
     type: QuestionsType,
     args: {

@@ -23,6 +23,9 @@ const createQuestion = async (args) => {
   return createItem;
 };
 
+const updateQuestionById = async (args) =>
+  await questionsModel.findByIdAndUpdate(args._id, { ...args }, { new: true });
+
 const deleteQuestionById = async (args) => {
   const { _id, quiz_id } = args;
   const deleteItem = await questionsModel.findByIdAndDelete(_id);
@@ -32,4 +35,4 @@ const deleteQuestionById = async (args) => {
   return deleteItem;
 };
 
-module.exports = { getQuestionsByQuizId, createQuestion, deleteQuestionById };
+module.exports = { getQuestionsByQuizId, createQuestion, updateQuestionById, deleteQuestionById };
