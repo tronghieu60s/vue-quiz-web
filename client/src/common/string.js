@@ -15,9 +15,6 @@ export const Q_CONFIRM_DELETE_VALUES =
   "Bạn có chắc chắn muốn xóa? Hành động này không thể hoàn tác.";
 export const Q_CONFIRM_STOP_QUIZ = "Bạn có muốn dừng ngay bây giờ không?";
 
-export const E_UNKNOWN_ERROR_DETECT =
-  "Lỗi không xác định, vui lòng thử lại sau.";
-
 export const E_ALERT_USERNAME_EXISTS =
   "Tên người dùng đã tồn tại, vui lòng dùng tên khác.";
 export const E_USERNAME_NOT_ALLOW =
@@ -31,3 +28,9 @@ export const E_QUIZ_IS_RUNNING =
   "Cuộc thi này đang diễn ra, không thể tham gia.";
 export const E_QUESTIONS_NOT_FOUND =
   "Không có câu hỏi nào, hãy thêm câu hỏi trước.";
+
+/* Text ERROR */
+export const E_UNKNOWN_ERROR_DETECT =
+  "Lỗi không xác định, vui lòng thử lại sau.";
+export const E_SERVER_ERROR_CONNECTING =
+  "Error connecting system to server. Please reload and try again.";

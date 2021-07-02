@@ -8,14 +8,13 @@
 import jwt from "jsonwebtoken";
 import LoadingPage from "./components/UI/LoadingPage.vue";
 import LoadingAction from "./components/UI/LoadingAction.vue";
-import router from "./router";
 import { socketConnect } from "./store/socket";
+import router from "./router";
+
 export default {
   components: { LoadingPage, LoadingAction },
   data() {
-    return {
-      loadFirst: false,
-    };
+    return { loadFirst: false };
   },
   created() {
     this.$store.dispatch("actLoadingPage", async () => {
@@ -49,7 +48,7 @@ export default {
         router.push({ name: "Admin" });
     },
     async actLoadUserStorage() {
-      const token = localStorage.getItem(".config_user");
+      const token = localStorage.getItem("quizLogin");
       return new Promise((resolve) => {
         jwt.verify(token, this.$store.state.jwtToken, (err, decoded) => {
           if (err) resolve(null);

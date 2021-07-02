@@ -43,10 +43,7 @@ import { getUserByUsername } from "@models/usersModel";
 export default {
   components: { LayoutCenter },
   data() {
-    return {
-      inputUsername: "",
-      inputPassword: "",
-    };
+    return { inputUsername: "", inputPassword: "" };
   },
   methods: {
     onSubmit() {
@@ -54,6 +51,7 @@ export default {
       this.$store.dispatch("actLoadingAction", this.onLoginUser);
     },
     async onLoginUser() {
+      // create user
       const user_username = this.inputUsername.toLowerCase();
       const getItem = await getUserByUsername({ user_username });
       if (!getItem)
@@ -69,9 +67,11 @@ export default {
             this.$store.state.string.E_ACCOUNT_NOT_MATCH
           );
 
-        this.$store.state.user = getItem;
+        // save storage user
         const token = jwt.sign(getItem, this.$store.state.jwtToken);
-        localStorage.setItem(".config_user", token);
+        localStorage.setItem("quizLogin", token);
+
+        this.$store.state.user = getItem;
         this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
       });
     },

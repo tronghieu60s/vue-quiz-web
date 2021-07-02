@@ -7,7 +7,9 @@ A RealTime Quiz Application Using VueJS, SocketIO, Firebase.
 Config environment variables on file `/client/.env.local`:
 
 ```bash
-VUE_APP_SERVER_URL=http://localhost:4000
+# default server: http://localhost:4000
+VUE_APP_SERVER_URL=your-sever-url
+VUE_APP_JWT_TOKEN=your-jwt-token
 ```
 
 ## Run Docker Compose

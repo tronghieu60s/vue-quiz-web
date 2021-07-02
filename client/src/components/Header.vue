@@ -107,6 +107,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { updateUserById } from "@models/usersModel";
+
 export default {
   props: {
     title: {
@@ -128,7 +129,7 @@ export default {
       this.inputReNewPass = "";
     },
     onLogout() {
-      localStorage.removeItem(".config_user");
+      localStorage.removeItem("quizLogin");
       this.$store.state.user = null;
       this.$toast.success(this.$store.state.string.S_LOGOUT_ACCOUNT_SUCCESS);
     },
@@ -157,7 +158,7 @@ export default {
       // update user to state and storage
       this.$store.state.user = updateUser;
       const token = jwt.sign(updateUser, this.$store.state.jwtToken);
-      localStorage.setItem(".config_user", token);
+      localStorage.setItem("quizLogin", token);
 
       // toast and reset
       this.$toast.success(this.$store.state.string.S_CHANGE_PASS_SUCCESS);

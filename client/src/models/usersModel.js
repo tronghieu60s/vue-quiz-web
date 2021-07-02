@@ -7,7 +7,7 @@ import { executeMutation, executeQuery } from "@utils/graphql";
 
 /* users = { 
   _id, 
-  user_username, 
+  user_username,
   user_password,
   created_at,
   updated_at

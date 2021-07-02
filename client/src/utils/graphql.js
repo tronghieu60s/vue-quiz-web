@@ -3,27 +3,32 @@ import {
   createHttpLink,
   InMemoryCache,
 } from "@apollo/client/core";
+import { E_SERVER_ERROR_CONNECTING } from "@common/string";
+
+const SERVER = process.env.VUE_APP_SERVER_URL || "http://localhost:4000";
 
 /* Config apolloClient */
-const httpLink = createHttpLink({ uri: "http://localhost:4000/graphql" });
+const httpLink = createHttpLink({ uri: `${SERVER}/graphql` });
 
-const cache = new InMemoryCache();
-
-export const apolloClient = new ApolloClient({ link: httpLink, cache });
+export const apolloClient = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    query: { fetchPolicy: "no-cache", errorPolicy: "all" },
+    watchQuery: { fetchPolicy: "no-cache", errorPolicy: "ignore" },
+  },
+});
 
 export const onError = (err) => {
-  console.log(
-    "Error connecting system to server. Please reload and try again."
-  );
+  console.log(E_SERVER_ERROR_CONNECTING);
   if (process.env.NODE_ENV !== "development") return;
 
-  console.error(err.networkError);
+  // server error
+  console.error(`Server${err}`);
   // graphql error
+  if (!err.networkError) return;
   const error = err.networkError.result.errors[0];
-  const location = error.locations[0];
-  console.error(
-    `GraphQLError: ${error.message} on ${location.line} - ${location.column}`
-  );
+  console.error(`GraphQLError: ${error.message}`);
 };
 
 export const executeQuery = (query, variables = {}) => {

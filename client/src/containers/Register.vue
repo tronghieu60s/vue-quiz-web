@@ -54,31 +54,31 @@ import { getUserByUsername, createUser } from "@models/usersModel";
 export default {
   components: { LayoutCenter },
   data() {
-    return {
-      inputUsername: "",
-      inputPassword: "",
-      inputRePassword: "",
-    };
+    return { inputUsername: "", inputPassword: "", inputRePassword: "" };
   },
   methods: {
     onSubmit() {
       if (!new RegExp(/^[a-zA-Z0-9]{6,}$/).test(this.inputUsername)) return;
       if (this.inputPassword.length === 0) return;
-      if (this.inputPassword !== this.inputRePassword)
-        return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);
 
       this.$store.dispatch("actLoadingAction", this.onRegisterUser);
     },
     async onRegisterUser() {
+      // check password match
+      if (this.inputPassword !== this.inputRePassword)
+        return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);
+
       const user_username = this.inputUsername.toLowerCase();
       const user_password = bcrypt.hashSync(this.inputPassword, 10);
 
+      // get user by username
       const getItem = await getUserByUsername({ user_username });
       if (getItem)
         return this.$toast.error(
           this.$store.state.string.E_ALERT_USERNAME_EXISTS
         );
 
+      // create user
       const createItem = await createUser({ user_username, user_password });
       if (!createItem)
         return this.$toast.error(
