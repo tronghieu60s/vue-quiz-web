@@ -106,7 +106,7 @@
 <script>
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-import { updateUserById } from "@models/users.firebase";
+import { updateUserById } from "@models/usersModel";
 export default {
   props: {
     title: {

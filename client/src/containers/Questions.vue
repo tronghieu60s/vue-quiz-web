@@ -72,7 +72,7 @@ export default {
 
       // filter questionsbase to questions by search funtion
       this.questions = this.questionsbase.filter((o) =>
-        searchString(o.question, this.inputSearch)
+        searchString(o.question_content, this.inputSearch)
       );
     },
   },

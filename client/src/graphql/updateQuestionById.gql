@@ -1,7 +1,7 @@
 mutation updateQuestionById(
   $_id: ID!
   $question_content: String
-  $question_answers: [AnswerInput]
+  $question_answers: [AnswersInput]
 ) {
   updateQuestionById(
     _id: $_id

@@ -65,11 +65,11 @@
 import jwt from "jsonwebtoken";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
-import Firework from "../components/UI/Firework.vue";
-import AnimateQuiz from "../components/UI/AnimateQuiz.vue";
-import Countdown from "../components/UI/Countdown.vue";
-import LoadingActionIcon from "../components/UI/LoadingActionIcon.vue";
-import { getQuizByQuizCode } from "@models/quizzes.firebase";
+import Firework from "@components/UI/Firework.vue";
+import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
+import Countdown from "@components/UI/Countdown.vue";
+import LoadingActionIcon from "@components/UI/LoadingActionIcon.vue";
+import { getQuizByQuizCode } from "@models/quizzesModel";
 export default {
   components: {
     QuizAnswer,
@@ -95,7 +95,7 @@ export default {
   },
   created() {
     this.$store.dispatch("actLoadingAction", async () => {
-      const getQuiz = await getQuizByQuizCode(this.quiz_code);
+      const getQuiz = await getQuizByQuizCode({ quiz_code: this.quiz_code });
       if (!getQuiz) return this.$router.push({ name: "Home" });
       this.quiz = getQuiz;
 

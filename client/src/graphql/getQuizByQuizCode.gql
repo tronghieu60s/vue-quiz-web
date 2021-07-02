@@ -1,0 +1,9 @@
+query getQuiz($value: String!) {
+  getQuiz(key: "quiz_code", value: $value) {
+    _id
+    quiz_title
+    quiz_desc
+    quiz_code
+    quiz_current
+  }
+}

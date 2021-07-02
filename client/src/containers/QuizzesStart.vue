@@ -47,9 +47,9 @@ import QuizzesStartControl from "@components/QuizzesStart/QuizzesStartControl.vu
 import QuizzesStartUsers from "@components/QuizzesStart/QuizzesStartUsers.vue";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
-import { getQuizById, updateQuizById } from "@models/quizzes.firebase";
-import { getQuestionsByQuizId } from "@models/questions.firebase";
-import AnimateQuiz from "../components/UI/AnimateQuiz.vue";
+import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
+import { getQuizById, updateQuizById } from "@models/quizzesModel";
+import { getQuestionsByQuizId } from "@models/questionsModel";
 export default {
   components: {
     QuizzesStartControl,
@@ -132,13 +132,13 @@ export default {
       // );
     },
     async onLoadQuiz() {
-      const quizItem = await getQuizById(this.quiz_id);
+      const quizItem = await getQuizById({ quiz_id: this.quiz_id });
       if (!quizItem) return this.$router.back();
       if (!quizItem.quiz_code) return this.$router.back();
       return (this.quiz = quizItem);
     },
     async onLoadQuestions() {
-      const questions = await getQuestionsByQuizId(this.quiz._id);
+      const questions = await getQuestionsByQuizId({ quiz_id: this.quiz._id });
       this.questions = questions;
       this.question = questions[this.quiz.quiz_current - 1];
     },
@@ -166,8 +166,8 @@ export default {
     },
     onSetQuizCurrent(quiz_current) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const update = { quiz_current };
-        const updateItem = await updateQuizById(this.quiz._id, update);
+        const update = { quiz_id: this.quiz._id, quiz_current };
+        const updateItem = await updateQuizById(update);
         if (!updateItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT

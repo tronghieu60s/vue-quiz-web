@@ -24,9 +24,9 @@
 
 <script>
 import jwt from "jsonwebtoken";
-import { getQuizByQuizCode } from "@models/quizzes.firebase";
-import LayoutCenter from "../components/Layout/LayoutCenter.vue";
-import Bubbles from "../components/UI/Bubbles.vue";
+import { getQuizByQuizCode } from "@models/quizzesModel";
+import LayoutCenter from "@components/Layout/LayoutCenter.vue";
+import Bubbles from "@components/UI/Bubbles.vue";
 export default {
   components: { LayoutCenter, Bubbles },
   data() {
@@ -49,7 +49,7 @@ export default {
   methods: {
     onSubmit() {
       this.$store.dispatch("actLoadingAction", async () => {
-        const quizItem = await getQuizByQuizCode(this.inputCode);
+        const quizItem = await getQuizByQuizCode({ quiz_code: this.inputCode });
         if (!quizItem)
           return this.$toast.error(this.$store.state.string.E_NOT_FOUND_QUIZ);
 

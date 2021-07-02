@@ -1,0 +1,15 @@
+mutation updateUserById(
+  $_id: ID!
+  $user_username: String
+  $user_password: String
+) {
+  updateUserById(
+    _id: $_id
+    user_username: $user_username
+    user_password: $user_password
+  ) {
+    _id
+    user_username
+    user_password
+  }
+}

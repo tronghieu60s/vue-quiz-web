@@ -34,7 +34,7 @@ import QuizzesCreate from "@components/Quizzes/QuizzesCreate.vue";
 import QuizzesList from "@components/Quizzes/QuizzesList.vue";
 import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
 import { searchString } from "@helpers/string";
-import { getQuestionsByQuizId } from "@models/questions.firebase";
+import { getQuestionsByQuizId } from "@models/questionsModel";
 import {
   getAllQuizzes,
   getQuizzesByUserId,
@@ -172,7 +172,7 @@ export default {
       if (quiz) if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
 
       this.$store.dispatch("actLoadingAction", async () => {
-        const questions = await getQuestionsByQuizId(quiz._id);
+        const questions = await getQuestionsByQuizId({ quiz_id: quiz._id });
         if (questions.length === 0)
           return this.$toast.error(
             this.$store.state.string.E_QUESTIONS_NOT_FOUND

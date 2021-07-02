@@ -1,4 +1,5 @@
 import createUserQuery from "@graphql/createUser.gql";
+import updateUserByIdQuery from "@graphql/updateUserById.gql";
 import getAllUsersQuery from "@graphql/getAllUsers.gql";
 import getUserByIdQuery from "@graphql/getUserById.gql";
 import getUserByUsernameQuery from "@graphql/getUserByUsername.gql";
@@ -37,4 +38,13 @@ export function createUser(args) {
     user_username,
     user_password,
   }).then((res) => (res ? res.createUser : null));
+}
+
+export function updateUserById(args) {
+  const { _id, user_username, user_password } = args;
+  return executeMutation(updateUserByIdQuery, {
+    _id,
+    user_username,
+    user_password,
+  }).then((res) => (res ? res.updateUserById : null));
 }
