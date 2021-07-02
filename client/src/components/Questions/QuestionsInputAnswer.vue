@@ -4,8 +4,8 @@
       <img style="width: 13px" :src="icon" />
     </div>
     <input
-      :value="input.answer"
-      :required="input.isCorrect"
+      :value="input.answer_content"
+      :required="input.answer_isCorrect"
       @input="onInputAnswer"
       type="text"
       class="form-control"
@@ -28,7 +28,7 @@ export default {
     index: { type: Number },
     input: {
       type: Object,
-      default: () => ({ answer: "", isCorrect: false }),
+      default: () => ({ answer_content: "", answer_isCorrect: false }),
     },
   },
   emits: ["onInputAnswer", "onToggleIsCorrect"],
@@ -70,14 +70,14 @@ export default {
     stylesIconIsCorrect() {
       return {
         "fa fa-check-square": true,
-        "text-secondary": this.input.isCorrect,
+        "text-secondary": this.input.answer_isCorrect,
       };
     },
     stylesButtonIsCorrect() {
       return {
         "btn btn-sm mx-2": true,
-        "btn-success": this.input.isCorrect,
-        "btn-secondary": !this.input.isCorrect,
+        "btn-success": this.input.answer_isCorrect,
+        "btn-secondary": !this.input.answer_isCorrect,
       };
     },
   },

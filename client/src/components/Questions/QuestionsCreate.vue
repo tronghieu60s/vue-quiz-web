@@ -59,20 +59,20 @@ export default {
       inputQuestion: "",
       inputAnswer: [
         {
-          answer: "",
-          isCorrect: true,
+          answer_content: "",
+          answer_isCorrect: true,
         },
         {
-          answer: "",
-          isCorrect: false,
+          answer_content: "",
+          answer_isCorrect: false,
         },
         {
-          answer: "",
-          isCorrect: false,
+          answer_content: "",
+          answer_isCorrect: false,
         },
         {
-          answer: "",
-          isCorrect: false,
+          answer_content: "",
+          answer_isCorrect: false,
         },
       ],
     };
@@ -82,45 +82,48 @@ export default {
       if (this.question === null) return;
 
       // set question selected
-      const { question, answers } = this.question;
-      this.inputQuestion = question;
-      this.inputAnswer = answers.map(({ answer, isCorrect }) => ({
-        answer,
-        isCorrect,
-      }));
+      const { question_content, question_answers } = this.question;
+      this.inputQuestion = question_content;
+      this.inputAnswer = question_answers.map(
+        ({ answer_content, answer_isCorrect }) => ({
+          answer_content,
+          answer_isCorrect,
+        })
+      );
     },
   },
   methods: {
     onInputAnswer(props) {
       const { index, value } = props;
-      this.inputAnswer[index].answer = value;
+      this.inputAnswer[index].question_answers = value;
     },
     onToggleIsCorrect(index) {
       // set all isCorrect = false
       this.inputAnswer = this.inputAnswer.map((o) => ({
         ...o,
-        isCorrect: false,
+        answer_isCorrect: false,
       }));
-      this.inputAnswer[index].isCorrect = !this.inputAnswer[index].isCorrect;
+      this.inputAnswer[index].answer_isCorrect = !this.inputAnswer[index]
+        .answer_isCorrect;
     },
     onReset() {
       this.inputQuestion = "";
       this.inputAnswer = [
         {
           answer: "",
-          isCorrect: true,
+          answer_isCorrect: true,
         },
         {
           answer: "",
-          isCorrect: false,
+          answer_isCorrect: false,
         },
         {
           answer: "",
-          isCorrect: false,
+          answer_isCorrect: false,
         },
         {
           answer: "",
-          isCorrect: false,
+          answer_isCorrect: false,
         },
       ];
       this.$emit("onResetSelected");
@@ -129,7 +132,7 @@ export default {
       if (this.inputQuestion.length === 0) return;
 
       // find correct answer and check answer is empty
-      const correctAnswer = this.inputAnswer.find((o) => o.isCorrect);
+      const correctAnswer = this.inputAnswer.find((o) => o.answer_isCorrect);
       if (correctAnswer.answer.length === 0) return;
 
       // get data and pass action to parent

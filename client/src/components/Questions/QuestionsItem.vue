@@ -3,7 +3,7 @@
     <td>{{ index }}</td>
     <td>
       <h6 class="mb-0">{{ question._id }}</h6>
-      {{ question.question }}
+      {{ question.question_content }}
     </td>
     <td>
       <button
@@ -33,7 +33,7 @@ export default {
     index: { type: Number },
     question: {
       type: Object,
-      default: () => ({ _id: "", question: "", answers: [] }),
+      default: () => ({ _id: "", question_content: "", question_answers: [] }),
     },
   },
   methods: {

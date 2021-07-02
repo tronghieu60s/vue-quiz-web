@@ -1,0 +1,18 @@
+mutation createQuestion(
+  $quiz_id: ID!
+  $question_content: String!
+  $question_answers: [Object]!
+) {
+  createQuestion(
+    quiz_id: $quiz_id
+    question_content: $question_content
+    question_answers: $question_answers
+  ) {
+    _id
+    question_content
+    question_answers {
+      answer_content
+      answer_isCorrect
+    }
+  }
+}

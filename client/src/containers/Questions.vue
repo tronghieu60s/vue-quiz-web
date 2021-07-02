@@ -33,12 +33,12 @@ import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
 import QuestionsList from "@components/Questions/QuestionsList.vue";
 import { searchString } from "@helpers/string";
 import {
-  getQuestionsByQuizId,
   createQuestion,
   deleteQuestionById,
   updateQuestionById,
 } from "@models/questions.firebase";
 import { getQuizById } from "@models/quizzesModel";
+import { getQuestionsByQuizId } from "@models/questionsModel";
 export default {
   components: {
     HeaderCustom,
@@ -92,7 +92,8 @@ export default {
       return (this.quiz = quizItem);
     },
     async onLoadQuestions() {
-      const questions = await getQuestionsByQuizId(this.quiz_id);
+      const quiz_id = this.quiz_id;
+      const questions = [...(await getQuestionsByQuizId({ quiz_id }))];
       this.questions = questions;
       this.questionsbase = questions;
     },
