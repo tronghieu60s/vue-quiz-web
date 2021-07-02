@@ -25,15 +25,15 @@ export default createStore({
       let storage = {};
       try {
         storage = jwt.verify(
-          localStorage.getItem(".quiz_config_user"),
+          localStorage.getItem("quizPlayer"),
           state.jwtToken
         );
       } catch (err) {
-        localStorage.removeItem(".quiz_config_user");
+        localStorage.removeItem("quizPlayer");
       }
       storage[quiz_code] = username;
       const tokenStorage = jwt.sign(storage, state.jwtToken);
-      localStorage.setItem(".quiz_config_user", tokenStorage);
+      localStorage.setItem("quizPlayer", tokenStorage);
     },
   },
   actions: {

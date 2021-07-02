@@ -1,6 +1,6 @@
 <template>
   <button
-    v-if="answer.answer !== ''"
+    v-if="answer.answer_content !== ''"
     @click="$emit('onSelectAnswer')"
     type="button"
     :class="[`btn ${color} btn-block rounded-lg m-0 py-5 mb-3 mx-2`]"
@@ -9,7 +9,7 @@
   >
     <div :class="['w-75 mx-auto', [isDisable && 'del']]">
       <img :src="icon" style="width: 20px" />
-      {{ answer.answer }}
+      {{ answer.answer_content }}
     </div>
   </button>
 </template>
@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     isDisable() {
-      return this.showResult && !this.answer.isCorrect;
+      return this.showResult && !this.answer.answer_isCorrect;
     },
   },
 };

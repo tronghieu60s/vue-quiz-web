@@ -5,7 +5,7 @@
         class="text-dark text-center py-4 py-lg-4 mb-0"
         style="font-size: 1.7em"
       >
-        {{ question.question }}
+        {{ question.question_content }}
       </h1>
     </div>
     <div
@@ -13,7 +13,7 @@
       class="w-100 d-flex justify-content-center flex-wrap mt-4"
     >
       <quiz-answer-item
-        v-for="(answer, index) in question.answers"
+        v-for="(answer, index) in question.question_answers"
         :key="index"
         :index="index"
         :answer="answer"

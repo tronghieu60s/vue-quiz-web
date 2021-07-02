@@ -46,7 +46,7 @@
           <h1 class="mb-0">Awesome</h1>
           Bạn đã chọn đáp án:
           <span class="text-primary font-weight-bold">
-            {{ answer.answer }} </span
+            {{ answer.answer_content }} </span
           >. <br />
           Vui lòng chờ một chút để người khác trả lời...
         </div>
@@ -101,7 +101,7 @@ export default {
 
       try {
         const storage = jwt.verify(
-          localStorage.getItem(".quiz_config_user") || "",
+          localStorage.getItem("quizPlayer") || "",
           this.$store.state.jwtToken
         );
         if (storage[this.quiz_code] !== this.username)
@@ -118,8 +118,10 @@ export default {
   watch: {
     showResult() {
       if (!this.answer) return (this.answerStatus = "nochoose");
-      const correctAnswer = this.question.answers.find((o) => o.isCorrect);
-      if (correctAnswer.answer === this.answer.answer)
+      const correctAnswer = this.question.question_answers.find(
+        (o) => o.answer_isCorrect
+      );
+      if (correctAnswer.answer_content === this.answer.answer_content)
         return (this.answerStatus = "correct");
       this.answerStatus = "incorrect";
     },
@@ -182,15 +184,15 @@ export default {
     onStorageOutRoom() {
       try {
         const storage = jwt.verify(
-          localStorage.getItem(".quiz_config_user"),
+          localStorage.getItem("quizPlayer"),
           this.$store.state.jwtToken
         );
         delete storage[this.quiz_code];
         const tokenStorage = jwt.sign(storage, this.$store.state.jwtToken);
-        localStorage.setItem(".quiz_config_user", tokenStorage);
+        localStorage.setItem("quizPlayer", tokenStorage);
       } catch (err) {
         //empty
-        localStorage.removeItem(".quiz_config_user");
+        localStorage.removeItem("quizPlayer");
       }
       this.$router.push({ name: "Home" });
     },

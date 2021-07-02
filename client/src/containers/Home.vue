@@ -56,7 +56,7 @@ export default {
         // catch user already exists on quiz
         try {
           const storage = jwt.verify(
-            localStorage.getItem(".quiz_config_user"),
+            localStorage.getItem("quizPlayer"),
             this.$store.state.jwtToken
           );
           if (storage[this.inputCode])
@@ -68,7 +68,7 @@ export default {
               },
             });
         } catch (err) {
-          localStorage.removeItem(".quiz_config_user");
+          localStorage.removeItem("quizPlayer");
         }
 
         // quiz running not access new user
@@ -77,6 +77,7 @@ export default {
 
         // input user name and send to user
         const username = prompt("Nhập tên của bạn để tiếp tục.");
+        if (username === null) return;
         if (!new RegExp(/^[a-zA-Z0-9]+$/).test(username))
           return alert(this.$store.state.string.E_USERNAME_NOT_ALLOW);
 

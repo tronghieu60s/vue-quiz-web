@@ -132,7 +132,7 @@ export default {
       // );
     },
     async onLoadQuiz() {
-      const quizItem = await getQuizById({ quiz_id: this.quiz_id });
+      const quizItem = await getQuizById({ _id: this.quiz_id });
       if (!quizItem) return this.$router.back();
       if (!quizItem.quiz_code) return this.$router.back();
       return (this.quiz = quizItem);
@@ -166,7 +166,7 @@ export default {
     },
     onSetQuizCurrent(quiz_current) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const update = { quiz_id: this.quiz._id, quiz_current };
+        const update = { _id: this.quiz._id, quiz_current };
         const updateItem = await updateQuizById(update);
         if (!updateItem)
           return this.$toast.error(
