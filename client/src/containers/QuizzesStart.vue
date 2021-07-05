@@ -6,7 +6,7 @@
       :users="users"
       :question="question"
       :questions="questions"
-      @onQuizStart="onQuizStart"
+      @onQuizStart="users.length > 0 && onSetQuizCurrent(1)"
       @onQuizStop="onSetQuizCurrent(0)"
       @onQuizNext="onQuizNext"
     />
@@ -74,73 +74,53 @@ export default {
     this.$store.dispatch("actLoadingAction", async () => {
       await this.onLoadQuiz();
       await this.onLoadQuestions();
-      this.onLoadSocket();
+      await this.onLoadSocket();
     });
   },
   methods: {
-    onCountDownTimer() {
-      if (this.countdown > 0) {
-        setTimeout(() => {
-          this.countdown -= 1;
-          this.onCountDownTimer();
-        }, 1000);
-      }
-    },
     onLoadSocket() {
-      this.$store.state.socket.emit("admin-join-control", {
-        quiz_code: this.quiz.quiz_code,
-      });
+      const { quiz_code } = this.quiz;
+      // admin join room control
+      this.$store.state.socket.emit("admin-join-control", { quiz_code });
 
+      // request server send players
       this.$store.state.socket.on("server-send-players", (args) => {
         const { quiz_players } = args;
-        const playersOnline = quiz_players.filter((o) => o.player_online);
-        const namePlayers = playersOnline.map((o) => o.player_username);
-        this.users = namePlayers;
+        const players = quiz_players
+          .filter((o) => o.player_online)
+          .map((o) => o.player_username);
+        this.users = players;
       });
-
-      // this.$store.state.socket.on("server-send-question", (question) => {
-      //   if (question) {
-      //     this.countdown = 3;
-      //     this.onCountDownTimer();
-      //   }
-      //   this.question = question;
-      // });
-
-      // this.$store.state.socket.on(
-      //   "server-show-result",
-      //   (show) => (this.showResult = show)
-      // );
     },
     async onLoadQuiz() {
-      const quizItem = await getQuizById({ _id: this.quiz_id });
-      if (!quizItem) return this.$router.back();
-      if (!quizItem.quiz_code) return this.$router.back();
-      return (this.quiz = quizItem);
+      const getQuiz = await getQuizById({ _id: this.quiz_id });
+      if (!getQuiz) return this.$router.back();
+      if (!getQuiz.quiz_code) return this.$router.back();
+      return (this.quiz = getQuiz);
     },
     async onLoadQuestions() {
-      const questions = await getQuestionsByQuizId({ quiz_id: this.quiz._id });
-      this.questions = questions;
-      this.question = questions[this.quiz.quiz_current - 1];
+      const getQuestions = await getQuestionsByQuizId({
+        quiz_id: this.quiz._id,
+      });
+      this.questions = getQuestions;
+      this.question = getQuestions[this.quiz.quiz_current - 1];
     },
     onKickUser(index) {
-      this.$store.state.socket.emit("admin-kick-user", {
-        username: this.users[index],
+      this.$store.state.socket.emit("admin-kick-player", {
         quiz_code: this.quiz.quiz_code,
+        player_username: this.users[index],
       });
     },
-    onQuizStart() {
-      if (this.users.length === 0) return;
-      this.onSetQuizCurrent(1);
-    },
     onQuizNext() {
-      if (!this.showResult)
-        return this.$store.state.socket.emit(
-          "admin-show-result",
-          this.quiz.quiz_code
-        );
+      if (!this.showResult) {
+        return this.$store.state.socket.emit("admin-show-result", {
+          quiz_code: this.quiz.quiz_code,
+        });
+      }
 
-      if (this.quiz.quiz_current >= this.questions.length)
+      if (this.quiz.quiz_current >= this.questions.length) {
         return this.onSetQuizCurrent(0);
+      }
 
       this.onSetQuizCurrent(this.quiz.quiz_current + 1);
     },
@@ -148,10 +128,11 @@ export default {
       this.$store.dispatch("actLoadingAction", async () => {
         const update = { _id: this.quiz._id, quiz_current };
         const updateItem = await updateQuizById(update);
-        if (!updateItem)
+        if (!updateItem) {
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
+        }
 
         this.quiz = updateItem;
         this.$store.state.socket.emit("admin-send-question", {
@@ -159,6 +140,14 @@ export default {
           question: this.questions[this.quiz.quiz_current - 1],
         });
       });
+    },
+    onCountDownTimer() {
+      if (this.countdown > 0) {
+        setTimeout(() => {
+          this.countdown -= 1;
+          this.onCountDownTimer();
+        }, 1000);
+      }
     },
   },
 };

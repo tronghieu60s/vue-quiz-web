@@ -51,9 +51,18 @@ const deletePlayerByUsername = async (args) => {
   return deletePlayer;
 };
 
+const deletePlayersByQuizCode = async (args) => {
+  const { quiz_code } = args;
+  const deletePlayers = await playersModel.deleteMany({
+    player_quiz: quiz_code,
+  });
+  return deletePlayers;
+};
+
 module.exports = {
   getPlayersByUsername,
   createPlayer,
   updatePlayerByUsername,
   deletePlayerByUsername,
+  deletePlayersByQuizCode,
 };

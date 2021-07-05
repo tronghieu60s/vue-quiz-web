@@ -1,9 +1,5 @@
 const usersModel = require("../models/usersModel");
 
-const getAllUsers = async () => {
-  return await usersModel.find({}).exec();
-};
-
 const getUsers = async (args) => {
   return await usersModel.find({ [args.key]: args.value }).exec();
 };
@@ -26,4 +22,4 @@ const updateUserById = async (args) => {
   );
 };
 
-module.exports = { getAllUsers, getUsers, getUser, createUser, updateUserById };
+module.exports = { getUsers, getUser, createUser, updateUserById };

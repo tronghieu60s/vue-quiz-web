@@ -2,7 +2,6 @@ const { GraphQLList, GraphQLString, GraphQLNonNull, GraphQLID } = require("graph
 const { UsersType } = require("../types");
 
 const query = {
-  allUsers: { type: GraphQLList(UsersType) },
   getUsers: {
     type: GraphQLList(UsersType),
     args: {

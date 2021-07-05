@@ -1,6 +1,5 @@
 import createUserQuery from "@graphql/createUser.gql";
 import updateUserByIdQuery from "@graphql/updateUserById.gql";
-import getAllUsersQuery from "@graphql/getAllUsers.gql";
 import getUserByIdQuery from "@graphql/getUserById.gql";
 import getUserByUsernameQuery from "@graphql/getUserByUsername.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
@@ -13,12 +12,6 @@ import { executeMutation, executeQuery } from "@utils/graphql";
   updated_at
 }
 */
-
-export function getUsers() {
-  return executeQuery(getAllUsersQuery).then((res) =>
-    res ? res.allUsers : null
-  );
-}
 
 export function getUserById(args) {
   return executeQuery(getUserByIdQuery, { value: args._id }).then((res) =>

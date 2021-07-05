@@ -8,7 +8,6 @@ const {
 const { QuizzesType } = require("../types");
 
 const query = {
-  getAllQuizzes: { type: GraphQLList(QuizzesType) },
   getQuizzesByUserId: {
     type: GraphQLList(QuizzesType),
     args: { user_id: { type: GraphQLNonNull(GraphQLID) } },

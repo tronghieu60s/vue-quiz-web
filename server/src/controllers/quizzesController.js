@@ -1,10 +1,6 @@
 const usersModel = require("../models/usersModel");
 const quizzesModel = require("../models/quizzesModel");
 
-const getAllQuizzes = async () => {
-  return await quizzesModel.find({}).exec();
-};
-
 const getQuizzesByUserId = async (args) => {
   const getQuiz = await usersModel
     .findById(args.user_id)
@@ -16,7 +12,7 @@ const getQuiz = async (args) => {
   return await quizzesModel.findOne({ [args.key]: args.value }).exec();
 };
 
-const getQuizReferenceByQuizCode = async (args) => {
+const getQuizByQuizCode = async (args) => {
   const { quiz_code } = args;
   const getQuiz = await quizzesModel
     .findOne({ quiz_code })
@@ -40,8 +36,13 @@ const createQuiz = async (args) => {
   return createQuiz;
 };
 
-const updateQuizById = async (args) =>
-  await quizzesModel.findByIdAndUpdate(args._id, { ...args }, { new: true });
+const updateQuizById = async (args) => {
+  return await quizzesModel.findByIdAndUpdate(
+    args._id,
+    { ...args },
+    { new: true }
+  );
+};
 
 const deleteQuizById = async (args) => {
   const { _id, user_id } = args;
@@ -53,10 +54,9 @@ const deleteQuizById = async (args) => {
 };
 
 module.exports = {
-  getAllQuizzes,
   getQuizzesByUserId,
   getQuiz,
-  getQuizReferenceByQuizCode,
+  getQuizByQuizCode,
   createQuiz,
   updateQuizById,
   deleteQuizById,

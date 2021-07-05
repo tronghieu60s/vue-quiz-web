@@ -1,6 +1,5 @@
 import createQuizQuery from "@graphql/createQuiz.gql";
 import deleteQuizByIdQuery from "@graphql/deleteQuizById.gql";
-import getAllQuizzesQuery from "@graphql/getAllQuizzes.gql";
 import getQuizByIdQuery from "@graphql/getQuizById.gql";
 import getQuizByQuizCodeQuery from "@graphql/getQuizByQuizCode.gql";
 import getQuizzesByUserIdQuery from "@graphql/getQuizzesByUserId.gql";
@@ -17,10 +16,6 @@ import { executeMutation, executeQuery } from "@utils/graphql";
   updated_at,
 }
 */
-
-export function getAllQuizzes() {
-  return executeQuery(getAllQuizzesQuery).then((res) => res.getAllQuizzes);
-}
 
 export function getQuizzesByUserId(args) {
   return executeQuery(getQuizzesByUserIdQuery, {

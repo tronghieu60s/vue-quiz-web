@@ -79,10 +79,7 @@ export default {
     AnimateQuiz,
     LoadingActionIcon,
   },
-  props: {
-    quiz_code: { type: String },
-    player_username: { type: String },
-  },
+  props: { quiz_code: { type: String }, username: { type: String } },
   data() {
     return {
       answer: null,
@@ -95,27 +92,8 @@ export default {
   },
   created() {
     this.$store.dispatch("actLoadingAction", async () => {
-      const getQuiz = await getQuizByQuizCode({ quiz_code: this.quiz_code });
-      if (!getQuiz) return this.$router.push({ name: "Home" });
-      this.quiz = getQuiz;
-
-      try {
-        const storage = jwt.verify(
-          localStorage.getItem("quizPlayer") || "",
-          this.$store.state.jwtToken
-        );
-        if (storage[this.quiz_code] !== this.player_username)
-          return this.$router.push({ name: "Home" });
-      } catch (err) {
-        return this.$router.push({ name: "Home" });
-      }
-
-      const payload = {
-        player_username: this.player_username,
-        quiz_code: this.quiz_code,
-      };
-      this.$store.state.socket.emit("client-join-user", payload);
-      this.onLoadSocket();
+      await this.onLoadFirst();
+      await this.onLoadSocket();
     });
   },
   watch: {
@@ -133,14 +111,6 @@ export default {
     },
   },
   methods: {
-    onCountDownTimer() {
-      if (this.countdown > 0) {
-        setTimeout(() => {
-          this.countdown -= 1;
-          this.onCountDownTimer();
-        }, 1000);
-      }
-    },
     onLoadSocket() {
       this.$store.state.socket.on("server-show-result", (args) => {
         const { quiz_result } = args;
@@ -176,11 +146,31 @@ export default {
         }
       });
     },
+    async onLoadFirst() {
+      const { quiz_code, username: player_username } = this;
+
+      const getQuiz = await getQuizByQuizCode({ quiz_code });
+      if (!getQuiz) return this.$router.push({ name: "Home" });
+      this.quiz = getQuiz;
+
+      try {
+        const storage = jwt.verify(
+          localStorage.getItem("quizPlayer") || "",
+          this.$store.state.jwtToken
+        );
+        if (storage[quiz_code] !== player_username)
+          return this.$router.push({ name: "Home" });
+      } catch (err) {
+        return this.$router.push({ name: "Home" });
+      }
+
+      const payload = { quiz_code, player_username };
+      this.$store.state.socket.emit("client-join-user", payload);
+    },
     onOutRoom() {
-      this.$store.state.socket.emit("client-out-user", {
-        player_username: this.player_username,
-        quiz_code: this.quiz_code,
-      });
+      const { quiz_code, username: player_username } = this;
+      const payload = { quiz_code, player_username };
+      this.$store.state.socket.emit("client-out-user", payload);
     },
     onStorageOutRoom() {
       try {
@@ -196,6 +186,14 @@ export default {
         localStorage.removeItem("quizPlayer");
       }
       this.$router.push({ name: "Home" });
+    },
+    onCountDownTimer() {
+      if (this.countdown > 0) {
+        setTimeout(() => {
+          this.countdown -= 1;
+          this.onCountDownTimer();
+        }, 1000);
+      }
     },
   },
 };

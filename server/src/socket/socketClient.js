@@ -7,7 +7,7 @@ const quizzesCon = require("../controllers/quizzesController");
  *
  **/
 
-function socketClient(socket) {
+function socketClient(io, socket) {
   /* --- Player Register --- */
   socket.on("client-register-player", async (args) => {
     const { quiz_code, player_username } = args;
@@ -45,9 +45,7 @@ function socketClient(socket) {
 
     // send question and status result to client
     const { quiz_questions, quiz_result, quiz_players } =
-      await playersCon.getQuizReferenceByQuizCode({
-        quiz_code,
-      });
+      await quizzesCon.getQuizByQuizCode({ quiz_code });
     socket.emit("server-send-question", { quiz_questions });
     socket.emit("server-send-result", { quiz_result });
 
@@ -64,7 +62,7 @@ function socketClient(socket) {
       });
 
       // send players to admin
-      const { quiz_players } = await playersCon.getQuizReferenceByQuizCode({
+      const { quiz_players } = await quizzesCon.getQuizByQuizCode({
         quiz_code,
       });
       const quizControl = `${quiz_code}-control`;
@@ -81,9 +79,7 @@ function socketClient(socket) {
     await playersCon.deletePlayerByUsername(player);
 
     // send players to admin
-    const { quiz_players } = await playersCon.getQuizReferenceByQuizCode({
-      quiz_code,
-    });
+    const { quiz_players } = await quizzesCon.getQuizByQuizCode({ quiz_code });
     const quizControl = `${quiz_code}-control`;
     io.to(quizControl).emit("server-send-players", { quiz_players });
   });
