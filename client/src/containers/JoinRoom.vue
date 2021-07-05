@@ -1,6 +1,6 @@
 <template>
   <layout-top>
-    <h1 class="mb-0">{{ username }}</h1>
+    <h1 class="mb-0">{{ player_username }}</h1>
     <!-- <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
       790
     </div> -->
@@ -81,7 +81,7 @@ export default {
   },
   props: {
     quiz_code: { type: String },
-    username: { type: String },
+    player_username: { type: String },
   },
   data() {
     return {
@@ -104,13 +104,16 @@ export default {
           localStorage.getItem("quizPlayer") || "",
           this.$store.state.jwtToken
         );
-        if (storage[this.quiz_code] !== this.username)
+        if (storage[this.quiz_code] !== this.player_username)
           return this.$router.push({ name: "Home" });
       } catch (err) {
         return this.$router.push({ name: "Home" });
       }
 
-      const payload = { username: this.username, quiz_code: this.quiz_code };
+      const payload = {
+        player_username: this.player_username,
+        quiz_code: this.quiz_code,
+      };
       this.$store.state.socket.emit("client-join-user", payload);
       this.onLoadSocket();
     });
@@ -139,37 +142,35 @@ export default {
       }
     },
     onLoadSocket() {
-      this.$store.state.socket.on(
-        "server-show-result",
-        (show) => (this.showResult = show)
-      );
+      this.$store.state.socket.on("server-show-result", (args) => {
+        const { quiz_result } = args;
+        this.showResult = quiz_result;
+      });
 
-      this.$store.state.socket.on("server-send-question", (question) => {
-        if (question) {
-          this.countdown = 3;
-          this.onCountDownTimer();
-        }
-
+      this.$store.state.socket.on("server-send-question", (args) => {
+        const { question } = args;
         this.question = question;
         this.answer = null;
       });
 
+      // STOP QUIZ
       this.$store.state.socket.on("server-stop-quiz", () => {
-        this.$router.push({ name: "Home" });
         this.onStorageOutRoom();
       });
 
       // DISCONNECT
-      this.$store.state.socket.on("server-user-disconnect", (username) => {
-        if (this.username === username) {
+      this.$store.state.socket.on("server-player-disconnect", (args) => {
+        const { player_username } = args;
+        if (this.player_username === player_username) {
           // this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
           this.onStorageOutRoom();
         }
       });
 
       // KICK
-      this.$store.state.socket.on("server-user-kick", (username) => {
-        if (this.username === username) {
+      this.$store.state.socket.on("server-player-kick", (args) => {
+        const { player_username } = args;
+        if (this.player_username === player_username) {
           // this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
           this.onStorageOutRoom();
         }
@@ -177,7 +178,7 @@ export default {
     },
     onOutRoom() {
       this.$store.state.socket.emit("client-out-user", {
-        username: this.username,
+        player_username: this.player_username,
         quiz_code: this.quiz_code,
       });
     },

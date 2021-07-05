@@ -2,37 +2,58 @@ const quizzesModel = require("../models/quizzesModel");
 const questionsModel = require("../models/questionsModel");
 
 const getQuestionsByQuizId = async (args) => {
-  const getItem = await quizzesModel
+  const getQuestion = await quizzesModel
     .findById(args.quiz_id)
     .populate("quiz_questions");
-  return getItem ? getItem.quiz_questions : null;
+  return getQuestion ? getQuestion.quiz_questions : null;
+};
+
+const getQuestionsByQuizCode = async (args) => {
+  const getQuiz = await quizzesModel
+    .findOne({ quiz_code: args.quiz_code })
+    .populate("quiz_questions");
+  return getQuiz ? getQuiz.quiz_questions : null;
 };
 
 const createQuestion = async (args) => {
   const { quiz_id, question_content, question_answers } = args;
 
   // create question
-  const createItem = new questionsModel({ question_content, question_answers });
-  await createItem.save();
+  const createQuestion = new questionsModel({
+    question_content,
+    question_answers,
+  });
+  await createQuestion.save();
 
-  // save createItem to quiz
-  const getItem = await quizzesModel.findById(quiz_id);
-  getItem.quiz_questions.push(createItem);
-  await getItem.save();
+  // save createQuestion to quiz
+  const getQuiz = await quizzesModel.findById(quiz_id);
+  getQuiz.quiz_questions.push(createQuestion);
+  await getQuiz.save();
 
-  return createItem;
+  return createQuestion;
 };
 
-const updateQuestionById = async (args) =>
-  await questionsModel.findByIdAndUpdate(args._id, { ...args }, { new: true });
+const updateQuestionById = async (args) => {
+  return await questionsModel.findByIdAndUpdate(
+    args._id,
+    { ...args },
+    { new: true }
+  );
+};
 
 const deleteQuestionById = async (args) => {
   const { _id, quiz_id } = args;
-  const deleteItem = await questionsModel.findByIdAndDelete(_id);
+  const deleteQuestion = await questionsModel.findByIdAndDelete(_id);
   await quizzesModel.findByIdAndUpdate(quiz_id, {
-    $pullAll: { quiz_questions: [deleteItem] },
+    $pullAll: { quiz_questions: [deleteQuestion] },
   });
-  return deleteItem;
+  return deleteQuestion;
 };
 
-module.exports = { getQuestionsByQuizId, createQuestion, updateQuestionById, deleteQuestionById };
+module.exports = {
+  getQuestionsByQuizId,
+  getQuestionsByQuizCode,
+  createQuestion,
+  updateQuestionById,
+  deleteQuestionById,
+};

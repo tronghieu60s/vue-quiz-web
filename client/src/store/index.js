@@ -1,4 +1,3 @@
-import jwt from "jsonwebtoken";
 import { createStore } from "vuex";
 import * as string from "../common/string";
 
@@ -19,21 +18,6 @@ export default createStore({
     },
     setIsLoadingAction(state, payload) {
       state.isLoadingAction = payload;
-    },
-    setQuizUserStorage(state, payload) {
-      const { quiz_code, username } = payload;
-      let storage = {};
-      try {
-        storage = jwt.verify(
-          localStorage.getItem("quizPlayer"),
-          state.jwtToken
-        );
-      } catch (err) {
-        localStorage.removeItem("quizPlayer");
-      }
-      storage[quiz_code] = username;
-      const tokenStorage = jwt.sign(storage, state.jwtToken);
-      localStorage.setItem("quizPlayer", tokenStorage);
     },
   },
   actions: {

@@ -87,48 +87,28 @@ export default {
       }
     },
     onLoadSocket() {
-      this.$store.state.socket.emit("admin-join-control", this.quiz.quiz_code);
-
-      this.$store.state.socket.on("server-send-users", (users) => {
-        const mapUsers = Object.entries(users)
-          .map(([name, status]) => ({ name, status }))
-          .filter((o) => o.status === "online")
-          .map((o) => o.name);
-        this.users = mapUsers;
+      this.$store.state.socket.emit("admin-join-control", {
+        quiz_code: this.quiz.quiz_code,
       });
 
-      this.$store.state.socket.on("server-send-question", (question) => {
-        if (question) {
-          this.countdown = 3;
-          this.onCountDownTimer();
-        }
-        this.question = question;
+      this.$store.state.socket.on("server-send-players", (args) => {
+        const { quiz_players } = args;
+        const playersOnline = quiz_players.filter((o) => o.player_online);
+        const namePlayers = playersOnline.map((o) => o.player_username);
+        this.users = namePlayers;
       });
 
-      this.$store.state.socket.on(
-        "server-show-result",
-        (show) => (this.showResult = show)
-      );
+      // this.$store.state.socket.on("server-send-question", (question) => {
+      //   if (question) {
+      //     this.countdown = 3;
+      //     this.onCountDownTimer();
+      //   }
+      //   this.question = question;
+      // });
 
-      // // CONNECT
-      // this.$store.state.socket.on("server-user-connected", (username) =>
-      //   this.$toast.success(
-      //     username + this.$store.state.string.S_ALERT_USER_JOINED
-      //   )
-      // );
-
-      // // DISCONNECT
-      // this.$store.state.socket.on("server-user-disconnect", (username) =>
-      //   this.$toast.error(
-      //     username + this.$store.state.string.S_ALERT_USER_OUTED
-      //   )
-      // );
-
-      // // KICK
-      // this.$store.state.socket.on("server-user-kick", (username) =>
-      //   this.$toast.error(
-      //     username + this.$store.state.string.S_ALERT_USER_KICKED
-      //   )
+      // this.$store.state.socket.on(
+      //   "server-show-result",
+      //   (show) => (this.showResult = show)
       // );
     },
     async onLoadQuiz() {

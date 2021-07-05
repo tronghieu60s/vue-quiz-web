@@ -46,7 +46,7 @@ const socketConfig = {
 const server = require("http").createServer(app);
 const io = require("socket.io")(server, socketConfig);
 
-require("./socket")(io);
+require("./src/socket")(io);
 
 /* Listen Server */
 server.listen(PORT, () =>

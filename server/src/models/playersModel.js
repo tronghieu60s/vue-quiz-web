@@ -3,10 +3,10 @@ const Schema = mongoose.Schema;
 
 const PlayersSchema = new Schema(
   {
-    player_name: { type: String, default: "Unknown" },
-    player_username: { type: String },
-    player_scores: { type: Number },
-    player_online: { type: Boolean },
+    player_username: { type: String, unique: true, required: true },
+    player_online: { type: Boolean, default: true },
+    player_scores: { type: Number, default: 0 },
+    player_quiz: { type: String },
   },
   {
     collection: "Players",
