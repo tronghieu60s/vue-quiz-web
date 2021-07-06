@@ -6,8 +6,8 @@
       :players="players"
       :question="question"
       :questions="questions"
-      @onQuizStart="players.length > 0 && onSetQuizCurrent(1)"
-      @onQuizStop="onSetQuizCurrent(0)"
+      @onQuizStart="players.length > 0 && onQuizCurrent(1)"
+      @onQuizStop="onQuizCurrent(0)"
       @onQuizNext="onQuizNext"
     />
   </layout-top>
@@ -74,10 +74,11 @@ export default {
     this.$store.dispatch("actLoadingAction", async () => {
       await this.onLoadQuiz();
       await this.onLoadQuestions();
-      this.onLoadSocket();
+      await this.onLoadSocket();
     });
   },
   methods: {
+    /* load pages */
     onLoadSocket() {
       const { quiz_code } = this.quiz;
 
@@ -111,6 +112,7 @@ export default {
       this.questions = getQuestions;
       this.question = getQuestions[this.quiz.quiz_current - 1];
     },
+    /* methods */
     onKickPlayer(index) {
       const quiz_code = this.quiz.quiz_code;
       const player_username = this.players[index];
@@ -125,12 +127,12 @@ export default {
       }
 
       if (this.quiz.quiz_current >= this.questions.length) {
-        return this.onSetQuizCurrent(0);
+        return this.onQuizCurrent(0);
       }
 
-      this.onSetQuizCurrent(this.quiz.quiz_current + 1);
+      this.onQuizCurrent(this.quiz.quiz_current + 1);
     },
-    onSetQuizCurrent(quiz_current) {
+    onQuizCurrent(quiz_current) {
       this.$store.dispatch("actLoadingAction", async () => {
         const update = { _id: this.quiz._id, quiz_current, quiz_result: false };
         const updateItem = await updateQuizById(update);

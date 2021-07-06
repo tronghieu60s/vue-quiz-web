@@ -1,56 +1,19 @@
 <template>
   <layout-top>
-    <h1 class="mb-0">{{ player_username }}</h1>
-    <!-- <div class="bg-dark text-light font-weight-bold rounded-lg px-3 py-1">
-      790
-    </div> -->
-    <div>
-      <button @click="onOutRoom" type="button" class="btn btn-default btn-sm">
-        Rời Khỏi Phòng
-        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-      </button>
-    </div>
+    <join-room-control
+      :player_username="player_username"
+      :onOutRoom="onOutRoom"
+    />
   </layout-top>
   <div v-show="!question">
     <animate-quiz />
-    <div class="mb-0 py-5 my-5 d-flex flex-column align-items-center">
-      <loading-action-icon />
-      <div class="mt-5">Vui lòng chờ người khác vào...</div>
-      <h1 class="mt-2 mb-0">Bạn có thấy tên của mình chưa nhỉ?</h1>
-    </div>
+    <join-room-waiting />
   </div>
   <div class="container my-5" v-if="quiz">
     <countdown v-show="countdown" :value="countdown" />
     <div v-if="question && !countdown">
-      <div v-show="showResult">
-        <firework v-show="answerStatus === 'correct'" />
-        <h1
-          :class="{
-            'text-success': answerStatus === 'correct',
-            'text-danger': answerStatus === 'incorrect',
-            'text-warning': answerStatus === 'nochoose',
-            'text-center': true,
-          }"
-        >
-          {{ answerStatus === "correct" ? "✔️ Chính Xác" : "" }}
-          {{ answerStatus === "incorrect" ? "❌ Sai Mất Rồi" : "" }}
-          {{ answerStatus === "nochoose" ? "🤔 Bạn Chưa Chọn Đáp Án Nào" : "" }}
-        </h1>
-      </div>
-      <div
-        v-if="answer && !showResult"
-        class="mb-0 py-5 my-5 d-flex flex-column align-items-center"
-      >
-        <loading-action-icon />
-        <div class="mt-5 text-center">
-          <h1 class="mb-0">Awesome</h1>
-          Bạn đã chọn đáp án:
-          <span class="text-primary font-weight-bold">
-            {{ answer.answer_content }} </span
-          >. <br />
-          Vui lòng chờ một chút để người khác trả lời...
-        </div>
-      </div>
+      <join-room-show-answer v-show="showResult" />
+      <join-room-waiting-answer v-if="answer && !showResult" />
       <quiz-answer
         v-else
         :question="question"
@@ -65,19 +28,23 @@
 import jwt from "jsonwebtoken";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
-import Firework from "@components/UI/Firework.vue";
 import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
 import Countdown from "@components/UI/Countdown.vue";
-import LoadingActionIcon from "@components/UI/LoadingActionIcon.vue";
+import JoinRoomControl from "@components/JoinRoom/JoinRoomControl.vue";
+import JoinRoomShowAnswer from "@components/JoinRoom/JoinRoomShowAnswer.vue";
+import JoinRoomWaiting from "@components/JoinRoom/JoinRoomWaiting.vue";
+import JoinRoomWaitingAnswer from "@components/JoinRoom/JoinRoomWaitingAnswer.vue";
 import { getQuizByQuizCode } from "@models/quizzesModel";
 export default {
   components: {
     QuizAnswer,
     LayoutTop,
-    Firework,
     Countdown,
     AnimateQuiz,
-    LoadingActionIcon,
+    JoinRoomControl,
+    JoinRoomShowAnswer,
+    JoinRoomWaiting,
+    JoinRoomWaitingAnswer,
   },
   props: {
     quiz_code: { type: String },
@@ -94,9 +61,12 @@ export default {
     };
   },
   created() {
-    this.onLoadFirst();
+    this.$store.dispatch("actLoadingAction", this.onLoadFirst);
   },
   watch: {
+    $route() {
+      this.onOutRoom();
+    },
     showResult() {
       if (!this.answer) return (this.answerStatus = "nochoose");
       const correctAnswer = this.question.question_answers.find(
@@ -106,11 +76,32 @@ export default {
         return (this.answerStatus = "correct");
       this.answerStatus = "incorrect";
     },
-    $route() {
-      this.onOutRoom();
-    },
   },
   methods: {
+    /* load pages */
+    async onLoadFirst() {
+      const { quiz_code, player_username } = this;
+
+      const getQuiz = await getQuizByQuizCode({ quiz_code });
+      if (!getQuiz) {
+        return this.$router.push({ name: "Home" });
+      }
+      this.quiz = getQuiz;
+
+      try {
+        const storage = jwt.verify(
+          localStorage.getItem("quizPlayer") || "",
+          this.$store.state.jwtToken
+        );
+        if (storage[quiz_code] !== player_username) {
+          return this.$router.push({ name: "Home" });
+        }
+      } catch (err) {
+        return this.$router.push({ name: "Home" });
+      }
+
+      this.onLoadSocket();
+    },
     onLoadSocket() {
       const { quiz_code, player_username } = this;
       this.$store.state.socket.emit("client-join-room", {
@@ -130,31 +121,7 @@ export default {
         }
       });
     },
-    onLoadFirst() {
-      this.$store.dispatch("actLoadingAction", async () => {
-        const { quiz_code, player_username } = this;
-
-        const getQuiz = await getQuizByQuizCode({ quiz_code });
-        if (!getQuiz) {
-          return this.$router.push({ name: "Home" });
-        }
-        this.quiz = getQuiz;
-
-        try {
-          const storage = jwt.verify(
-            localStorage.getItem("quizPlayer") || "",
-            this.$store.state.jwtToken
-          );
-          if (storage[quiz_code] !== player_username) {
-            return this.$router.push({ name: "Home" });
-          }
-        } catch (err) {
-          return this.$router.push({ name: "Home" });
-        }
-
-        this.onLoadSocket();
-      });
-    },
+    /* methods */
     onOutRoom() {
       const { quiz_code, player_username } = this;
       const payload = { quiz_code, player_username };

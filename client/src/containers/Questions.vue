@@ -145,10 +145,9 @@ export default {
     async onDeleteQuestion(question) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete question with quiz_id
-        const question_id = question._id;
+        const _id = question._id;
         const quiz_id = this.quiz._id;
-        const deleteQ = { _id: question_id, quiz_id };
-        const deleteItem = await deleteQuestionById(deleteQ);
+        const deleteItem = await deleteQuestionById({ _id, quiz_id });
         if (!deleteItem)
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
@@ -157,9 +156,7 @@ export default {
         // load questions on table
         this.question = null;
         const questionsbase = this.questionsbase;
-        const questionIndex = questionsbase.findIndex(
-          (o) => o._id === question_id
-        );
+        const questionIndex = questionsbase.findIndex((o) => o._id === _id);
         questionsbase.splice(questionIndex, 1);
         this.questionsbase = questionsbase;
 
