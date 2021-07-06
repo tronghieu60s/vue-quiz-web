@@ -13,9 +13,13 @@ const { getQuizByQuizCode } = require("../controllers/quizzesController");
  **/
 
 async function serverSendPlayersByQuizCode(io, quiz_code) {
-  const { quiz_players } = await getQuizByQuizCode({ quiz_code });
-  const quizControl = `${quiz_code}-control`;
-  io.to(quizControl).emit("server-send-players", { quiz_players });
+  const getQuiz = await getQuizByQuizCode({ quiz_code });
+  if (getQuiz) {
+    const quizControl = `${quiz_code}-control`;
+    io.to(quizControl).emit("server-send-players", {
+      quiz_players: getQuiz.quiz_players,
+    });
+  }
 }
 
 function socketClient(io, socket) {

@@ -94,10 +94,7 @@ export default {
     };
   },
   created() {
-    this.$store.dispatch("actLoadingAction", async () => {
-      await this.onLoadFirst();
-      await this.onLoadSocket();
-    });
+    this.onLoadFirst();
   },
   watch: {
     showResult() {
@@ -133,23 +130,30 @@ export default {
         }
       });
     },
-    async onLoadFirst() {
-      const { quiz_code, player_username } = this;
+    onLoadFirst() {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const { quiz_code, player_username } = this;
 
-      const getQuiz = await getQuizByQuizCode({ quiz_code });
-      if (!getQuiz) return this.$router.push({ name: "Home" });
-      this.quiz = getQuiz;
-
-      try {
-        const storage = jwt.verify(
-          localStorage.getItem("quizPlayer") || "",
-          this.$store.state.jwtToken
-        );
-        if (storage[quiz_code] !== player_username)
+        const getQuiz = await getQuizByQuizCode({ quiz_code });
+        if (!getQuiz) {
           return this.$router.push({ name: "Home" });
-      } catch (err) {
-        return this.$router.push({ name: "Home" });
-      }
+        }
+        this.quiz = getQuiz;
+
+        try {
+          const storage = jwt.verify(
+            localStorage.getItem("quizPlayer") || "",
+            this.$store.state.jwtToken
+          );
+          if (storage[quiz_code] !== player_username) {
+            return this.$router.push({ name: "Home" });
+          }
+        } catch (err) {
+          return this.$router.push({ name: "Home" });
+        }
+
+        this.onLoadSocket();
+      });
     },
     onOutRoom() {
       const { quiz_code, player_username } = this;
