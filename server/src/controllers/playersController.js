@@ -1,7 +1,7 @@
 const playersModel = require("../models/playersModel");
 const quizzesModel = require("../models/quizzesModel");
 
-const getPlayersByUsername = async (args) => {
+const getPlayerByUsername = async (args) => {
   const { quiz_code, player_username } = args;
   return await playersModel.findOne({
     player_username,
@@ -12,6 +12,8 @@ const getPlayersByUsername = async (args) => {
 const createPlayer = async (args) => {
   const { quiz_code, player_username } = args;
 
+  const getQuiz = await quizzesModel.findOne({ quiz_code });
+
   // create quiz
   const createPlayer = new playersModel({
     player_username,
@@ -20,7 +22,6 @@ const createPlayer = async (args) => {
   await createPlayer.save();
 
   // save createItem to user
-  const getQuiz = await quizzesModel.findOne({ quiz_code });
   if (getQuiz) {
     getQuiz.quiz_players.push(createPlayer);
     await getQuiz.save();
@@ -38,6 +39,14 @@ const updatePlayerByUsername = async (args) => {
   );
 };
 
+const deleteAllPlayersByQuizCode = async (args) => {
+  const { quiz_code } = args;
+  const deletePlayers = await playersModel.deleteMany({
+    player_quiz: quiz_code,
+  });
+  return deletePlayers;
+};
+
 const deletePlayerByUsername = async (args) => {
   const { quiz_code, player_username } = args;
   const deletePlayer = await playersModel.findOneAndDelete({
@@ -53,18 +62,10 @@ const deletePlayerByUsername = async (args) => {
   return deletePlayer;
 };
 
-const deleteAllPlayersByQuizCode = async (args) => {
-  const { quiz_code } = args;
-  const deletePlayers = await playersModel.deleteMany({
-    player_quiz: quiz_code,
-  });
-  return deletePlayers;
-};
-
 module.exports = {
-  getPlayersByUsername,
+  getPlayerByUsername,
   createPlayer,
   updatePlayerByUsername,
-  deletePlayerByUsername,
   deleteAllPlayersByQuizCode,
+  deletePlayerByUsername,
 };

@@ -74,16 +74,15 @@ export default {
     this.$store.dispatch("actLoadingAction", async () => {
       await this.onLoadQuiz();
       await this.onLoadQuestions();
-      await this.onLoadSocket();
+      this.onLoadSocket();
     });
   },
   methods: {
     onLoadSocket() {
       const { quiz_code } = this.quiz;
-      // admin join room control
-      this.$store.state.socket.emit("admin-join-room", { quiz_code });
 
-      // request server send players
+      this.$store.state.socket.emit("admin-join-quiz", { quiz_code });
+
       this.$store.state.socket.on("server-send-players", (args) => {
         const { quiz_players } = args;
         const players = quiz_players
@@ -104,7 +103,6 @@ export default {
     async onLoadQuiz() {
       const getQuiz = await getQuizByQuizCode({ quiz_code: this.quiz_code });
       if (!getQuiz) return this.$router.back();
-      if (!getQuiz.quiz_code) return this.$router.back();
       return (this.quiz = getQuiz);
     },
     async onLoadQuestions() {
@@ -116,10 +114,8 @@ export default {
     onKickPlayer(index) {
       const quiz_code = this.quiz.quiz_code;
       const player_username = this.players[index];
-      this.$store.state.socket.emit("admin-kick-player", {
-        quiz_code,
-        player_username,
-      });
+      const payload = { quiz_code, player_username };
+      this.$store.state.socket.emit("admin-kick-player", payload);
     },
     onQuizNext() {
       if (!this.showResult) {

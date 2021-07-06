@@ -5,7 +5,7 @@ const QuizzesSchema = new Schema(
   {
     quiz_title: { type: String },
     quiz_desc: { type: String },
-    quiz_code: { type: String, unique: true },
+    quiz_code: { type: String },
     quiz_current: { type: Number, default: 0 },
     quiz_result: { type: Boolean, default: false },
     quiz_questions: [{ type: Schema.Types.ObjectId, ref: "Questions" }],

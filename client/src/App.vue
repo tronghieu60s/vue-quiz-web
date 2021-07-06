@@ -36,7 +36,9 @@ export default {
       this.onRedirectPermission();
     },
     $route() {
-      if (this.loadFirst) this.onRedirectPermission();
+      if (this.loadFirst) {
+        this.onRedirectPermission();
+      }
     },
   },
   methods: {

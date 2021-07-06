@@ -1,5 +1,10 @@
-const playersCon = require("../controllers/playersController");
-const quizzesCon = require("../controllers/quizzesController");
+const {
+  getPlayerByUsername,
+  createPlayer,
+  updatePlayerByUsername,
+  deletePlayerByUsername,
+} = require("../controllers/playersController");
+const { getQuizByQuizCode } = require("../controllers/quizzesController");
 
 /**
  *
@@ -7,85 +12,61 @@ const quizzesCon = require("../controllers/quizzesController");
  *
  **/
 
-function socketClient(io, socket) {
-  /* --- Player Register --- */
-  socket.on("client-register-room", async (args) => {
-    const { quiz_code, player_username } = args;
-    const player = { quiz_code, player_username };
+async function serverSendPlayersByQuizCode(io, quiz_code) {
+  const { quiz_players } = await getQuizByQuizCode({ quiz_code });
+  const quizControl = `${quiz_code}-control`;
+  io.to(quizControl).emit("server-send-players", { quiz_players });
+}
 
-    // get quiz and check username exists
-    const getPlayer = await playersCon.getPlayersByUsername(player);
+function socketClient(io, socket) {
+  socket.on("client-username-register", async (args) => {
+    const { quiz_code, player_username } = args;
+
+    const getPlayer = await getPlayerByUsername({ quiz_code, player_username });
     if (getPlayer) {
       return socket.emit("server-username-exists");
     }
 
-    // if player not exist
     return socket.emit("server-username-not-exists");
   });
 
-  /* --- Player Join Room --- */
   socket.on("client-join-room", async (args) => {
     const { quiz_code, player_username } = args;
-    const player = { quiz_code, player_username };
 
-    // player join room
     socket.join(quiz_code);
 
-    // get player and set online status
-    const getPlayer = await playersCon.getPlayersByUsername(player);
+    /* get player by username if user not exist then create new player
+    if user is offline to set player online
+    then send all players to admin */
+    const player = { quiz_code, player_username };
+    const getPlayer = await getPlayerByUsername(player);
     if (!getPlayer) {
-      await playersCon.createPlayer(player);
+      await createPlayer(player);
     } else if (!getPlayer.player_online) {
-      await playersCon.updatePlayerByUsername({
-        ...player,
-        player_online: true,
-      });
+      await updatePlayerByUsername({ ...player, player_online: true });
     }
+    serverSendPlayersByQuizCode(io, quiz_code);
 
-    // send question and status result to client
-    const { quiz_questions, quiz_result, quiz_players } =
-      await quizzesCon.getQuizByQuizCode({ quiz_code });
-    socket.emit("server-send-question", { quiz_questions });
-    socket.emit("server-send-result", { quiz_result });
-
-    // send players to admin
-    const quizControl = `${quiz_code}-control`;
-    io.to(quizControl).emit("server-send-players", { quiz_players });
-
-    /* --- SOCKET PLAYER DISCONNECT */
+    /* this is function for user disconnect from server */
     socket.on("disconnect", async () => {
-      // set player offline
-      await playersCon.updatePlayerByUsername({
-        ...player,
-        player_online: false,
-      });
-
-      // send players to admin
-      const { quiz_players } = await quizzesCon.getQuizByQuizCode({
-        quiz_code,
-      });
-      const quizControl = `${quiz_code}-control`;
-      io.to(quizControl).emit("server-send-players", { quiz_players });
+      /* set player to offline if user disconnect from server
+      get players and resend to admin for update current players */
+      await updatePlayerByUsername({ ...player, player_online: false });
+      serverSendPlayersByQuizCode(io, quiz_code);
     });
   });
 
-  /* --- Player Out Of Room --- */
   socket.on("client-out-room", async (args) => {
     const { quiz_code, player_username } = args;
-    const player = { quiz_code, player_username };
 
-    // check quiz exists
-    const getQuiz = await quizzesCon.getQuizByQuizCode({ quiz_code });
+    const getQuiz = await getQuizByQuizCode({ quiz_code });
     if (!getQuiz) return;
 
-    // delete player from database
-    await playersCon.deletePlayerByUsername(player);
-    socket.emit("server-player-disconnect", { player_username });
-
-    // send players to admin
-    const { quiz_players } = await quizzesCon.getQuizByQuizCode({ quiz_code });
-    const quizControl = `${quiz_code}-control`;
-    io.to(quizControl).emit("server-send-players", { quiz_players });
+    /* player request disconnect, server delete user from database
+    and send status disconnect to player */
+    await deletePlayerByUsername({ quiz_code, player_username });
+    socket.emit("server-out-room", { player_username });
+    serverSendPlayersByQuizCode(io, quiz_code);
   });
 }
 

@@ -12,6 +12,12 @@ const getQuiz = async (args) => {
   return await quizzesModel.findOne({ [args.key]: args.value }).exec();
 };
 
+const getQuizById = async (args) => {
+  const { _id } = args;
+  const getQuiz = await quizzesModel.findById(_id);
+  return getQuiz;
+};
+
 const getQuizByQuizCode = async (args) => {
   const { quiz_code } = args;
   const getQuiz = await quizzesModel
@@ -56,6 +62,7 @@ const deleteQuizById = async (args) => {
 module.exports = {
   getQuizzesByUserId,
   getQuiz,
+  getQuizById,
   getQuizByQuizCode,
   createQuiz,
   updateQuizById,

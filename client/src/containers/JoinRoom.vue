@@ -79,13 +79,16 @@ export default {
     AnimateQuiz,
     LoadingActionIcon,
   },
-  props: { quiz_code: { type: String }, player_username: { type: String } },
+  props: {
+    quiz_code: { type: String },
+    player_username: { type: String },
+  },
   data() {
     return {
-      answer: null,
-      answerStatus: null,
       quiz: null,
       question: null,
+      answer: null,
+      answerStatus: null,
       showResult: false,
       countdown: 0,
     };
@@ -113,43 +116,19 @@ export default {
   methods: {
     onLoadSocket() {
       const { quiz_code, player_username } = this;
-      const payload = { quiz_code, player_username };
-      this.$store.state.socket.emit("client-join-room", payload);
-
-      this.$store.state.socket.on("server-show-result", (args) => {
-        const { quiz_result } = args;
-        this.showResult = quiz_result;
+      this.$store.state.socket.emit("client-join-room", {
+        quiz_code,
+        player_username,
       });
 
-      this.$store.state.socket.on("server-send-question", (args) => {
-        const { quiz_question } = args;
-        if (quiz_question) {
-          this.countdown = 3;
-          this.onCountDownTimer();
-        }
-        this.question = quiz_question;
-        this.answer = null;
-      });
-
-      // STOP QUIZ
       this.$store.state.socket.on("server-stop-quiz", () => {
         this.onStorageOutRoom();
       });
 
-      // DISCONNECT
-      this.$store.state.socket.on("server-player-disconnect", (args) => {
+      this.$store.state.socket.on("server-out-room", (args) => {
         const { player_username } = args;
         if (this.player_username === player_username) {
           // this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
-          this.onStorageOutRoom();
-        }
-      });
-
-      // KICK
-      this.$store.state.socket.on("server-kick-player", (args) => {
-        const { player_username } = args;
-        if (this.player_username === player_username) {
-          // this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
           this.onStorageOutRoom();
         }
       });

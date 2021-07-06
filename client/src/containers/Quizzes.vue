@@ -36,7 +36,6 @@ import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
 import { searchString } from "@helpers/string";
 import { getQuestionsByQuizId } from "@models/questionsModel";
 import {
-  getQuizByQuizCode,
   getQuizzesByUserId,
   createQuiz,
   deleteQuizById,
@@ -59,8 +58,8 @@ export default {
     };
   },
   created() {
-    // load quizzes first
-    this.$store.dispatch("actLoadingAction", this.onLoadQuizzes);
+    this.onLoadQuizzes();
+    this.onLoadSocket();
   },
   watch: {
     inputSearch() {
@@ -74,78 +73,108 @@ export default {
       );
     },
     "$store.state.user"() {
-      this.$store.dispatch("actLoadingAction", this.onLoadQuizzes);
+      this.onLoadQuizzes();
     },
   },
   methods: {
+    moveQuizzesStart(quiz_code) {
+      this.$router.push({ name: "Quizzes-Start", params: { quiz_code } });
+    },
     onActionQuiz(props) {
-      this.$store.dispatch(
-        "actLoadingAction",
-        this.quiz
-          ? () => this.onUpdateQuiz(props)
-          : () => this.onCreateQuiz(props)
-      );
+      this.quiz ? this.onUpdateQuiz(props) : this.onCreateQuiz(props);
+    },
+    onLoadSocket() {
+      this.$store.state.socket.on("server-start-quiz-failed", () => {
+        this.$toast.error(this.$store.state.string.E_UNKNOWN_ERROR_DETECT);
+      });
+
+      this.$store.state.socket.on("server-start-quiz-success", (args) => {
+        const { quiz } = args;
+        this.moveQuizzesStart(quiz.quiz_code);
+      });
+
+      this.$store.state.socket.on("server-stop-quiz-failed", () => {
+        this.$toast.error(this.$store.state.string.E_UNKNOWN_ERROR_DETECT);
+      });
+
+      this.$store.state.socket.on("server-stop-quiz-success", (args) => {
+        const { quiz } = args;
+        const quizzesbase = this.quizzesbase;
+        const quizIndex = quizzesbase.findIndex((o) => o._id === quiz._id);
+        quizzesbase[quizIndex] = quiz;
+        this.quizzesbase = quizzesbase;
+      });
     },
     // load - create - update - delete
-    async onLoadQuizzes() {
-      if (!this.$store.state.user) return;
+    onLoadQuizzes() {
+      this.$store.dispatch("actLoadingAction", async () => {
+        if (!this.$store.state.user) return;
 
-      // get quizzes by database and set to quizzes and quizzesbase
-      const user_id = this.$store.state.user._id;
-      const getQuizzes = [...(await getQuizzesByUserId({ user_id }))];
-      getQuizzes.reverse();
+        // get quizzes by database and set to quizzes and quizzesbase
+        const user_id = this.$store.state.user._id;
+        const getQuizzes = [...(await getQuizzesByUserId({ user_id }))];
+        getQuizzes.reverse();
 
-      // set quizzes to base
-      this.quizzes = getQuizzes;
-      this.quizzesbase = getQuizzes;
-    },
-    async onCreateQuiz(props) {
-      const { quiz_title, quiz_desc } = props;
-      const user_id = this.$store.state.user._id;
-
-      // create quiz and check exists (if not exists alert error)
-      const createQuizz = await createQuiz({ quiz_title, quiz_desc, user_id });
-      if (!createQuizz) {
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
-      }
-
-      // load quizzes on table
-      const quizzesbase = this.quizzesbase;
-      quizzesbase.unshift(createQuizz);
-      this.quizzesbase = quizzesbase;
-
-      // toast success
-      this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
-    },
-    async onUpdateQuiz(props) {
-      const { quiz_title, quiz_desc } = props;
-      const quiz_id = this.quiz._id;
-      this.quiz = null;
-
-      // update quiz
-      const updateQuiz = await updateQuizById({
-        _id: quiz_id,
-        quiz_title,
-        quiz_desc,
+        // set quizzes to base
+        this.quizzes = getQuizzes;
+        this.quizzesbase = getQuizzes;
       });
-      if (!updateQuiz) {
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
-      }
-
-      // load quizzes on table
-      const quizzesbase = this.quizzesbase;
-      const quizIndex = quizzesbase.findIndex((o) => o._id === quiz_id);
-      quizzesbase[quizIndex] = updateQuiz;
-      this.quizzesbase = quizzesbase;
-
-      // toast success
-      this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
     },
-    async onDeleteQuiz(quiz) {
+    onCreateQuiz(props) {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const { quiz_title, quiz_desc } = props;
+        const user_id = this.$store.state.user._id;
+
+        // create quiz and check exists (if not exists alert error)
+        const createQuizz = await createQuiz({
+          quiz_title,
+          quiz_desc,
+          user_id,
+        });
+        if (!createQuizz) {
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+        }
+
+        // load quizzes on table
+        const quizzesbase = this.quizzesbase;
+        quizzesbase.unshift(createQuizz);
+        this.quizzesbase = quizzesbase;
+
+        // toast success
+        this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
+      });
+    },
+    onUpdateQuiz(props) {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const { quiz_title, quiz_desc } = props;
+        const quiz_id = this.quiz._id;
+        this.quiz = null;
+
+        // update quiz
+        const updateQuiz = await updateQuizById({
+          _id: quiz_id,
+          quiz_title,
+          quiz_desc,
+        });
+        if (!updateQuiz) {
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+        }
+
+        // load quizzes on table
+        const quizzesbase = this.quizzesbase;
+        const quizIndex = quizzesbase.findIndex((o) => o._id === quiz_id);
+        quizzesbase[quizIndex] = updateQuiz;
+        this.quizzesbase = quizzesbase;
+
+        // toast success
+        this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
+      });
+    },
+    onDeleteQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete quizzes by id
         const user_id = this.$store.state.user._id;
@@ -168,68 +197,29 @@ export default {
       });
     },
     // action quiz
-    async onStartQuiz(quiz) {
-      if (quiz && quiz.quiz_code) {
-        return this.$router.push({
-          name: "Quizzes-Start",
-          params: { quiz_code: quiz.quiz_code },
-        });
-      }
-
+    onStartQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const questions = await getQuestionsByQuizId({ quiz_id: quiz._id });
+        const { _id: quiz_id, quiz_code } = quiz;
+
+        if (quiz_code) {
+          return this.moveQuizzesStart(quiz_code);
+        }
+
+        const questions = await getQuestionsByQuizId({ quiz_id });
         if (questions.length === 0) {
           return this.$toast.error(
             this.$store.state.string.E_QUESTIONS_NOT_FOUND
           );
         }
 
-        const quiz_code = await this.generateCodeQuiz();
-        const updateQuiz = await updateQuizById({ _id: quiz._id, quiz_code });
-        if (!updateQuiz) {
-          return this.$toast.error(
-            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-          );
-        }
-
-        this.$router.push({ name: "Quizzes-Start", params: { quiz_code } });
+        this.$store.state.socket.emit("admin-start-quiz", { quiz_id });
       });
     },
-    async onStopQuiz(quiz) {
+    onStopQuiz(quiz) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const updateQuiz = await updateQuizById({
-          _id: quiz._id,
-          quiz_code: null,
-          quiz_current: 0,
-        });
-        if (!updateQuiz) {
-          return this.$toast.error(
-            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-          );
-        }
-
-        // load quizzes on table
-        const quizzesbase = this.quizzesbase;
-        const quizIndex = quizzesbase.findIndex((o) => o._id === quiz._id);
-        quizzesbase[quizIndex] = updateQuiz;
-        this.quizzesbase = quizzesbase;
-
-        // request server stop quiz
-        this.$store.state.socket.emit("admin-stop-quiz", {
-          quiz_code: quiz.quiz_code,
-        });
+        const quiz_id = quiz._id;
+        this.$store.state.socket.emit("admin-stop-quiz", { quiz_id });
       });
-    },
-    async generateCodeQuiz() {
-      // random and check if quizzes exists
-      const rdQuizCode = Math.random().toString(36).substring(7);
-      const getQuiz = await getQuizByQuizCode({ quiz_code: rdQuizCode });
-
-      // find code exists on quizzes
-      if (getQuiz) return this.generateCodeQuiz();
-
-      // return code
-      return rdQuizCode;
     },
   },
 };
