@@ -86,12 +86,6 @@ export default {
           : () => this.onCreateQuiz(props)
       );
     },
-    routerQuizStart(quiz_id) {
-      this.$router.push({
-        name: "Quizzes-Start",
-        params: { quiz_id: quiz_id },
-      });
-    },
     // load - create - update - delete
     async onLoadQuizzes() {
       if (!this.$store.state.user) return;
@@ -175,7 +169,12 @@ export default {
     },
     // action quiz
     async onStartQuiz(quiz) {
-      if (quiz) if (quiz.quiz_code) return this.routerQuizStart(quiz._id);
+      if (quiz && quiz.quiz_code) {
+        return this.$router.push({
+          name: "Quizzes-Start",
+          params: { quiz_code: quiz.quiz_code },
+        });
+      }
 
       this.$store.dispatch("actLoadingAction", async () => {
         const questions = await getQuestionsByQuizId({ quiz_id: quiz._id });
@@ -193,7 +192,7 @@ export default {
           );
         }
 
-        this.routerQuizStart(quiz._id);
+        this.$router.push({ name: "Quizzes-Start", params: { quiz_code } });
       });
     },
     async onStopQuiz(quiz) {

@@ -102,7 +102,7 @@ export default {
         this.player_username = player_username;
         // send username to server
         const payload = { player_username, quiz_code };
-        this.$store.state.socket.emit("client-register-player", payload);
+        this.$store.state.socket.emit("client-register-room", payload);
       });
     },
   },

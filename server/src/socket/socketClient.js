@@ -9,7 +9,7 @@ const quizzesCon = require("../controllers/quizzesController");
 
 function socketClient(io, socket) {
   /* --- Player Register --- */
-  socket.on("client-register-player", async (args) => {
+  socket.on("client-register-room", async (args) => {
     const { quiz_code, player_username } = args;
     const player = { quiz_code, player_username };
 
@@ -19,15 +19,12 @@ function socketClient(io, socket) {
       return socket.emit("server-username-exists");
     }
 
-    // if player not exist create player
-    const createPlayer = await playersCon.createPlayer(player);
-    if (createPlayer) {
-      return socket.emit("server-username-not-exists");
-    }
+    // if player not exist
+    return socket.emit("server-username-not-exists");
   });
 
   /* --- Player Join Room --- */
-  socket.on("client-join-player", async (args) => {
+  socket.on("client-join-room", async (args) => {
     const { quiz_code, player_username } = args;
     const player = { quiz_code, player_username };
 
@@ -36,7 +33,9 @@ function socketClient(io, socket) {
 
     // get player and set online status
     const getPlayer = await playersCon.getPlayersByUsername(player);
-    if (getPlayer && !getPlayer.player_online) {
+    if (!getPlayer) {
+      await playersCon.createPlayer(player);
+    } else if (!getPlayer.player_online) {
       await playersCon.updatePlayerByUsername({
         ...player,
         player_online: true,
@@ -71,12 +70,17 @@ function socketClient(io, socket) {
   });
 
   /* --- Player Out Of Room --- */
-  socket.on("client-out-player", async (args) => {
+  socket.on("client-out-room", async (args) => {
     const { quiz_code, player_username } = args;
     const player = { quiz_code, player_username };
 
+    // check quiz exists
+    const getQuiz = await quizzesCon.getQuizByQuizCode({ quiz_code });
+    if (!getQuiz) return;
+
     // delete player from database
     await playersCon.deletePlayerByUsername(player);
+    socket.emit("server-player-disconnect", { player_username });
 
     // send players to admin
     const { quiz_players } = await quizzesCon.getQuizByQuizCode({ quiz_code });

@@ -5,6 +5,7 @@ const {
   GraphQLID,
   GraphQLInputObjectType,
   GraphQLBoolean,
+  GraphQLInt,
 } = require("graphql");
 const { QuestionsType } = require("../types");
 
@@ -30,6 +31,7 @@ const mutation = {
       quiz_id: { type: GraphQLNonNull(GraphQLID) },
       question_content: { type: GraphQLNonNull(GraphQLString) },
       question_answers: { type: GraphQLNonNull(GraphQLList(AnswersInput)) },
+      question_times: { type: GraphQLInt },
     },
   },
   updateQuestionById: {
@@ -38,6 +40,7 @@ const mutation = {
       _id: { type: GraphQLNonNull(GraphQLID) },
       question_content: { type: GraphQLString },
       question_answers: { type: GraphQLList(AnswersInput) },
+      question_times: { type: GraphQLInt },
     },
   },
   deleteQuestionById: {

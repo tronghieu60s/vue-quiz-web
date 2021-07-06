@@ -8,14 +8,14 @@
   <div class="d-flex justify-content-center flex-column my-2 my-sm-0">
     <div class="my-1">
       <button type="button" class="btn btn-default btn-sm">
-        <i class="fa fa-user" aria-hidden="true"></i> {{ users.length }}
+        <i class="fa fa-user" aria-hidden="true"></i> {{ players.length }}
       </button>
       <button
         v-if="!question"
         @click="$emit('onQuizStart')"
         type="button"
         class="btn btn-default btn-sm"
-        :disabled="users.length === 0"
+        :disabled="players.length === 0"
       >
         Bắt Đầu Ngay
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -38,7 +38,7 @@ export default {
   emits: ["onQuizStart", "onQuizStop", "onQuizNext"],
   props: {
     quiz: { type: Object },
-    users: { type: Object },
+    players: { type: Object },
     question: { type: Object },
     questions: { type: Array },
   },

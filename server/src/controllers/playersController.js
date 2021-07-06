@@ -21,8 +21,10 @@ const createPlayer = async (args) => {
 
   // save createItem to user
   const getQuiz = await quizzesModel.findOne({ quiz_code });
-  getQuiz.quiz_players.push(createPlayer);
-  await getQuiz.save();
+  if (getQuiz) {
+    getQuiz.quiz_players.push(createPlayer);
+    await getQuiz.save();
+  }
 
   return createPlayer;
 };
@@ -51,7 +53,7 @@ const deletePlayerByUsername = async (args) => {
   return deletePlayer;
 };
 
-const deletePlayersByQuizCode = async (args) => {
+const deleteAllPlayersByQuizCode = async (args) => {
   const { quiz_code } = args;
   const deletePlayers = await playersModel.deleteMany({
     player_quiz: quiz_code,
@@ -64,5 +66,5 @@ module.exports = {
   createPlayer,
   updatePlayerByUsername,
   deletePlayerByUsername,
-  deletePlayersByQuizCode,
+  deleteAllPlayersByQuizCode,
 };

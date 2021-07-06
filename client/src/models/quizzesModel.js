@@ -45,13 +45,21 @@ export function createQuiz(args) {
 }
 
 export function updateQuizById(args) {
-  const { _id, quiz_title, quiz_desc, quiz_code, quiz_current } = args;
+  const {
+    _id,
+    quiz_title,
+    quiz_desc,
+    quiz_code,
+    quiz_current,
+    quiz_result,
+  } = args;
   return executeMutation(updateQuizByIdQuery, {
     _id,
     quiz_title,
     quiz_desc,
     quiz_code,
     quiz_current,
+    quiz_result,
   }).then((res) => (res ? res.updateQuizById : null));
 }
 

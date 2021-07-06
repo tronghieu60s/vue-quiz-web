@@ -13,7 +13,5 @@ mutation createQuiz(
     quiz_desc
     quiz_code
     quiz_current
-    created_at
-    updated_at
   }
 }

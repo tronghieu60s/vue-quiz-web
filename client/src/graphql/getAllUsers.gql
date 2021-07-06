@@ -1,7 +1,0 @@
-query {
-  allUsers {
-    _id
-    user_username
-    user_password
-  }
-}

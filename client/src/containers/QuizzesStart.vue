@@ -3,10 +3,10 @@
   <layout-top v-if="quiz">
     <quizzes-start-control
       :quiz="quiz"
-      :users="users"
+      :players="players"
       :question="question"
       :questions="questions"
-      @onQuizStart="users.length > 0 && onSetQuizCurrent(1)"
+      @onQuizStart="players.length > 0 && onSetQuizCurrent(1)"
       @onQuizStop="onSetQuizCurrent(0)"
       @onQuizNext="onQuizNext"
     />
@@ -34,35 +34,35 @@
       :question="question"
       :showResult="showResult"
     />
-    <quizzes-start-users
+    <quizzes-start-players
       v-if="!question"
-      :users="users"
-      @onKickUser="onKickUser"
+      :players="players"
+      @onKickPlayer="onKickPlayer"
     />
   </div>
 </template>
 
 <script>
 import QuizzesStartControl from "@components/QuizzesStart/QuizzesStartControl.vue";
-import QuizzesStartUsers from "@components/QuizzesStart/QuizzesStartUsers.vue";
+import QuizzesStartPlayers from "@components/QuizzesStart/QuizzesStartPlayers.vue";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
 import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
-import { getQuizById, updateQuizById } from "@models/quizzesModel";
+import { getQuizByQuizCode, updateQuizById } from "@models/quizzesModel";
 import { getQuestionsByQuizId } from "@models/questionsModel";
 export default {
   components: {
     QuizzesStartControl,
-    QuizzesStartUsers,
+    QuizzesStartPlayers,
     QuizAnswer,
     LayoutTop,
     AnimateQuiz,
   },
-  props: ["quiz_id"],
+  props: ["quiz_code"],
   data() {
     return {
       quiz: null,
-      users: [],
+      players: [],
       question: null,
       questions: [],
       showResult: false,
@@ -81,7 +81,7 @@ export default {
     onLoadSocket() {
       const { quiz_code } = this.quiz;
       // admin join room control
-      this.$store.state.socket.emit("admin-join-control", { quiz_code });
+      this.$store.state.socket.emit("admin-join-room", { quiz_code });
 
       // request server send players
       this.$store.state.socket.on("server-send-players", (args) => {
@@ -89,26 +89,36 @@ export default {
         const players = quiz_players
           .filter((o) => o.player_online)
           .map((o) => o.player_username);
-        this.users = players;
+        this.players = players;
+      });
+
+      this.$store.state.socket.on("server-send-question", (args) => {
+        const { quiz_question } = args;
+        if (quiz_question) {
+          this.countdown = 3;
+          this.onCountDownTimer();
+        }
+        this.question = quiz_question;
       });
     },
     async onLoadQuiz() {
-      const getQuiz = await getQuizById({ _id: this.quiz_id });
+      const getQuiz = await getQuizByQuizCode({ quiz_code: this.quiz_code });
       if (!getQuiz) return this.$router.back();
       if (!getQuiz.quiz_code) return this.$router.back();
       return (this.quiz = getQuiz);
     },
     async onLoadQuestions() {
-      const getQuestions = await getQuestionsByQuizId({
-        quiz_id: this.quiz._id,
-      });
+      const quiz_id = this.quiz._id;
+      const getQuestions = await getQuestionsByQuizId({ quiz_id });
       this.questions = getQuestions;
       this.question = getQuestions[this.quiz.quiz_current - 1];
     },
-    onKickUser(index) {
+    onKickPlayer(index) {
+      const quiz_code = this.quiz.quiz_code;
+      const player_username = this.players[index];
       this.$store.state.socket.emit("admin-kick-player", {
-        quiz_code: this.quiz.quiz_code,
-        player_username: this.users[index],
+        quiz_code,
+        player_username,
       });
     },
     onQuizNext() {
@@ -126,7 +136,7 @@ export default {
     },
     onSetQuizCurrent(quiz_current) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const update = { _id: this.quiz._id, quiz_current };
+        const update = { _id: this.quiz._id, quiz_current, quiz_result: false };
         const updateItem = await updateQuizById(update);
         if (!updateItem) {
           return this.$toast.error(
@@ -137,7 +147,7 @@ export default {
         this.quiz = updateItem;
         this.$store.state.socket.emit("admin-send-question", {
           quiz_code: this.quiz.quiz_code,
-          question: this.questions[this.quiz.quiz_current - 1],
+          quiz_question: this.questions[this.quiz.quiz_current - 1],
         });
       });
     },

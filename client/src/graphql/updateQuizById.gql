@@ -4,6 +4,7 @@ mutation updateQuizById(
   $quiz_desc: String
   $quiz_code: String
   $quiz_current: Int
+  $quiz_result: Boolean
 ) {
   updateQuizById(
     _id: $_id
@@ -11,6 +12,7 @@ mutation updateQuizById(
     quiz_desc: $quiz_desc
     quiz_code: $quiz_code
     quiz_current: $quiz_current
+    quiz_result: $quiz_result
   ) {
     _id
     quiz_title

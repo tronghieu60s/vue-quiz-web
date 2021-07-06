@@ -79,7 +79,7 @@ export default {
     AnimateQuiz,
     LoadingActionIcon,
   },
-  props: { quiz_code: { type: String }, username: { type: String } },
+  props: { quiz_code: { type: String }, player_username: { type: String } },
   data() {
     return {
       answer: null,
@@ -112,14 +112,22 @@ export default {
   },
   methods: {
     onLoadSocket() {
+      const { quiz_code, player_username } = this;
+      const payload = { quiz_code, player_username };
+      this.$store.state.socket.emit("client-join-room", payload);
+
       this.$store.state.socket.on("server-show-result", (args) => {
         const { quiz_result } = args;
         this.showResult = quiz_result;
       });
 
       this.$store.state.socket.on("server-send-question", (args) => {
-        const { question } = args;
-        this.question = question;
+        const { quiz_question } = args;
+        if (quiz_question) {
+          this.countdown = 3;
+          this.onCountDownTimer();
+        }
+        this.question = quiz_question;
         this.answer = null;
       });
 
@@ -138,7 +146,7 @@ export default {
       });
 
       // KICK
-      this.$store.state.socket.on("server-player-kick", (args) => {
+      this.$store.state.socket.on("server-kick-player", (args) => {
         const { player_username } = args;
         if (this.player_username === player_username) {
           // this.$toast.error(this.$store.state.string.S_ALERT_YOU_KICKED);
@@ -147,7 +155,7 @@ export default {
       });
     },
     async onLoadFirst() {
-      const { quiz_code, username: player_username } = this;
+      const { quiz_code, player_username } = this;
 
       const getQuiz = await getQuizByQuizCode({ quiz_code });
       if (!getQuiz) return this.$router.push({ name: "Home" });
@@ -163,14 +171,11 @@ export default {
       } catch (err) {
         return this.$router.push({ name: "Home" });
       }
-
-      const payload = { quiz_code, player_username };
-      this.$store.state.socket.emit("client-join-user", payload);
     },
     onOutRoom() {
-      const { quiz_code, username: player_username } = this;
+      const { quiz_code, player_username } = this;
       const payload = { quiz_code, player_username };
-      this.$store.state.socket.emit("client-out-user", payload);
+      this.$store.state.socket.emit("client-out-room", payload);
     },
     onStorageOutRoom() {
       try {

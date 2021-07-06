@@ -15,7 +15,7 @@ const routes = [
     component: Home,
   },
   {
-    path: "/quiz/:quiz_code/:username",
+    path: "/quiz/:quiz_code/:player_username",
     name: "JoinRoom",
     component: JoinRoom,
     props: true,
@@ -52,7 +52,7 @@ const routes = [
     props: true,
   },
   {
-    path: "/admin/quizzes/:quiz_id/start",
+    path: "/admin/quizzes/:quiz_code/start",
     name: "Quizzes-Start",
     component: QuizzesStart,
     props: true,
