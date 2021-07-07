@@ -10,12 +10,13 @@ const getPlayerByUsername = async (args) => {
 };
 
 const createPlayer = async (args) => {
-  const { quiz_code, player_username } = args;
+  const { quiz_code, player_socket, player_username } = args;
 
   const getQuiz = await quizzesModel.findOne({ quiz_code });
 
   // create quiz
   const createPlayer = new playersModel({
+    player_socket,
     player_username,
     player_quiz: quiz_code,
   });

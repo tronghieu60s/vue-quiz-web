@@ -149,14 +149,6 @@ export default {
         });
       });
     },
-    onCountDownTimer() {
-      if (this.countdown > 0) {
-        setTimeout(() => {
-          this.countdown -= 1;
-          this.onCountDownTimer();
-        }, 1000);
-      }
-    },
   },
 };
 </script>

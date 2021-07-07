@@ -42,7 +42,7 @@ function socketClient(io, socket) {
     /* get player by username if user not exist then create new player
     if user is offline to set player online
     then send all players to admin */
-    const player = { quiz_code, player_username };
+    const player = { quiz_code, player_socket: socket.id, player_username };
     const getPlayer = await getPlayerByUsername(player);
     if (!getPlayer) {
       await createPlayer(player);
@@ -69,7 +69,7 @@ function socketClient(io, socket) {
     /* player request disconnect, server delete user from database
     and send status disconnect to player */
     await deletePlayerByUsername({ quiz_code, player_username });
-    socket.emit("server-out-room", { player_username });
+    socket.emit("server-out-room");
     serverSendPlayersByQuizCode(io, quiz_code);
   });
 }

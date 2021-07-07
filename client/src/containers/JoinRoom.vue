@@ -2,7 +2,7 @@
   <layout-top>
     <join-room-control
       :player_username="player_username"
-      :onOutRoom="onOutRoom"
+      @onOutRoom="onOutRoom"
     />
   </layout-top>
   <div v-show="!question">
@@ -109,16 +109,8 @@ export default {
         player_username,
       });
 
-      this.$store.state.socket.on("server-stop-quiz", () => {
+      this.$store.state.socket.on("server-out-room", () => {
         this.onStorageOutRoom();
-      });
-
-      this.$store.state.socket.on("server-out-room", (args) => {
-        const { player_username } = args;
-        if (this.player_username === player_username) {
-          // this.$toast.success(this.$store.state.string.S_ALERT_YOU_OUTED);
-          this.onStorageOutRoom();
-        }
       });
     },
     /* methods */
@@ -141,14 +133,6 @@ export default {
         localStorage.removeItem("quizPlayer");
       }
       this.$router.push({ name: "Home" });
-    },
-    onCountDownTimer() {
-      if (this.countdown > 0) {
-        setTimeout(() => {
-          this.countdown -= 1;
-          this.onCountDownTimer();
-        }, 1000);
-      }
     },
   },
 };

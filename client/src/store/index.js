@@ -1,5 +1,5 @@
 import { createStore } from "vuex";
-import * as string from "../common/string";
+import * as string from "@common/string";
 
 const JWT_TOKEN = process.env.VUE_APP_JWT_TOKEN;
 

@@ -48,31 +48,40 @@ export default {
   methods: {
     onSubmit() {
       if (this.inputUsername.length === 0) return;
-      this.$store.dispatch("actLoadingAction", this.onLoginUser);
-    },
-    async onLoginUser() {
-      // create user
-      const user_username = this.inputUsername.toLowerCase();
-      const getItem = await getUserByUsername({ user_username });
-      if (!getItem)
-        return this.$toast.error(this.$store.state.string.E_ACCOUNT_NOT_MATCH);
-
-      bcrypt.compare(this.inputPassword, getItem.user_password, (err, res) => {
-        if (err)
-          return this.$toast.error(
-            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-          );
-        if (!res)
+      this.$store.dispatch("actLoadingAction", async () => {
+        /* get user by username */
+        const user_username = this.inputUsername.toLowerCase();
+        const getItem = await getUserByUsername({ user_username });
+        if (!getItem)
           return this.$toast.error(
             this.$store.state.string.E_ACCOUNT_NOT_MATCH
           );
 
-        // save storage user
-        const token = jwt.sign(getItem, this.$store.state.jwtToken);
-        localStorage.setItem("quizLogin", token);
+        bcrypt.compare(
+          this.inputPassword,
+          getItem.user_password,
+          (err, res) => {
+            /* bcrypt password log to user if error or password not match
+            if user match then save to storage and set to vue store
+            log success to user */
+            if (err)
+              return this.$toast.error(
+                this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+              );
+            if (!res)
+              return this.$toast.error(
+                this.$store.state.string.E_ACCOUNT_NOT_MATCH
+              );
 
-        this.$store.state.user = getItem;
-        this.$toast.success(this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS);
+            const token = jwt.sign(getItem, this.$store.state.jwtToken);
+            localStorage.setItem("quizLogin", token);
+
+            this.$store.state.user = getItem;
+            this.$toast.success(
+              this.$store.state.string.S_LOGIN_ACCOUNT_SUCCESS
+            );
+          }
+        );
       });
     },
   },

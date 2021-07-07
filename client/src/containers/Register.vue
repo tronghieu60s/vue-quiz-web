@@ -61,32 +61,34 @@ export default {
       if (!new RegExp(/^[a-zA-Z0-9]{6,}$/).test(this.inputUsername)) return;
       if (this.inputPassword.length === 0) return;
 
-      this.$store.dispatch("actLoadingAction", this.onRegisterUser);
-    },
-    async onRegisterUser() {
-      // check password match
-      if (this.inputPassword !== this.inputRePassword)
-        return this.$toast.error(this.$store.state.string.E_PASSWORD_NOT_MATCH);
+      this.$store.dispatch("actLoadingAction", async () => {
+        /* check password and repassword match
+        then check username exists */
+        if (this.inputPassword !== this.inputRePassword)
+          return this.$toast.error(
+            this.$store.state.string.E_PASSWORD_NOT_MATCH
+          );
 
-      const user_username = this.inputUsername.toLowerCase();
-      const user_password = bcrypt.hashSync(this.inputPassword, 10);
+        const user_username = this.inputUsername.toLowerCase();
+        const user_password = bcrypt.hashSync(this.inputPassword, 10);
 
-      // get user by username
-      const getItem = await getUserByUsername({ user_username });
-      if (getItem)
-        return this.$toast.error(
-          this.$store.state.string.E_ALERT_USERNAME_EXISTS
-        );
+        const getItem = await getUserByUsername({ user_username });
+        if (getItem)
+          return this.$toast.error(
+            this.$store.state.string.E_ALERT_USERNAME_EXISTS
+          );
 
-      // create user
-      const createItem = await createUser({ user_username, user_password });
-      if (!createItem)
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
+        /* create user with password hashed if ok toast successs for user
+        then redirect to login pages */
+        const createItem = await createUser({ user_username, user_password });
+        if (!createItem)
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
 
-      this.$toast.success(this.$store.state.string.S_CREATE_ACCOUNT_SUCCESS);
-      this.$router.push({ name: "Login" });
+        this.$toast.success(this.$store.state.string.S_CREATE_ACCOUNT_SUCCESS);
+        this.$router.push({ name: "Login" });
+      });
     },
   },
 };

@@ -14,6 +14,13 @@ const {
  *
  **/
 
+async function serverSendPlayersByQuizCode(socket, quiz_code) {
+  const getQuiz = await getQuizByQuizCode({ quiz_code });
+  if (getQuiz) {
+    socket.emit("server-send-players", { quiz_players: getQuiz.quiz_players });
+  }
+}
+
 async function generateCodeQuiz() {
   const rdQuizCode = Math.random().toString(36).substring(7);
   const getQuiz = await getQuizByQuizCode({ quiz_code: rdQuizCode });
@@ -56,33 +63,33 @@ function socketAdmin(io, socket) {
     }
 
     /* delete all players by quiz code
-    and send stop quiz to all players */
+    and send out room to all players */
     const { quiz_code } = getQuiz;
     await deleteAllPlayersByQuizCode({ quiz_code });
 
     socket.emit("server-stop-quiz-success", { quiz: updateQuiz });
-    socket.to(quiz_code).emit("server-stop-quiz");
+    socket.to(quiz_code).emit("server-out-room");
   });
 
   socket.on("admin-join-quiz", async (args) => {
     const { quiz_code } = args;
-
-    const quizControl = `${quiz_code}-control`;
-    socket.join(quizControl);
-
-    // get and send players
-    const { quiz_players } = await getQuizByQuizCode({ quiz_code });
-    socket.emit("server-send-players", { quiz_players });
+    socket.join(`${quiz_code}-control`);
+    serverSendPlayersByQuizCode(socket, quiz_code);
   });
 
   socket.on("admin-kick-player", async (args) => {
     const { quiz_code, player_username } = args;
 
-    await deletePlayerByUsername({ quiz_code, player_username });
-    io.to(quiz_code).emit("server-out-room", { player_username });
-
-    const { quiz_players } = await getQuizByQuizCode({ quiz_code });
-    socket.emit("server-send-players", { quiz_players });
+    /* delete player from database and get value socket
+    for send to player logout, send all players to admin */
+    const deletePlayer = await deletePlayerByUsername({
+      quiz_code,
+      player_username,
+    });
+    if (deletePlayer) {
+      io.to(deletePlayer.player_socket).emit("server-out-room");
+      serverSendPlayersByQuizCode(socket, quiz_code);
+    }
   });
 
   socket.on("admin-send-quiz", async (args) => {

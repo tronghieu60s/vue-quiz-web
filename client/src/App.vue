@@ -8,7 +8,7 @@
 import jwt from "jsonwebtoken";
 import LoadingPage from "./components/UI/LoadingPage.vue";
 import LoadingAction from "./components/UI/LoadingAction.vue";
-import { socketConnect } from "./store/socket";
+import { socketConnect } from "./utils/socket";
 import router from "./router";
 
 export default {

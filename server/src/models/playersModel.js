@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 const PlayersSchema = new Schema(
   {
+    player_socket: { type: String, required: true },
     player_username: { type: String, required: true },
     player_online: { type: Boolean, default: true },
     player_scores: { type: Number, default: 0 },
