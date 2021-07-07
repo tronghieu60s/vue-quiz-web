@@ -7,9 +7,10 @@
   </h1>
   <div class="d-flex justify-content-center flex-column my-2 my-sm-0">
     <div class="my-1">
-      <button type="button" class="btn btn-default btn-sm">
-        <i class="fa fa-user" aria-hidden="true"></i> {{ players.length }}
-      </button>
+      <quizzes-start-players-model
+        :players="players"
+        @onKickPlayer="(index) => $emit('onKickPlayer', index)"
+      />
       <button
         v-if="!question"
         @click="$emit('onQuizStart')"
@@ -34,8 +35,10 @@
 </template>
 
 <script>
+import QuizzesStartPlayersModel from "./QuizzesStartPlayersModel.vue";
 export default {
-  emits: ["onQuizStart", "onQuizStop", "onQuizNext"],
+  components: { QuizzesStartPlayersModel },
+  emits: ["onQuizStart", "onQuizStop", "onQuizNext", "onKickPlayer"],
   props: {
     quiz: { type: Object },
     players: { type: Object },

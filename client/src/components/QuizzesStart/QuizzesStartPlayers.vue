@@ -2,27 +2,47 @@
   <div class="col-12 py-5 my-5" style="min-height: 50vh">
     <h2 class="w-75 w-lg-50 text-center mb-4 mx-auto bg-secondary p-3">
       {{
-        players.length === 0
+        playersOnline.length === 0
           ? "Sử dụng mã code phía trên để mời mọi người tham gia :3"
-          : `Đang có ${players.length} người tham gia. Bạn có thể bắt đầu bất cứ lúc nào!`
+          : `Đang có ${playersOnline.length} người tham gia. Bạn có thể bắt đầu bất cứ lúc nào!`
       }}
     </h2>
     <div class="d-flex justify-content-center flex-wrap">
-      <quizzes-start-players-item
-        v-for="(player, index) in players"
+      <button
+        v-for="(player, index) in playersOnline"
+        v-show="player.player_online"
         :key="index"
-        :player="player"
-        @onKickPlayer="$emit('onKickPlayer', index)"
-      />
+        @click="$emit('onKickPlayer', index)"
+        type="button"
+        class="btn btn-primary mb-2"
+      >
+        <span>{{ player.player_username }}</span>
+        <i class="fa fa-times-circle" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 </template>
 
 <script>
-import QuizzesStartPlayersItem from "./QuizzesStartPlayersItem.vue";
 export default {
-  components: { QuizzesStartPlayersItem },
   emits: ["onKickPlayer"],
   props: { players: { type: Array } },
+  data() {
+    return {
+      playersOnline: [],
+    };
+  },
+  watch: {
+    players() {
+      const playersOnline = this.players.filter((o) => o.player_online);
+      this.playersOnline = playersOnline;
+    },
+  },
 };
 </script>
+
+<style scoped>
+.btn.btn-primary:hover {
+  text-decoration: line-through;
+}
+</style>

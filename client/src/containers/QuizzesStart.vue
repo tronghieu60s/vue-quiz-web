@@ -6,6 +6,7 @@
       :players="players"
       :question="question"
       :questions="questions"
+      @onKickPlayer="onKickPlayer"
       @onQuizStart="players.length > 0 && onQuizCurrent(1)"
       @onQuizStop="onQuizCurrent(0)"
       @onQuizNext="onQuizNext"
@@ -86,10 +87,7 @@ export default {
 
       this.$store.state.socket.on("server-send-players", (args) => {
         const { quiz_players } = args;
-        const players = quiz_players
-          .filter((o) => o.player_online)
-          .map((o) => o.player_username);
-        this.players = players;
+        this.players = quiz_players;
       });
 
       this.$store.state.socket.on("server-send-question", (args) => {
@@ -114,8 +112,8 @@ export default {
     },
     /* methods */
     onKickPlayer(index) {
-      const quiz_code = this.quiz.quiz_code;
-      const player_username = this.players[index];
+      const { quiz_code } = this.quiz;
+      const { player_username } = this.players[index];
       const payload = { quiz_code, player_username };
       this.$store.state.socket.emit("admin-kick-player", payload);
     },

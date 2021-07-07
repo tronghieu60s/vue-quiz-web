@@ -88,7 +88,7 @@
                   class="btn btn-secondary"
                   data-dismiss="modal"
                 >
-                  Close
+                  Đóng
                 </button>
                 <button type="submit" class="btn btn-primary">Lưu</button>
               </div>
