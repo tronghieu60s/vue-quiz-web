@@ -1,6 +1,8 @@
 <template>
   <h1 class="mb-0">{{ player_username }}</h1>
-  <div class="bg-danger text-white font-weight-bold rounded-lg px-3 py-1">
+  <div
+    class="bg-default text-sm text-white font-weight-bold rounded-lg px-3 py-1"
+  >
     790
   </div>
   <div>

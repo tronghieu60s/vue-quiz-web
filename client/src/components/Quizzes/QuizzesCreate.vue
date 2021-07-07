@@ -71,9 +71,12 @@ export default {
     },
   },
   methods: {
-    onReset() {
+    reset() {
       this.inputTitle = "";
       this.inputDesc = "";
+    },
+    onReset() {
+      this.reset();
       this.$emit("onResetSelected");
     },
     onSubmit() {
@@ -83,8 +86,7 @@ export default {
       const quiz_desc = this.inputDesc;
       this.$emit("onActionQuiz", { quiz_title, quiz_desc });
 
-      this.inputTitle = "";
-      this.inputDesc = "";
+      this.reset();
     },
   },
 };

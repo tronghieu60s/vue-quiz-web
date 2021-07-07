@@ -10,6 +10,7 @@ const QuestionsSchema = new Schema(
   {
     question_content: { type: String, required: true },
     question_answers: [{ type: AnswerSchema, required: true }],
+    question_scores: { type: Number, default: 1000 },
     question_times: { type: Number, default: 20 },
   },
   {

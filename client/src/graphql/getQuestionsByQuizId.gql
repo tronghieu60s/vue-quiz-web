@@ -6,6 +6,7 @@ query getQuestionsByQuizId($quiz_id: ID!) {
       answer_content
       answer_isCorrect
     }
+    question_scores
     question_times
   }
 }

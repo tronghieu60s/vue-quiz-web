@@ -9,7 +9,6 @@
       @input="onInputAnswer"
       type="text"
       class="form-control"
-      aria-describedby="helpId"
       placeholder="Nhập câu trả lời..."
     />
     <button

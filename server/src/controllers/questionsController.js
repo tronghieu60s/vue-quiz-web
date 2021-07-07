@@ -16,7 +16,13 @@ const getQuestionsByQuizCode = async (args) => {
 };
 
 const createQuestion = async (args) => {
-  const { quiz_id, question_content, question_answers } = args;
+  const {
+    quiz_id,
+    question_content,
+    question_answers,
+    question_scores,
+    question_times,
+  } = args;
 
   // create question
   const createQuestion = new questionsModel({

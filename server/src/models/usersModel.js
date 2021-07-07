@@ -3,12 +3,7 @@ const Schema = mongoose.Schema;
 
 const UsersSchema = new Schema(
   {
-    user_username: {
-      type: String,
-      lowercase: true,
-      required: true,
-      unique: true,
-    },
+    user_username: { type: String, unique: true, required: true },
     user_password: { type: String, required: true },
     user_quizzes: [{ type: Schema.Types.ObjectId, ref: "Quizzes" }],
   },

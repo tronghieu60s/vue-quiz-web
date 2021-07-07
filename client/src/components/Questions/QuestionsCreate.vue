@@ -9,6 +9,29 @@
     >
       {{ this.question ? "Sửa Câu Hỏi" : "Thêm Câu Hỏi Mới" }}
     </h4>
+    <div class="d-flex justify-content-between">
+      <div class="form-group mr-2 w-50">
+        <h4 class="text-capitalize">Tổng điểm:</h4>
+        <select v-model.number="inputScores" class="w-100 form-control">
+          <option selected>1000</option>
+          <option>1500</option>
+          <option>2000</option>
+          <option>2500</option>
+          <option>3000</option>
+        </select>
+      </div>
+      <div class="form-group ml-2 w-50">
+        <h4 class="text-capitalize">Thời gian:</h4>
+        <select v-model.number="inputTimes" class="w-100 form-control">
+          <option>10</option>
+          <option selected>20</option>
+          <option>30</option>
+          <option>40</option>
+          <option>50</option>
+          <option>60</option>
+        </select>
+      </div>
+    </div>
     <div class="form-group">
       <div class="d-flex justify-content-between">
         <h4 class="text-capitalize">Câu Hỏi:</h4>
@@ -17,7 +40,7 @@
       <textarea
         v-model="inputQuestion"
         class="form-control"
-        rows="3"
+        rows="4"
         placeholder="Nhập câu hỏi vào đây..."
         required
       ></textarea>
@@ -56,6 +79,8 @@ export default {
   emits: ["onResetSelected", "onActionQuestion"],
   data() {
     return {
+      inputScores: 1000,
+      inputTimes: 20,
       inputQuestion: "",
       inputAnswer: [
         {
@@ -82,7 +107,14 @@ export default {
       if (this.question === null) return;
 
       // set question selected
-      const { question_content, question_answers } = this.question;
+      const {
+        question_content,
+        question_answers,
+        question_scores,
+        question_times,
+      } = this.question;
+      this.inputScores = question_scores;
+      this.inputTimes = question_times;
       this.inputQuestion = question_content;
       this.inputAnswer = question_answers.map(
         ({ answer_content, answer_isCorrect }) => ({
@@ -103,10 +135,12 @@ export default {
         ...answer,
         answer_isCorrect: false,
       }));
-      this.inputAnswer[index].answer_isCorrect = !this.inputAnswer[index]
-        .answer_isCorrect;
+      const { answer_isCorrect } = this.inputAnswer[index];
+      this.inputAnswer[index].answer_isCorrect = !answer_isCorrect;
     },
-    onReset() {
+    reset() {
+      this.inputScores = 1000;
+      this.inputTimes = 20;
       this.inputQuestion = "";
       this.inputAnswer = [
         {
@@ -126,6 +160,9 @@ export default {
           answer_isCorrect: false,
         },
       ];
+    },
+    onReset() {
+      this.reset();
       this.$emit("onResetSelected");
     },
     onSubmit() {
@@ -138,28 +175,16 @@ export default {
       // get data and pass action to parent
       const question_content = this.inputQuestion;
       const question_answers = this.inputAnswer;
-      this.$emit("onActionQuestion", { question_content, question_answers });
+      const question_scores = this.inputScores;
+      const question_times = this.inputTimes;
+      this.$emit("onActionQuestion", {
+        question_content,
+        question_answers,
+        question_scores,
+        question_times,
+      });
 
-      // reset
-      this.inputQuestion = "";
-      this.inputAnswer = [
-        {
-          answer_content: "",
-          answer_isCorrect: true,
-        },
-        {
-          answer_content: "",
-          answer_isCorrect: false,
-        },
-        {
-          answer_content: "",
-          answer_isCorrect: false,
-        },
-        {
-          answer_content: "",
-          answer_isCorrect: false,
-        },
-      ];
+      this.reset();
     },
   },
 };

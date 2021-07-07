@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <header-custom :title="`[${quiz._id}] ${quiz.quiz_title}`" />
+    <header-custom :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`" />
     <div class="row">
       <div class="col-lg-4 col-md-5">
         <questions-create
@@ -98,15 +98,28 @@ export default {
       this.questionsbase = questions;
     },
     async onCreateQuestion(props) {
-      const { question_content, question_answers } = props;
+      const {
+        question_content,
+        question_answers,
+        question_scores,
+        question_times,
+      } = props;
+
       // create question, if not exists return fail
       const quiz_id = this.quiz._id;
-      const create = { quiz_id, question_content, question_answers };
+      const create = {
+        quiz_id,
+        question_content,
+        question_answers,
+        question_scores,
+        question_times,
+      };
       const createItem = await createQuestion(create);
-      if (!createItem)
+      if (!createItem) {
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
+      }
 
       // load questions on table
       const questionsbase = this.questionsbase;
@@ -117,26 +130,37 @@ export default {
       this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
     },
     async onUpdateQuestion(props) {
-      const { question_content, question_answers } = props;
+      const {
+        question_content,
+        question_answers,
+        question_scores,
+        question_times,
+      } = props;
 
       // get id and set question = null
       const question_id = this.question._id;
       this.question = null;
 
       // update item
-      const update = { _id: question_id, question_content, question_answers };
-      const updateItem = await updateQuestionById(update);
-      if (!updateItem)
+      const updateQuestion = await updateQuestionById({
+        _id: question_id,
+        question_content,
+        question_answers,
+        question_scores,
+        question_times,
+      });
+      if (!updateQuestion) {
         return this.$toast.error(
           this.$store.state.string.E_UNKNOWN_ERROR_DETECT
         );
+      }
 
       // load quizzes on table
       const questionsbase = this.questionsbase;
       const questionIndex = questionsbase.findIndex(
         (o) => o._id === question_id
       );
-      questionsbase[questionIndex] = updateItem;
+      questionsbase[questionIndex] = updateQuestion;
       this.questionsbase = questionsbase;
 
       // toast success
@@ -147,11 +171,12 @@ export default {
         // delete question with quiz_id
         const _id = question._id;
         const quiz_id = this.quiz._id;
-        const deleteItem = await deleteQuestionById({ _id, quiz_id });
-        if (!deleteItem)
+        const deleteQuestion = await deleteQuestionById({ _id, quiz_id });
+        if (!deleteQuestion) {
           return this.$toast.error(
             this.$store.state.string.E_UNKNOWN_ERROR_DETECT
           );
+        }
 
         // load questions on table
         this.question = null;

@@ -23,20 +23,36 @@ export function getQuestionsByQuizId(args) {
 }
 
 export function createQuestion(args) {
-  const { quiz_id, question_content, question_answers } = args;
+  const {
+    quiz_id,
+    question_content,
+    question_answers,
+    question_scores,
+    question_times,
+  } = args;
   return executeMutation(createQuestionQuery, {
     quiz_id,
     question_content,
     question_answers,
+    question_scores,
+    question_times,
   }).then((res) => (res ? res.createQuestion : null));
 }
 
 export function updateQuestionById(args) {
-  const { _id, question_content, question_answers } = args;
+  const {
+    _id,
+    question_content,
+    question_answers,
+    question_scores,
+    question_times,
+  } = args;
   return executeMutation(updateQuestionByIdQuery, {
     _id,
     question_content,
     question_answers,
+    question_scores,
+    question_times,
   }).then((res) => (res ? res.updateQuestionById : null));
 }
 

@@ -49,6 +49,7 @@ const QuestionsType = new GraphQLObjectType({
     _id: { type: GraphQLID },
     question_content: { type: GraphQLString },
     question_answers: { type: GraphQLList(AnswersType) },
+    question_scores: { type: GraphQLInt },
     question_times: { type: GraphQLInt },
     created_at: { type: GraphQLString },
     updated_at: { type: GraphQLString },
@@ -59,6 +60,7 @@ const PlayersType = new GraphQLObjectType({
   name: "Players",
   fields: () => ({
     _id: { type: GraphQLID },
+    player_socket: { type: GraphQLString },
     player_username: { type: GraphQLString },
     player_online: { type: GraphQLBoolean },
     player_scores: { type: GraphQLInt },
