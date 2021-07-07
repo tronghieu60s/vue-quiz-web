@@ -1,5 +1,6 @@
 const usersModel = require("../models/usersModel");
 const quizzesModel = require("../models/quizzesModel");
+const questionsModel = require("../models/questionsModel");
 
 const getQuizzesByUserId = async (args) => {
   const getQuiz = await usersModel
@@ -53,10 +54,19 @@ const updateQuizById = async (args) => {
 const deleteQuizById = async (args) => {
   const { _id, user_id } = args;
   const deleteQuiz = await quizzesModel.findByIdAndDelete(_id);
-  await usersModel.findByIdAndUpdate(user_id, {
-    $pullAll: { user_quizzes: [deleteQuiz] },
-  });
-  return deleteQuiz;
+  if(deleteQuiz) {
+    /* delete all questions reference quiz and
+    update quiz to user_quizzes */
+    const questions = deleteQuiz.quiz_questions;
+    await questionsModel.deleteMany({ _id: { $in: questions } });
+
+    await usersModel.findByIdAndUpdate(user_id, {
+      $pullAll: { user_quizzes: [deleteQuiz] },
+    });
+    return deleteQuiz;
+  }
+
+  return null;
 };
 
 module.exports = {
