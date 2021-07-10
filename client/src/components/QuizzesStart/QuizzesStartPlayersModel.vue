@@ -92,7 +92,6 @@
           <button type="button" class="btn btn-secondary" data-dismiss="modal">
             Đóng
           </button>
-          <button type="button" class="btn btn-danger">Xóa Tất Cả</button>
         </div>
       </div>
     </div>
@@ -102,18 +101,7 @@
 <script>
 export default {
   emits: ["onKickPlayer"],
-  props: { players: { type: Object } },
-  data() {
-    return {
-      playersOnline: [],
-    };
-  },
-  watch: {
-    players() {
-      const playersOnline = this.players.filter((o) => o.player_online);
-      this.playersOnline = playersOnline;
-    },
-  },
+  props: { players: { type: Array }, playersOnline: { type: Array } },
 };
 </script>
 

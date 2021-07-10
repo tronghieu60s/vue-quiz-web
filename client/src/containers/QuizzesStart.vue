@@ -4,10 +4,11 @@
     <quizzes-start-control
       :quiz="quiz"
       :players="players"
+      :playersOnline="playersOnline"
       :question="question"
       :questions="questions"
       @onKickPlayer="onKickPlayer"
-      @onQuizStart="players.length > 0 && onQuizCurrent(1)"
+      @onQuizStart="playersOnline.length > 0 && onQuizCurrent(1)"
       @onQuizStop="onQuizCurrent(0)"
       @onQuizNext="onQuizNext"
     />
@@ -38,14 +39,17 @@
     <quizzes-start-players
       v-if="!question"
       :players="players"
+      :playersOnline="playersOnline"
       @onKickPlayer="onKickPlayer"
     />
+    <quizzes-start-ranking />
   </div>
 </template>
 
 <script>
 import QuizzesStartControl from "@components/QuizzesStart/QuizzesStartControl.vue";
 import QuizzesStartPlayers from "@components/QuizzesStart/QuizzesStartPlayers.vue";
+import QuizzesStartRanking from "@components/QuizzesStart/QuizzesStartRanking.vue";
 import QuizAnswer from "@components/Home/QuizAnswer.vue";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
 import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
@@ -55,6 +59,7 @@ export default {
   components: {
     QuizzesStartControl,
     QuizzesStartPlayers,
+    QuizzesStartRanking,
     QuizAnswer,
     LayoutTop,
     AnimateQuiz,
@@ -64,6 +69,7 @@ export default {
     return {
       quiz: null,
       players: [],
+      playersOnline: [],
       question: null,
       questions: [],
       showResult: false,
@@ -77,6 +83,12 @@ export default {
       await this.onLoadQuestions();
       await this.onLoadSocket();
     });
+  },
+  watch: {
+    players() {
+      const playersOnline = this.players.filter((o) => o.player_online);
+      this.playersOnline = playersOnline;
+    },
   },
   methods: {
     /* load pages */

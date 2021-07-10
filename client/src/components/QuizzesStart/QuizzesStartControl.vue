@@ -9,6 +9,7 @@
     <div class="my-1">
       <quizzes-start-players-model
         :players="players"
+        :playersOnline="playersOnline"
         @onKickPlayer="(index) => $emit('onKickPlayer', index)"
       />
       <button
@@ -16,7 +17,7 @@
         @click="$emit('onQuizStart')"
         type="button"
         class="btn btn-default btn-sm"
-        :disabled="players.length === 0"
+        :disabled="playersOnline.length === 0"
       >
         Bắt Đầu Ngay
         <i class="fa fa-arrow-right" aria-hidden="true"></i>
@@ -42,6 +43,7 @@ export default {
   props: {
     quiz: { type: Object },
     players: { type: Object },
+    playersOnline: { type: Array },
     question: { type: Object },
     questions: { type: Array },
   },

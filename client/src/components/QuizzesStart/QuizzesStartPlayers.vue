@@ -1,6 +1,6 @@
 <template>
   <div class="col-12 py-5 my-5" style="min-height: 50vh">
-    <h2 class="w-75 w-lg-50 text-center mb-4 mx-auto bg-secondary p-3">
+    <h2 class="w-75 w-lg-50 text-center mb-4 mx-auto bg-secondary p-3 rounded">
       {{
         playersOnline.length === 0
           ? "Sử dụng mã code phía trên để mời mọi người tham gia :3"
@@ -26,18 +26,7 @@
 <script>
 export default {
   emits: ["onKickPlayer"],
-  props: { players: { type: Array } },
-  data() {
-    return {
-      playersOnline: [],
-    };
-  },
-  watch: {
-    players() {
-      const playersOnline = this.players.filter((o) => o.player_online);
-      this.playersOnline = playersOnline;
-    },
-  },
+  props: { players: { type: Array }, playersOnline: { type: Array } },
 };
 </script>
 
