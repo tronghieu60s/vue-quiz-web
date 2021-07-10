@@ -7,7 +7,7 @@ const QuizzesSchema = new Schema(
     quiz_desc: { type: String },
     quiz_code: { type: String },
     quiz_current: { type: Number, default: 0 },
-    quiz_result: { type: Boolean, default: false },
+    quiz_status: { type: String, default: "quizzing" },
     quiz_questions: [{ type: Schema.Types.ObjectId, ref: "Questions" }],
     quiz_players: [{ type: Schema.Types.ObjectId, ref: "Players" }],
   },

@@ -27,7 +27,7 @@ const QuizzesType = new GraphQLObjectType({
     quiz_desc: { type: GraphQLString },
     quiz_code: { type: GraphQLString },
     quiz_current: { type: GraphQLInt },
-    quiz_result: { type: GraphQLBoolean },
+    quiz_status: { type: GraphQLString },
     quiz_questions: { type: GraphQLList(QuestionsType) },
     quiz_players: { type: GraphQLList(PlayersType) },
     created_at: { type: GraphQLString },

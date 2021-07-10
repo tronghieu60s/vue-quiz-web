@@ -92,11 +92,25 @@ function socketAdmin(io, socket) {
     }
   });
 
-  socket.on("admin-send-quiz", async (args) => {
+  socket.on("admin-send-question", async (args) => {
     const { quiz_code, quiz_question } = args;
 
-    socket.emit("server-send-quiz", { quiz_question });
-    io.to(quiz_code).emit("server-send-quiz", { quiz_question });
+    socket.emit("server-send-question", { quiz_question });
+    io.to(quiz_code).emit("server-send-question", { quiz_question });
+  });
+
+  socket.on("admin-send-result", async (args) => {
+    const { quiz_code, quiz_result } = args;
+
+    socket.emit("server-send-question", { quiz_result });
+    io.to(quiz_code).emit("server-send-question", { quiz_result });
+  });
+
+  socket.on("admin-send-ranking", async (args) => {
+    const { quiz_code } = args;
+
+    // socket.emit("server-send-question", { quiz_result });
+    // io.to(quiz_code).emit("server-send-question", { quiz_result });
   });
 }
 

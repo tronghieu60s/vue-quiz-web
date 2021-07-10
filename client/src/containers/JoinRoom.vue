@@ -112,6 +112,11 @@ export default {
       this.$store.state.socket.on("server-out-room", () => {
         this.onStorageOutRoom();
       });
+
+      this.$store.state.socket.on("server-send-question", (args) => {
+        const { quiz_question } = args;
+        this.question = quiz_question;
+      });
     },
     /* methods */
     onOutRoom() {

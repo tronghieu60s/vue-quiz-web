@@ -39,7 +39,6 @@ const mutation = {
       quiz_desc: { type: GraphQLString },
       quiz_code: { type: GraphQLString },
       quiz_current: { type: GraphQLInt },
-      quiz_result: { type: GraphQLBoolean },
     },
   },
   deleteQuizById: {

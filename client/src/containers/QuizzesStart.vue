@@ -104,10 +104,6 @@ export default {
 
       this.$store.state.socket.on("server-send-question", (args) => {
         const { quiz_question } = args;
-        if (quiz_question) {
-          this.countdown = 3;
-          this.onCountDownTimer();
-        }
         this.question = quiz_question;
       });
     },
@@ -131,7 +127,7 @@ export default {
     },
     onQuizNext() {
       if (!this.showResult) {
-        return this.$store.state.socket.emit("admin-show-result", {
+        return this.$store.state.socket.emit("admin-send-result", {
           quiz_code: this.quiz.quiz_code,
         });
       }
@@ -144,7 +140,7 @@ export default {
     },
     onQuizCurrent(quiz_current) {
       this.$store.dispatch("actLoadingAction", async () => {
-        const update = { _id: this.quiz._id, quiz_current, quiz_result: false };
+        const update = { _id: this.quiz._id, quiz_current };
         const updateItem = await updateQuizById(update);
         if (!updateItem) {
           return this.$toast.error(
