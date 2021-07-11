@@ -102,8 +102,8 @@ function socketAdmin(io, socket) {
   socket.on("admin-send-result", async (args) => {
     const { quiz_code, quiz_result } = args;
 
-    socket.emit("server-send-question", { quiz_result });
-    io.to(quiz_code).emit("server-send-question", { quiz_result });
+    socket.emit("server-send-result", { quiz_result });
+    io.to(quiz_code).emit("server-send-result", { quiz_result });
   });
 
   socket.on("admin-send-ranking", async (args) => {

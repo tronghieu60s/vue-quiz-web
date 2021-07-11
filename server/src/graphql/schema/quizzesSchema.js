@@ -4,7 +4,6 @@ const {
   GraphQLNonNull,
   GraphQLID,
   GraphQLInt,
-  GraphQLBoolean,
 } = require("graphql");
 const { QuizzesType } = require("../types");
 

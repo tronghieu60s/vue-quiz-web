@@ -9,5 +9,8 @@
 </template>
 
 <script>
-export default {};
+import LoadingActionIcon from "@components/UI/LoadingActionIcon.vue";
+export default {
+  components: { LoadingActionIcon },
+};
 </script>

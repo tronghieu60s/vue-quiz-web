@@ -5,6 +5,5 @@ query getQuiz($value: String!) {
     quiz_desc
     quiz_code
     quiz_current
-    quiz_status
   }
 }

@@ -5,6 +5,5 @@ query getQuizzesByUserId($user_id: ID!) {
     quiz_desc
     quiz_code
     quiz_current
-    quiz_status
   }
 }

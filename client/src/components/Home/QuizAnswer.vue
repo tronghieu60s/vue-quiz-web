@@ -17,7 +17,7 @@
         :key="index"
         :index="index"
         :answer="answer"
-        :showResult="showResult"
+        :result="result"
         @onSelectAnswer="$emit('onSelectAnswer', answer)"
       />
     </div>
@@ -30,8 +30,8 @@ export default {
   components: { QuizAnswerItem },
   emits: ["onSelectAnswer"],
   props: {
+    result: { type: String },
     question: { type: Object },
-    showResult: { type: Boolean },
     countdown: { type: Boolean, default: false },
   },
 };

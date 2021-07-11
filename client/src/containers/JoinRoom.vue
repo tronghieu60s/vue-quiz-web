@@ -12,12 +12,12 @@
   <div class="container my-5" v-if="quiz">
     <countdown v-show="countdown" :value="countdown" />
     <div v-if="question && !countdown">
-      <join-room-show-answer v-show="showResult" />
-      <join-room-waiting-answer v-if="answer && !showResult" />
+      <join-room-show-result :answer="answer" :result="result" />
+      <join-room-waiting-answer v-if="answer && !result" />
       <quiz-answer
         v-else
+        :result="result"
         :question="question"
-        :showResult="showResult"
         @onSelectAnswer="(o) => (this.answer = o)"
       />
     </div>
@@ -31,7 +31,7 @@ import LayoutTop from "@components/Layout/LayoutTop.vue";
 import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
 import Countdown from "@components/UI/Countdown.vue";
 import JoinRoomControl from "@components/JoinRoom/JoinRoomControl.vue";
-import JoinRoomShowAnswer from "@components/JoinRoom/JoinRoomShowAnswer.vue";
+import JoinRoomShowResult from "@components/JoinRoom/JoinRoomShowResult.vue";
 import JoinRoomWaiting from "@components/JoinRoom/JoinRoomWaiting.vue";
 import JoinRoomWaitingAnswer from "@components/JoinRoom/JoinRoomWaitingAnswer.vue";
 import { getQuizByQuizCode } from "@models/quizzesModel";
@@ -42,7 +42,7 @@ export default {
     Countdown,
     AnimateQuiz,
     JoinRoomControl,
-    JoinRoomShowAnswer,
+    JoinRoomShowResult,
     JoinRoomWaiting,
     JoinRoomWaitingAnswer,
   },
@@ -55,8 +55,7 @@ export default {
       quiz: null,
       question: null,
       answer: null,
-      answerStatus: null,
-      showResult: false,
+      result: null,
       countdown: 0,
     };
   },
@@ -66,15 +65,6 @@ export default {
   watch: {
     $route() {
       this.onOutRoom();
-    },
-    showResult() {
-      if (!this.answer) return (this.answerStatus = "nochoose");
-      const correctAnswer = this.question.question_answers.find(
-        (o) => o.answer_isCorrect
-      );
-      if (correctAnswer.answer_content === this.answer.answer_content)
-        return (this.answerStatus = "correct");
-      this.answerStatus = "incorrect";
     },
   },
   methods: {
@@ -115,7 +105,14 @@ export default {
 
       this.$store.state.socket.on("server-send-question", (args) => {
         const { quiz_question } = args;
+        this.answer = null;
+        this.result = null;
         this.question = quiz_question;
+      });
+
+      this.$store.state.socket.on("server-send-result", (args) => {
+        const { quiz_result } = args;
+        this.result = quiz_result;
       });
     },
     /* methods */

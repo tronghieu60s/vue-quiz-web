@@ -32,9 +32,9 @@
     </div>
     <quiz-answer
       v-if="question"
+      :result="result"
       :countdown="countdown !== 0"
       :question="question"
-      :showResult="showResult"
     />
     <quizzes-start-players
       v-if="!question"
@@ -42,7 +42,7 @@
       :playersOnline="playersOnline"
       @onKickPlayer="onKickPlayer"
     />
-    <quizzes-start-ranking />
+    <quizzes-start-ranking hidden />
   </div>
 </template>
 
@@ -68,11 +68,11 @@ export default {
   data() {
     return {
       quiz: null,
+      result: null,
       players: [],
       playersOnline: [],
       question: null,
       questions: [],
-      showResult: false,
       countdown: 0,
     };
   },
@@ -104,7 +104,13 @@ export default {
 
       this.$store.state.socket.on("server-send-question", (args) => {
         const { quiz_question } = args;
+        this.result = null;
         this.question = quiz_question;
+      });
+
+      this.$store.state.socket.on("server-send-result", (args) => {
+        const { quiz_result } = args;
+        this.result = quiz_result;
       });
     },
     async onLoadQuiz() {
@@ -126,9 +132,13 @@ export default {
       this.$store.state.socket.emit("admin-kick-player", payload);
     },
     onQuizNext() {
-      if (!this.showResult) {
+      if (!this.result) {
+        const quiz_result = this.question.question_answers.find(
+          (o) => o.answer_isCorrect
+        );
         return this.$store.state.socket.emit("admin-send-result", {
           quiz_code: this.quiz.quiz_code,
+          quiz_result: quiz_result.answer_content,
         });
       }
 

@@ -20,7 +20,7 @@ export default {
   props: {
     index: { type: Number },
     answer: { type: Object },
-    showResult: { type: Boolean },
+    result: { type: String },
   },
   data() {
     return {
@@ -52,7 +52,7 @@ export default {
   },
   computed: {
     isDisable() {
-      return this.showResult && !this.answer.answer_isCorrect;
+      return this.result && !this.answer.answer_isCorrect;
     },
   },
 };
