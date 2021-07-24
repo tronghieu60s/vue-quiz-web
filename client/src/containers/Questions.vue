@@ -32,7 +32,7 @@ import Layout from "@components/Layout";
 import QuestionsCreate from "@components/Questions/QuestionsCreate.vue";
 import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
 import QuestionsList from "@components/Questions/QuestionsList.vue";
-import { searchString } from "@helpers/string";
+import { searchString } from "@helpers/commonFunctions";
 import { getQuizById } from "@models/quizzesModel";
 import {
   createQuestion,

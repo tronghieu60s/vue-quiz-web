@@ -50,7 +50,7 @@
 import QuizzesStartControl from "@components/QuizzesStart/QuizzesStartControl.vue";
 import QuizzesStartPlayers from "@components/QuizzesStart/QuizzesStartPlayers.vue";
 import QuizzesStartRanking from "@components/QuizzesStart/QuizzesStartRanking.vue";
-import QuizAnswer from "@components/Home/QuizAnswer.vue";
+import QuizAnswer from "@components/QuizAnswer";
 import LayoutTop from "@components/Layout/LayoutTop.vue";
 import AnimateQuiz from "@components/UI/AnimateQuiz.vue";
 import { getQuizByQuizCode, updateQuizById } from "@models/quizzesModel";

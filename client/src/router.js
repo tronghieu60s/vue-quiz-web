@@ -5,7 +5,7 @@ import Register from "@containers/Register.vue";
 import Questions from "@containers/Questions.vue";
 import Quizzes from "@containers/Quizzes.vue";
 import QuizzesStart from "@containers/QuizzesStart.vue";
-import NotFound from "@views/NotFound.vue";
+import NotFound from "@containers/NotFound.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const routes = [

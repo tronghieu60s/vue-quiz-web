@@ -1,8 +1,5 @@
-import createQuestionQuery from "@graphql/createQuestion.gql";
-import deleteQuestionByIdQuery from "@graphql/deleteQuestionById.gql";
-import getQuestionsByQuizIdQuery from "@graphql/getQuestionsByQuizId.gql";
-import updateQuestionByIdQuery from "@graphql/updateQuestionById.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
+import gql from "graphql-tag";
 
 /* questions = {
   _id
@@ -15,6 +12,83 @@ import { executeMutation, executeQuery } from "@utils/graphql";
   updated_at
 }
 */
+
+const getQuestionsByQuizIdQuery = gql`
+  query getQuestionsByQuizId($quiz_id: ID!) {
+    getQuestionsByQuizId(quiz_id: $quiz_id) {
+      _id
+      question_content
+      question_answers {
+        answer_content
+        answer_isCorrect
+      }
+      question_scores
+      question_times
+    }
+  }
+`;
+
+const createQuestionQuery = gql`
+  mutation createQuestion(
+    $quiz_id: ID!
+    $question_content: String!
+    $question_answers: [AnswersInput]!
+    $question_scores: Int
+    $question_times: Int
+  ) {
+    createQuestion(
+      quiz_id: $quiz_id
+      question_content: $question_content
+      question_answers: $question_answers
+      question_scores: $question_scores
+      question_times: $question_times
+    ) {
+      _id
+      question_content
+      question_answers {
+        answer_content
+        answer_isCorrect
+      }
+      question_scores
+      question_times
+    }
+  }
+`;
+
+const updateQuestionByIdQuery = gql`
+  mutation updateQuestionById(
+    $_id: ID!
+    $question_content: String
+    $question_answers: [AnswersInput]
+    $question_scores: Int
+    $question_times: Int
+  ) {
+    updateQuestionById(
+      _id: $_id
+      question_content: $question_content
+      question_answers: $question_answers
+      question_scores: $question_scores
+      question_times: $question_times
+    ) {
+      _id
+      question_content
+      question_answers {
+        answer_content
+        answer_isCorrect
+      }
+      question_scores
+      question_times
+    }
+  }
+`;
+
+const deleteQuestionByIdQuery = gql`
+  mutation deleteQuestionById($_id: ID!, $quiz_id: ID!) {
+    deleteQuestionById(_id: $_id, quiz_id: $quiz_id) {
+      _id
+    }
+  }
+`;
 
 export function getQuestionsByQuizId(args) {
   return executeQuery(getQuestionsByQuizIdQuery, {

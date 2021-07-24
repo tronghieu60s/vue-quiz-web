@@ -8,10 +8,8 @@ import { E_SERVER_ERROR_CONNECTING } from "@common/string";
 const SERVER = process.env.VUE_APP_SERVER_URL || "http://localhost:4000";
 
 /* Config apolloClient */
-const httpLink = createHttpLink({ uri: `${SERVER}/graphql` });
-
 export const apolloClient = new ApolloClient({
-  link: httpLink,
+  link: createHttpLink({ uri: `${SERVER}/graphql` }),
   cache: new InMemoryCache(),
   defaultOptions: {
     query: { fetchPolicy: "no-cache", errorPolicy: "all" },

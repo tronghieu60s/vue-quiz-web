@@ -30,7 +30,7 @@ import Layout from "@components/Layout";
 import QuizzesCreate from "@components/Quizzes/QuizzesCreate.vue";
 import QuizzesList from "@components/Quizzes/QuizzesList.vue";
 import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
-import { searchString } from "@helpers/string";
+import { searchString } from "@helpers/commonFunctions";
 
 export default {
   components: {

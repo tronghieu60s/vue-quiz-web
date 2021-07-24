@@ -1,7 +1,0 @@
-query getUser($value: String!) {
-  getUser(key: "_id", value: $value) {
-    _id
-    user_username
-    user_password
-  }
-}

@@ -1,9 +1,0 @@
-query getQuizzesByUserId($user_id: ID!) {
-  getQuizzesByUserId(user_id: $user_id) {
-    _id
-    quiz_title
-    quiz_desc
-    quiz_code
-    quiz_current
-  }
-}

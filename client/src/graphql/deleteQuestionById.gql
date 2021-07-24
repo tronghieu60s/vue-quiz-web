@@ -1,5 +1,0 @@
-mutation deleteQuestionById($_id: ID!, $quiz_id: ID!) {
-  deleteQuestionById(_id: $_id, quiz_id: $quiz_id) {
-    _id
-  }
-}

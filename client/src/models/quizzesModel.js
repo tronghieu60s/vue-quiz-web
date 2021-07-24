@@ -1,10 +1,5 @@
-import createQuizQuery from "@graphql/createQuiz.gql";
-import deleteQuizByIdQuery from "@graphql/deleteQuizById.gql";
-import getQuizByIdQuery from "@graphql/getQuizById.gql";
-import getQuizByQuizCodeQuery from "@graphql/getQuizByQuizCode.gql";
-import getQuizzesByUserIdQuery from "@graphql/getQuizzesByUserId.gql";
-import updateQuizByIdQuery from "@graphql/updateQuizById.gql";
 import { executeMutation, executeQuery } from "@utils/graphql";
+import gql from "graphql-tag";
 
 /* quizzes = { 
   _id,
@@ -16,6 +11,90 @@ import { executeMutation, executeQuery } from "@utils/graphql";
   updated_at,
 }
 */
+
+const getQuizzesByUserIdQuery = gql`
+  query getQuizzesByUserId($user_id: ID!) {
+    getQuizzesByUserId(user_id: $user_id) {
+      _id
+      quiz_title
+      quiz_desc
+      quiz_code
+      quiz_current
+    }
+  }
+`;
+
+const getQuizByIdQuery = gql`
+  query getQuiz($value: String!) {
+    getQuiz(key: "_id", value: $value) {
+      _id
+      quiz_title
+      quiz_desc
+      quiz_code
+      quiz_current
+    }
+  }
+`;
+
+const getQuizByQuizCodeQuery = gql`
+  query getQuiz($value: String!) {
+    getQuiz(key: "quiz_code", value: $value) {
+      _id
+      quiz_title
+      quiz_desc
+      quiz_code
+      quiz_current
+    }
+  }
+`;
+
+const createQuizQuery = gql`
+  mutation createQuiz($user_id: ID!, $quiz_title: String!, $quiz_desc: String) {
+    createQuiz(
+      user_id: $user_id
+      quiz_title: $quiz_title
+      quiz_desc: $quiz_desc
+    ) {
+      _id
+      quiz_title
+      quiz_desc
+      quiz_code
+      quiz_current
+    }
+  }
+`;
+
+const updateQuizByIdQuery = gql`
+  mutation updateQuizById(
+    $_id: ID!
+    $quiz_title: String
+    $quiz_desc: String
+    $quiz_code: String
+    $quiz_current: Int
+  ) {
+    updateQuizById(
+      _id: $_id
+      quiz_title: $quiz_title
+      quiz_desc: $quiz_desc
+      quiz_code: $quiz_code
+      quiz_current: $quiz_current
+    ) {
+      _id
+      quiz_title
+      quiz_desc
+      quiz_code
+      quiz_current
+    }
+  }
+`;
+
+const deleteQuizByIdQuery = gql`
+  mutation deleteQuizById($_id: ID!, $user_id: ID!) {
+    deleteQuizById(_id: $_id, user_id: $user_id) {
+      _id
+    }
+  }
+`;
 
 export function getQuizzesByUserId(args) {
   return executeQuery(getQuizzesByUserIdQuery, {
