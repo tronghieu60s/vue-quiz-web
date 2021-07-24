@@ -52,22 +52,16 @@
 
 <script>
 export default {
-  emits: ["onResetSelected", "onActionQuiz"],
+  emits: ["onSetQuiz", "onActionQuiz"],
   props: ["quiz"],
   data() {
-    return {
-      inputTitle: "",
-      inputDesc: "",
-    };
+    return { inputTitle: "", inputDesc: "" };
   },
   watch: {
     quiz() {
       if (this.quiz === null) return;
-
-      // set quiz selected
-      const { quiz_title, quiz_desc } = this.quiz;
-      this.inputTitle = quiz_title;
-      this.inputDesc = quiz_desc;
+      this.inputTitle = this.quiz.quiz_title;
+      this.inputDesc = this.quiz.quiz_desc;
     },
   },
   methods: {
@@ -77,15 +71,12 @@ export default {
     },
     onReset() {
       this.reset();
-      this.$emit("onResetSelected");
+      this.$emit("onSetQuiz", null);
     },
     onSubmit() {
       if (this.inputTitle.length === 0) return;
-
-      const quiz_title = this.inputTitle;
-      const quiz_desc = this.inputDesc;
+      const { inputTitle: quiz_title, inputDesc: quiz_desc } = this;
       this.$emit("onActionQuiz", { quiz_title, quiz_desc });
-
       this.reset();
     },
   },

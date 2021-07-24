@@ -30,7 +30,12 @@
     <td>
       <div v-if="!quiz.quiz_code">
         <button
-          @click="$router.push(routerQuestions)"
+          @click="
+            $router.push({
+              name: 'Questions',
+              params: { quiz_id: this.quiz._id },
+            })
+          "
           type="button"
           class="btn btn-primary btn-sm mb-2"
           title="Thêm"
@@ -38,7 +43,7 @@
           <i class="fa fa-plus" aria-hidden="true"></i>
         </button>
         <button
-          @click="$emit('onSelectEditQuiz')"
+          @click="$emit('onSetQuiz')"
           type="button"
           class="btn btn-success btn-sm mb-2"
           title="Sửa"
@@ -61,27 +66,13 @@
 
 <script>
 export default {
-  emits: ["onStartQuiz", "onStopQuiz", "onSelectEditQuiz", "onDeleteQuiz"],
-  props: {
-    quiz: {
-      type: Object,
-      default: () => ({
-        _id: "",
-        quiz_title: "",
-        quiz_desc: "",
-        quiz_code: "",
-      }),
-    },
-  },
-  computed: {
-    routerQuestions() {
-      return { name: "Questions", params: { quiz_id: this.quiz._id } };
-    },
-  },
+  emits: ["onStartQuiz", "onStopQuiz", "onSetQuiz", "onDeleteQuiz"],
+  props: ["quiz"],
   methods: {
     onDeleteQuiz() {
-      const textConfirm = this.$store.state.string.Q_CONFIRM_DELETE_VALUES;
-      if (confirm(textConfirm)) this.$emit("onDeleteQuiz");
+      if (confirm(this.$store.state.string.Q_CONFIRM_DELETE_VALUES)) {
+        this.$emit("onDeleteQuiz");
+      }
     },
   },
 };

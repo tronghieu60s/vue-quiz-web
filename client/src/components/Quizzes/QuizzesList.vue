@@ -18,9 +18,9 @@
         v-for="(quiz, index) in quizzes"
         :key="index"
         :quiz="quiz"
+        @onSetQuiz="$emit('onSetQuiz', quiz)"
         @onStartQuiz="$emit('onStartQuiz', quiz)"
         @onStopQuiz="$emit('onStopQuiz', quiz)"
-        @onSelectEditQuiz="$emit('onSelectEditQuiz', quiz)"
         @onDeleteQuiz="$emit('onDeleteQuiz', quiz)"
       />
     </tbody>
@@ -31,7 +31,7 @@
 import QuizzesItem from "./QuizzesItem.vue";
 export default {
   components: { QuizzesItem },
-  emits: ["onStartQuiz", "onStopQuiz", "onSelectEditQuiz", "onDeleteQuiz"],
+  emits: ["onSetQuiz", "onStartQuiz", "onStopQuiz", "onDeleteQuiz"],
   props: { quizzes: { type: Array } },
 };
 </script>
