@@ -1,13 +1,13 @@
 {
 	"folders": [
 		{
-			"path": "E:\\WORKS\\vue-quiz-web"
+			"path": "..\\vue-quizzes"
 		},
 		{
-			"path": "E:\\WORKS\\vue-quiz-web\\client"
+			"path": "..\\vue-quizzes\\client"
 		},
 		{
-			"path": "E:\\WORKS\\vue-quiz-web\\server"
+			"path": "..\\vue-quizzes\\server"
 		}
 	],
 	"settings": {

@@ -1,33 +1,34 @@
 <template>
-  <div class="container">
-    <header-custom :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`" />
-    <div class="row">
-      <div class="col-lg-4 col-md-5">
-        <questions-create
-          :question="question"
-          @onActionQuestion="onActionQuestion"
-          @onResetSelected="this.question = null"
-        />
+  <layout :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`">
+    <div class="container">
+      <header-custom :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`" />
+      <div class="row">
+        <div class="col-lg-4 col-md-5">
+          <questions-create
+            :question="question"
+            @onActionQuestion="onActionQuestion"
+            @onResetSelected="this.question = null"
+          />
+        </div>
+        <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
+          <questions-filter
+            :questions="questions"
+            @onInputSearch="(s) => (inputSearch = s)"
+          />
+          <questions-list
+            :questions="questions"
+            @onDeleteQuestion="onDeleteQuestion"
+            @onSelectEditQuestion="(q) => (question = q)"
+          />
+        </div>
       </div>
-      <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
-        <questions-filter
-          :questions="questions"
-          @onInputSearch="(s) => (inputSearch = s)"
-        />
-        <questions-list
-          :questions="questions"
-          @onDeleteQuestion="onDeleteQuestion"
-          @onSelectEditQuestion="(q) => (question = q)"
-        />
-      </div>
+      <footer-custom />
     </div>
-    <footer-custom />
-  </div>
+  </layout>
 </template>
 
 <script>
-import HeaderCustom from "@components/Header.vue";
-import FooterCustom from "@components/Footer.vue";
+import Layout from "@components/Layout";
 import QuestionsCreate from "@components/Questions/QuestionsCreate.vue";
 import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
 import QuestionsList from "@components/Questions/QuestionsList.vue";
@@ -41,8 +42,7 @@ import {
 } from "@models/questionsModel";
 export default {
   components: {
-    HeaderCustom,
-    FooterCustom,
+    Layout,
     QuestionsCreate,
     QuestionsList,
     QuestionsFilter,

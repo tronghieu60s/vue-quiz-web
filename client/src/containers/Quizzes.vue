@@ -1,6 +1,5 @@
 <template>
-  <div class="container">
-    <header-custom title="Bộ Câu Hỏi" />
+  <layout title="Bộ Câu Hỏi">
     <div class="row">
       <div class="col-lg-4 col-md-5">
         <quizzes-create
@@ -23,13 +22,11 @@
         />
       </div>
     </div>
-    <footer-custom />
-  </div>
+  </layout>
 </template>
 
 <script>
-import HeaderCustom from "@components/Header.vue";
-import FooterCustom from "@components/Footer.vue";
+import Layout from "@components/Layout";
 import QuizzesCreate from "@components/Quizzes/QuizzesCreate.vue";
 import QuizzesList from "@components/Quizzes/QuizzesList.vue";
 import QuizzesFilter from "@components/Quizzes/QuizzesFilter.vue";
@@ -43,8 +40,7 @@ import {
 } from "@models/quizzesModel";
 export default {
   components: {
-    HeaderCustom,
-    FooterCustom,
+    Layout,
     QuizzesCreate,
     QuizzesList,
     QuizzesFilter,

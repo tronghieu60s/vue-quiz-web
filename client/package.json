@@ -6,8 +6,7 @@
     "start": "node app.js",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "production": "vue-cli-service serve --mode production"
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "@apollo/client": "^3.3.20",
