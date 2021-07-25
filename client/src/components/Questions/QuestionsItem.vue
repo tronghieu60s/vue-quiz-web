@@ -7,7 +7,7 @@
     </td>
     <td>
       <button
-        @click="$emit('onSelectEditQuestion')"
+        @click="$emit('onSetQuestion')"
         type="button"
         class="btn btn-success btn-sm mb-2"
         title="Sửa"
@@ -28,7 +28,7 @@
 
 <script>
 export default {
-  emits: ["onSelectEditQuestion", "onDeleteQuestion"],
+  emits: ["onSetQuestion", "onDeleteQuestion"],
   props: {
     index: { type: Number },
     question: {

@@ -1,38 +1,20 @@
 <template>
-  <layout :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`">
-    <div class="container">
-      <header-custom :title="`[${quiz._id.slice(0, 10)}] ${quiz.quiz_title}`" />
-      <div class="row">
-        <div class="col-lg-4 col-md-5">
-          <questions-create
-            :question="question"
-            @onActionQuestion="onActionQuestion"
-            @onResetSelected="this.question = null"
-          />
-        </div>
-        <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
-          <questions-filter
-            :questions="questions"
-            @onInputSearch="(s) => (inputSearch = s)"
-          />
-          <questions-list
-            :questions="questions"
-            @onDeleteQuestion="onDeleteQuestion"
-            @onSelectEditQuestion="(q) => (question = q)"
-          />
-        </div>
-      </div>
-      <footer-custom />
-    </div>
-  </layout>
+  <questions
+    :quiz="quiz"
+    :question="question"
+    :questions="questions"
+    :questionsbase="questionsbase"
+    @onActionQuestion="
+      (props) => (question ? onUpdateQuestion(props) : onCreateQuestion(props))
+    "
+    @onDeleteQuestion="onDeleteQuestion"
+    @onSetQuestion="(q) => (question = q)"
+    @onSetQuestions="(q) => (questions = q)"
+  />
 </template>
 
 <script>
-import Layout from "@components/Layout";
-import QuestionsCreate from "@components/Questions/QuestionsCreate.vue";
-import QuestionsFilter from "@components/Questions/QuestionsFilter.vue";
-import QuestionsList from "@components/Questions/QuestionsList.vue";
-import { searchString } from "@helpers/commonFunctions";
+import Questions from "@components/Questions";
 import { getQuizById } from "@models/quizzesModel";
 import {
   createQuestion,
@@ -41,12 +23,7 @@ import {
   deleteQuestionById,
 } from "@models/questionsModel";
 export default {
-  components: {
-    Layout,
-    QuestionsCreate,
-    QuestionsList,
-    QuestionsFilter,
-  },
+  components: { Questions },
   props: ["quiz_id"],
   data() {
     return {
@@ -54,7 +31,6 @@ export default {
       question: null,
       questions: [],
       questionsbase: [],
-      inputSearch: "",
     };
   },
   created() {
@@ -64,27 +40,7 @@ export default {
       await this.onLoadQuestions();
     });
   },
-  watch: {
-    inputSearch() {
-      // check input empty get questionsbase to questions
-      if (this.inputSearch.length === 0)
-        return (this.questions = this.questionsbase);
-
-      // filter questionsbase to questions by search funtion
-      this.questions = this.questionsbase.filter((o) =>
-        searchString(o.question_content, this.inputSearch)
-      );
-    },
-  },
   methods: {
-    onActionQuestion(props) {
-      this.$store.dispatch(
-        "actLoadingAction",
-        this.question
-          ? () => this.onUpdateQuestion(props)
-          : () => this.onCreateQuestion(props)
-      );
-    },
     async onLoadQuiz() {
       const quizItem = await getQuizById({ _id: this.quiz_id });
       if (!quizItem) return this.$router.back();
@@ -97,76 +53,78 @@ export default {
       this.questions = questions;
       this.questionsbase = questions;
     },
-    async onCreateQuestion(props) {
-      const {
-        question_content,
-        question_answers,
-        question_scores,
-        question_times,
-      } = props;
+    onCreateQuestion(props) {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const {
+          question_content,
+          question_answers,
+          question_scores,
+          question_times,
+        } = props;
 
-      // create question, if not exists return fail
-      const quiz_id = this.quiz._id;
-      const create = {
-        quiz_id,
-        question_content,
-        question_answers,
-        question_scores,
-        question_times,
-      };
-      const createItem = await createQuestion(create);
-      if (!createItem) {
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
-      }
+        // create question, if not exists return fail
+        const quiz_id = this.quiz._id;
+        const create = {
+          quiz_id,
+          question_content,
+          question_answers,
+          question_scores,
+          question_times,
+        };
+        const createItem = await createQuestion(create);
+        if (!createItem) {
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+        }
 
-      // load questions on table
-      const questionsbase = this.questionsbase;
-      questionsbase.push(createItem);
-      this.questionsbase = questionsbase;
+        // load questions on table
+        const questionsbase = this.questionsbase;
+        questionsbase.push(createItem);
+        this.questionsbase = questionsbase;
 
-      // toast success
-      this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
-    },
-    async onUpdateQuestion(props) {
-      const {
-        question_content,
-        question_answers,
-        question_scores,
-        question_times,
-      } = props;
-
-      // get id and set question = null
-      const question_id = this.question._id;
-      this.question = null;
-
-      // update item
-      const updateQuestion = await updateQuestionById({
-        _id: question_id,
-        question_content,
-        question_answers,
-        question_scores,
-        question_times,
+        // toast success
+        this.$toast.success(this.$store.state.string.S_ADD_VALUES_SUCCESS);
       });
-      if (!updateQuestion) {
-        return this.$toast.error(
-          this.$store.state.string.E_UNKNOWN_ERROR_DETECT
-        );
-      }
-
-      // load quizzes on table
-      const questionsbase = this.questionsbase;
-      const questionIndex = questionsbase.findIndex(
-        (o) => o._id === question_id
-      );
-      questionsbase[questionIndex] = updateQuestion;
-      this.questionsbase = questionsbase;
-
-      // toast success
-      this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
     },
-    async onDeleteQuestion(question) {
+    onUpdateQuestion(props) {
+      this.$store.dispatch("actLoadingAction", async () => {
+        const {
+          question_content,
+          question_answers,
+          question_scores,
+          question_times,
+        } = props;
+
+        // get id and set question = null
+        const question_id = this.question._id;
+        this.question = null;
+
+        const updateQuestion = await updateQuestionById({
+          _id: question_id,
+          question_content,
+          question_answers,
+          question_scores,
+          question_times,
+        });
+        if (!updateQuestion) {
+          return this.$toast.error(
+            this.$store.state.string.E_UNKNOWN_ERROR_DETECT
+          );
+        }
+
+        // load quizzes on table
+        const questionsbase = this.questionsbase;
+        const questionIndex = questionsbase.findIndex(
+          (o) => o._id === question_id
+        );
+        questionsbase[questionIndex] = updateQuestion;
+        this.questionsbase = questionsbase;
+
+        this.$toast.success(this.$store.state.string.S_EDIT_VALUES_SUCCESS);
+      });
+    },
+    onDeleteQuestion(question) {
       this.$store.dispatch("actLoadingAction", async () => {
         // delete question with quiz_id
         const _id = question._id;

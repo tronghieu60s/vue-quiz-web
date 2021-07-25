@@ -18,14 +18,12 @@ export default {
   },
   created() {
     this.$store.dispatch("actLoadingPage", async () => {
-      await new Promise((resolve) => setTimeout(resolve, 1500));
-
       // socket connect
       const socket = await socketConnect();
       this.$store.state.socket = socket;
 
       // load user storage
-      this.$store.state.user = await this.actLoadUserStorage();
+      this.$store.state.user = await this.loadUserStorage();
 
       this.onRedirectPermission();
       this.loadFirst = true;
@@ -49,7 +47,7 @@ export default {
       if (currentPath.indexOf("/auth") === 0 && this.$store.state.user)
         router.push({ name: "Admin" });
     },
-    async actLoadUserStorage() {
+    loadUserStorage() {
       const token = localStorage.getItem("quizLogin");
       return new Promise((resolve) => {
         jwt.verify(token, this.$store.state.jwtToken, (err, decoded) => {

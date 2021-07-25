@@ -18,7 +18,7 @@
         :key="index"
         :index="index + 1"
         :question="question"
-        @onSelectEditQuestion="$emit('onSelectEditQuestion', question)"
+        @onSetQuestion="$emit('onSetQuestion', question)"
         @onDeleteQuestion="$emit('onDeleteQuestion', question)"
       />
     </tbody>
@@ -29,7 +29,7 @@
 import QuestionsItem from "./QuestionsItem.vue";
 export default {
   components: { QuestionsItem },
-  emits: ["onSelectEditQuestion", "onDeleteQuestion"],
+  emits: ["onSetQuestion", "onDeleteQuestion"],
   props: { questions: { type: Array } },
 };
 </script>

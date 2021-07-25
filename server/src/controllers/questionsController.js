@@ -28,6 +28,8 @@ const createQuestion = async (args) => {
   const createQuestion = new questionsModel({
     question_content,
     question_answers,
+    question_scores,
+    question_times,
   });
   await createQuestion.save();
 

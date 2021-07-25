@@ -76,7 +76,7 @@ import QuestionsInputAnswer from "./QuestionsInputAnswer.vue";
 export default {
   components: { QuestionsInputAnswer },
   props: ["question"],
-  emits: ["onResetSelected", "onActionQuestion"],
+  emits: ["onSetQuestion", "onActionQuestion"],
   data() {
     return {
       inputScores: 1000,
@@ -163,7 +163,7 @@ export default {
     },
     onReset() {
       this.reset();
-      this.$emit("onResetSelected");
+      this.$emit("onSetQuestion", null);
     },
     onSubmit() {
       if (this.inputQuestion.length === 0) return;

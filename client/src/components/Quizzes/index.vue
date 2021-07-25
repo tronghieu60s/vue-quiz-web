@@ -4,8 +4,8 @@
       <div class="col-lg-4 col-md-5">
         <quizzes-create
           :quiz="quiz"
-          @onActionQuiz="(quiz) => $emit('onActionQuiz', quiz)"
-          @onSetQuiz="(quiz) => $emit('onSetQuiz', quiz)"
+          @onActionQuiz="(q) => $emit('onActionQuiz', q)"
+          @onSetQuiz="(q) => $emit('onSetQuiz', q)"
         />
       </div>
       <div class="col-lg-8 col-md-7 mt-5 mt-md-0">
@@ -15,10 +15,10 @@
         />
         <quizzes-list
           :quizzes="quizzes"
-          @onSetQuiz="(quiz) => $emit('onSetQuiz', quiz)"
-          @onStartQuiz="(quiz) => $emit('onStartQuiz', quiz)"
-          @onStopQuiz="(quiz) => $emit('onStopQuiz', quiz)"
-          @onDeleteQuiz="(quiz) => $emit('onDeleteQuiz', quiz)"
+          @onSetQuiz="(q) => $emit('onSetQuiz', q)"
+          @onStartQuiz="(q) => $emit('onStartQuiz', q)"
+          @onStopQuiz="(q) => $emit('onStopQuiz', q)"
+          @onDeleteQuiz="(q) => $emit('onDeleteQuiz', q)"
         />
       </div>
     </div>
