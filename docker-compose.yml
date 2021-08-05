@@ -23,6 +23,16 @@ services:
       - 4000:4000
     networks: 
       - common
+
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes: 
+      - ./server/data/db:/data/db
+    ports: 
+      - 27017:27017
+    networks:
+      - common
     
 networks: 
   common:

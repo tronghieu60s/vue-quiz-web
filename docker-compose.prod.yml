@@ -34,6 +34,16 @@ services:
     networks: 
       - common
 
+  mongo:
+    container_name: mongo
+    image: mongo
+    volumes: 
+      - ./server/data/db:/data/db
+    ports: 
+      - 27017:27017
+    networks:
+      - common
+
 networks: 
   common:
     driver: bridge
