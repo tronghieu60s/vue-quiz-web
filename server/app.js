@@ -13,8 +13,12 @@ app.use(express.urlencoded({ extended: false }));
 
 /* MongoDB */
 const mongoose = require("mongoose");
+const mongoUrl =
+  process.env.NODE_ENV === "production"
+    ? "mongodb://mongo:27017/myproject"
+    : "mongodb://localhost/myproject";
 mongoose
-  .connect(process.env.MONGODB_URI || "mongodb://localhost/myproject", {
+  .connect(process.env.MONGODB_URI || mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
